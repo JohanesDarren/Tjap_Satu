@@ -1,0 +1,98 @@
+/* === STYLE UMUM === */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #fffdf8;
+  color: #2b2b2b;
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5 {
+  font-weight: 700;
+  color: #2c2c2c;
+}
+
+p {
+  font-size: 1rem;
+  color: #4a4a4a;
+}
+
+/* === HERO SECTION === */
+section.bg-light {
+  background-color: #fff7e6 !important;
+  border-radius: 20px;
+  padding: 80px 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+section.bg-light h1 {
+  font-size: 2.5rem;
+  color: #e17a00;
+}
+
+section.bg-light span.text-warning {
+  color: #ff9900 !important;
+}
+
+/* === JUDUL BAGIAN === */
+section h2 {
+  font-size: 1.8rem;
+  color: #e17a00;
+  margin-bottom: 0.8rem;
+  position: relative;
+}
+
+section h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background-color: #e17a00;
+  margin-top: 8px;
+  border-radius: 2px;
+}
+
+/* === PEMILIK BISNIS === */
+section .row img {
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+section .row img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+section .text-muted {
+  font-size: 0.9rem;
+  color: #7a7a7a !important;
+}
+
+/* === MAP === */
+iframe {
+  border: none;
+  border-radius: 15px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  section.bg-light h1 {
+    font-size: 1.8rem;
+  }
+  section h2 {
+    font-size: 1.4rem;
+  }
+  .row img {
+    width: 150px;
+  }
+}
+
+/* === ANIMASI SCROLL HALUS === */
+html {
+  scroll-behavior: smooth;
+}
+
+/* === TRANSISI LEMBUT === */
+a, button, img, h2 {
+  transition: all 0.3s ease;
+}
