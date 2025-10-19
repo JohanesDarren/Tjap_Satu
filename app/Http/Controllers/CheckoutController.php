@@ -12,17 +12,16 @@ class CheckoutController extends Controller
     {
         $cartItems = [
     [
-        'name' => 'Damian Lillard Milwaukee Bucks Icon Edition',
-        'description' => "Men's Nike Dri-FIT NBA Swingman Jersey",
-        'color' => 'Fir',
-        'size' => 'XXL (56)',
-        'price' => 1379000,
+        'name' => 'Gn. Puntang',
+        'description' => "Natural",
+        'satuan' => '100gr',
+        'price' => 20000,
         'quantity' => 1,
         'image' => '/images/bijiKopi.jpg' // path image
     ]
         ];
-        $subtotal = 1379000;
-        $shippingCost = 150000;
+        $subtotal = 20000;
+        $shippingCost = 15000;
 
 
         return view('checkout', compact('cartItems', 'subtotal', 'shippingCost'));

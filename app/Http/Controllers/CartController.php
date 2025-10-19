@@ -12,9 +12,9 @@ class CartController extends Controller
         $cartItems = [
             [
                 'id' => 1,
-                'name' => 'Gunung Tilu - Wine',
-                'price' => 39000,
-                'quantity' => 2,
+                'name' => 'Gn. Puntang - Natural/100gr',
+                'price' => 20000,
+                'quantity' => 1,
                 'image' => 'images/bijiKopi.jpg'
             ],
             [

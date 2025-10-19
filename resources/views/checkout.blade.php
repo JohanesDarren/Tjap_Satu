@@ -46,9 +46,7 @@
                 <!-- Bag Items -->
                 <h4 class="mb-4">Bag</h4>
                 @include('components.checkout.item')
-                
-                <p class="text-warning"><i class="bi bi-clock"></i> Just a few left. Order soon.</p>
-                <p><i class="bi bi-box-arrow-left"></i> Free returns for Members. <a href="#">Learn More</a></p>
+
             </div>
 
             <!-- Summary / Checkout -->
@@ -60,11 +58,11 @@
                         <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
-                        <span>Estimated Delivery & Handling</span>
+                        <span>Biaya Pengiriman</span>
                         <span>Rp {{ number_format($shippingCost, 0, ',', '.') }}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
-                        <span>Estimated Duties and Taxes</span>
+                        <span>Pajak</span>
                         <span>—</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between fw-bold">

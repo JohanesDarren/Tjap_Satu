@@ -26,8 +26,8 @@
                 @endforeach
             </ul>
         </div>
-        <a href="{{ route('produk.order', ['id' => $produk['id']]) }}" class="btn btn-success btn-lg mt-4">
-            Pesan Sekarang
+        <a href="{{ route('cart.index', ['id' => $produk['id']]) }}" class="btn btn-success btn-lg mt-4">
+            Masukkan ke Keranjang
         </a>
         
         <a href="{{ route('produk.menu') }}" class="btn btn-outline-secondary mt-4">&laquo; Kembali ke Menu</a>

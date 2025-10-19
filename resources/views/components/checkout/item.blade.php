@@ -7,8 +7,7 @@
             <div class="col-5">
                 <h6 class="mb-1">{{ $item['name'] }}</h6>
                 <p class="text-muted mb-1">{{ $item['description'] }}</p>
-                <p class="mb-1">{{ $item['color'] }} | Size {{ $item['size'] }}</p>
-                <a href="#" class="text-decoration-underline">Learn More</a>
+                <p class="mb-1">{{ $item['satuan'] }}</p>
             </div>
             <div class="col-2 text-end">
                 <span class="fw-bold">Rp {{ number_format($item['price'], 0, ',', '.') }}</span>
