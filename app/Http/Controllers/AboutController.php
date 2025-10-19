@@ -13,7 +13,7 @@ class AboutController extends Controller
                 'name' => 'Refo Ongko Songo',
                 'position' => 'Founder & CEO',
                 'image' => 'owner1.jpg',
-                'desc' => 'Refo adalah sosok visioner di balik lahirnya TJAP SATU. Berpengalaman dalam branding dan strategi bisnis, ia berfokus menjadikan kopi sebagai medium yang menyatukan manusia dan cerita mereka.'
+                'desc' => 'Refo adalah sosok visioner di balik lahirnya TJAP SATU. Berpengalaman dalam branding dan strategi bisnis, ia berfokus menjadikan kopi sebagai medium yang menyatukan manusia.'
             ],
             [
                 'name' => 'Ferdian Rama',
@@ -31,7 +31,7 @@ class AboutController extends Controller
                 'name' => 'Albi Fernanda',
                 'position' => 'Co-Founder & COO',
                 'image' => 'owner1.jpg',
-                'desc' => 'Albi memimpin pengalaman pelanggan dengan pendekatan hangat dan autentik. Ia percaya bahwa pelayanan berkualitas adalah kunci membangun loyalitas pelanggan.'
+                'desc' => 'Albi memimpin pengalaman pelanggan dengan pendekatan hangat dan autentik. Ia percaya bahwa pelayanan berkualitas adalah kunci membangun loyalitas.'
             ],
         ];
 

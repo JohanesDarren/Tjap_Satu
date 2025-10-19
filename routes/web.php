@@ -13,3 +13,7 @@ Route::get('/menu/{id}', [ProdukController::class, 'show'])->name('produk.show')
 // About Page Route
 use App\Http\Controllers\AboutController;
 Route::get('/about', [AboutController::class, 'index']);
+
+// Cart Page Route
+use App\Http\Controllers\CartController;
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

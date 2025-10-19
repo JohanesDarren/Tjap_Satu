@@ -1,0 +1,138 @@
+body {
+  background-color: #F3E3C2;
+  font-family: 'Poppins', sans-serif;
+}
+
+.cart-wrapper {
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.line {
+  width: 150px;
+  height: 3px;
+  background-color: #AF461F;
+  border: none;
+  margin-bottom: 30px;
+  border-radius: 2px;
+}
+
+.cart-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.cart-img:hover {
+  transform: scale(1.05);
+}
+
+.badge-sale {
+  background-color: #AF461F;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+
+.table thead {
+  background-color: #55351D;
+  color: #fff;
+}
+
+.table thead th {
+  border-bottom: 2px solid #AF461F;
+}
+
+.table tbody tr {
+  transition: all 0.3s;
+}
+
+.table tbody tr:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background-color: #fff4ef;
+}
+
+.qty-input {
+  width: 70px;
+  border: 1px solid #AF461F;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.qty-input:focus {
+  box-shadow: 0 0 5px rgba(175,70,31,0.5);
+}
+
+.btn-outline-dark {
+  border-color: #55351D;
+  color: #55351D;
+  transition: all 0.3s;
+}
+
+.btn-outline-dark:hover {
+  background-color: #55351D;
+  color: #fff;
+}
+
+.btn-checkout {
+  background-color: #325B56;
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-checkout:hover {
+  background-color: #325B56;
+  transform: scale(1.05);
+  color: white;
+
+}
+
+.btn-delete {
+  background-color: #AF461F;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-delete:hover {
+  background-color: #55351D;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.cart-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.total-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 270px;
+  background-color: #2E373D;
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}

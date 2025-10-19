@@ -3,7 +3,6 @@
 @section('title', 'Tentang TJAP SATU')
 
 @section('content')
-<link rel="stylesheet" href="{{ asset('../css/about.css') }}">
 
 @include('components.about.hero')
 @include('components.about.cerita')
