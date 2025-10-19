@@ -1,0 +1,57 @@
+/* General */
+body {
+    background-color: #f9f9f9;
+    font-family: 'Poppins', sans-serif;
+}
+
+h4 {
+    font-weight: 600;
+}
+
+.card {
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.list-group-item {
+    border: none;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+.btn-dark {
+    background-color: #325B56;
+    border: none;
+    border-radius: 30px;
+}
+
+.btn-dark:hover {
+    background-color: #333;
+}
+
+input[type="text"] {
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.text-warning {
+    font-size: 0.9rem;
+}
+
+/* checkout.css */
+
+.shipping-option:hover,
+.payment-option:hover {
+  border-color: #AF461F; /* merah bata */
+  background-color: rgba(169, 169, 169, 0.268);
+  transition: 0.3s ease;
+}
+
+.form-check-input:checked {
+  background-color: #AF461F;
+  border-color: #AF461F;
+}
+
+label {
+  cursor: pointer;
+}
