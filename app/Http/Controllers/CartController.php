@@ -19,7 +19,7 @@ class CartController extends Controller
             ],
             [
                 'id' => 2,
-                'name' => 'Flores Bajawa - Full Wash',
+                'name' => 'Flores Bajawa - Full Wash/100gr',
                 'price' => 25000,
                 'quantity' => 1,
                 'image' => 'images/bijiKopi.jpg'

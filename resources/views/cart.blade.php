@@ -1,5 +1,6 @@
 @extends('layouts.cart-app')
 @section('title', 'Keranjang Belanja')
+@include('components.header')
 
 @section('content')
     <div class="cart-wrapper">
@@ -40,41 +41,3 @@
 
 @endsection
 
-@section('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tombol Pilih Semua
-            const selectAll = document.getElementById('select-all');
-            const itemCheckboxes = document.querySelectorAll('.item-checkbox');
-
-            selectAll.addEventListener('change', function() {
-                itemCheckboxes.forEach(cb => cb.checked = selectAll.checked);
-            });
-
-            itemCheckboxes.forEach(cb => {
-                cb.addEventListener('change', function() {
-                    selectAll.checked = Array.from(itemCheckboxes).every(item => item.checked);
-                });
-            });
-
-            // Tombol + / − quantity
-            const cartRows = document.querySelectorAll('.quantity-group');
-            cartRows.forEach(row => {
-                const input = row.querySelector('.qty-input');
-                const btnInc = row.querySelector('.btn-increase');
-                const btnDec = row.querySelector('.btn-decrease');
-
-                btnInc.addEventListener('click', () => {
-                    input.value = parseInt(input.value) + 1;
-                });
-
-                btnDec.addEventListener('click', () => {
-                    if (parseInt(input.value) > 1) {
-                        input.value = parseInt(input.value) - 1;
-                    }
-                });
-            });
-        });
-    </script>
-
-@endsection
