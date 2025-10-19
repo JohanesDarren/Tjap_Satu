@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\Admin\ProdukController as AdminProdukController;
+use App\Http\Controllers\Admin\PesananController as AdminPesananController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
 
 Route::get('/', [LandingController::class, 'index'])->name('home');
 
