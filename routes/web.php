@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ProdukController as AdminProdukController;
 use App\Http\Controllers\Admin\PesananController as AdminPesananController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 
+use App\Http\Controllers\LandingController;
 Route::get('/', [LandingController::class, 'index'])->name('home');
 
 // menu route

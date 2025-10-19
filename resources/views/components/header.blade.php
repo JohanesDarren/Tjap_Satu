@@ -5,6 +5,9 @@
       <span class="brand-dot"></span> <span class="brand-text">TOKOKOPITJAP1</span>
     </a>
 
+    <!-- Bootstrap CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Burger -->
     <button id="navbarToggler" class="navbar-toggler border-0 shadow-none" type="button" aria-controls="navbarMain"
       aria-expanded="false" aria-label="Toggle navigation">
@@ -34,11 +37,18 @@
 
         <!-- Order -->
         <li class="nav-item mt-2 mt-lg-0">
+          @if(session('user'))
+            {{-- Sudah login --}}
+            <a href="{{ route('order.index') }}" class="btn btn-warning fw-bold text-white px-4 rounded-pill order-btn">
+              Order
+            </a>
+          @else
             {{-- Belum login -> buka modal --}}
             <a href="#" class="btn btn-warning fw-bold text-white px-4 rounded-pill order-btn" data-bs-toggle="modal"
               data-bs-target="#loginModal">
               Order
             </a>
+          @endif
         </li>
       </ul>
     </div>

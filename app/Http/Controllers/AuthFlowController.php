@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 
 class AuthFlowController extends Controller
 {
+    // GET /register
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
 
     // POST /login (tanpa validasi/auth, hanya redirect)
     public function submitLogin(Request $request)
