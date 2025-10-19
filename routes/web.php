@@ -7,8 +7,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/menu', [ProdukController::class, 'index'])->name('produk.index');
+// menu route
+Route::get('/menu', [ProdukController::class, 'menu'])->name('produk.menu');
 Route::get('/menu/{id}', [ProdukController::class, 'show'])->name('produk.show');
+// orderan route
+Route::get('/pesan/{id}', [ProdukController::class, 'showOrderForm'])->name('produk.order');
 
 // About Page Route
 use App\Http\Controllers\AboutController;
