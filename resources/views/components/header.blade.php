@@ -17,14 +17,14 @@
     <!-- Menu -->
     <div class="collapse navbar-collapse justify-content-end" id="navbarMain">
       <ul class="navbar-nav align-items-lg-center ms-auto gap-lg-3">
-        <li class="nav-item"><a class="nav-link menu-link" href="#">Home</a></li>
-        <li class="nav-item"><a class="nav-link menu-link" href="#about">Tentang</a></li>
-        <li class="nav-item"><a class="nav-link menu-link" href="#menu">Menu</a></li>
-        <li class="nav-item"><a class="nav-link menu-link" href="#location">Lokasi</a></li>
+        <li class="nav-item"><a class="nav-link menu-link" href="{{ route('home') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link menu-link" href="{{ route('tentang') }}">Tentang</a></li>
+        <li class="nav-item"><a class="nav-link menu-link" href="{{ route('produk.menu') }}">Menu</a></li>
+        <li class="nav-item"><a class="nav-link menu-link" href="location">Lokasi</a></li>
 
         <!-- Keranjang -->
         <li class="nav-item">
-          <a class="nav-link menu-link pe-2" href="#cart">
+          <a class="nav-link menu-link pe-2" href="{{ route('cart.index') }}">
             <span class="cart-icon position-relative d-inline-block">
               <i class="bi bi-bag fs-5"></i>
               @if(($cartCount ?? 0) > 0)

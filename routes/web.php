@@ -29,7 +29,7 @@ Route::get('/admin/report', [AdminReportController::class, 'index'])->name('admi
 
 // About Page Route
 use App\Http\Controllers\AboutController;
-Route::get('/about', [AboutController::class, 'index']);
+Route::get('/about', [AboutController::class, 'index'])->name('tentang');
 
 // Cart Page Route
 use App\Http\Controllers\CartController;
