@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>@yield('title', 'Toko Kopi Tjap 1')</title>
+  <title>@yield('title', 'Toko Kopi Tjap Satu')</title> {{-- Judul default --}}
 
   {{-- Stack CSS halaman --}}
   @stack('head')

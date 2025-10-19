@@ -20,7 +20,7 @@
         <li class="nav-item"><a class="nav-link menu-link" href="{{ route('home') }}">Home</a></li>
         <li class="nav-item"><a class="nav-link menu-link" href="{{ route('tentang') }}">Tentang</a></li>
         <li class="nav-item"><a class="nav-link menu-link" href="{{ route('produk.menu') }}">Menu</a></li>
-        <li class="nav-item"><a class="nav-link menu-link" href="location">Lokasi</a></li>
+        <li class="nav-item"><a class="nav-link menu-link" href="#location">Lokasi</a></li>
 
         <!-- Keranjang -->
         <li class="nav-item">

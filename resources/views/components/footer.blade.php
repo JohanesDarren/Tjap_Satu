@@ -44,12 +44,13 @@
             </div>
 
             <!-- Kolom 3: Info TJAP1 -->
-            <div class="col-md-3">
+            <div class="col-md-3 ">
                 <h6 class="fw-bold mb-3 fs-5 text-uppercase" style="color: #ff8a33;">Info TJAP1</h6>
                 <ul class="list-unstyled footer-link fs-6">
                     <li>Tentang Kami</li>
                     <li>Lokasi</li>
                     <li>Hubungi Kami!</li>
+                    <a class="text-decoration-none" href="{{ route('profile.index') }}"><li>Profile</li></a>
                 </ul>
             </div>
         </div>
