@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class ProdukController extends Controller
 {
-    // simpan data produk sebagai properti kelas sehingga bisa dipakai di semua method
-    private $produk = [
+   private $produk = [
         ['id' => 1, 'nama' => 'Gn. Puntang', 'jenis' => 'Robusta', 'proses' => 'Natural', 'harga' => ['100gr' => 20000, '200gr' => 40000, '500gr' => 100000], 'gambar' => 'images/produk2.jpg'],
         ['id' => 2, 'nama' => 'Temanggung', 'jenis' => 'Robusta', 'proses' => 'Natural', 'harga' => ['100gr' => 20000, '200gr' => 40000, '500gr' => 100000], 'gambar' => 'images/produk2.jpg'],
         ['id' => 3, 'nama' => 'Gn. Puntang', 'jenis' => 'Arabika', 'proses' => 'Fullwash', 'harga' => ['100gr' => 25000, '200gr' => 50000, '500gr' => 125000], 'gambar' => 'images/produk2.jpg'],
@@ -21,78 +21,46 @@ class ProdukController extends Controller
         ['id' => 11, 'nama' => 'Gn. Puntang', 'jenis' => 'Arabika', 'proses' => 'Natural Anaerob', 'harga' => ['100gr' => 35000, '200gr' => 70000, '500gr' => 175000], 'gambar' => 'images/produk2.jpg'],
         ['id' => 12, 'nama' => 'Gayo', 'jenis' => 'Arabika', 'proses' => 'Wine', 'harga' => ['100gr' => 42000, '200gr' => 84000, '500gr' => 210000], 'gambar' => 'images/produk2.jpg'],
     ];
-
-    public function menu(){
-        return view('produk.menu', ['produk' => $this->produk]);
-    }
-
-    public function show($id){
-        $filtered = array_filter($this->produk, function ($produk) use ($id) {
-            return $produk['id'] == $id;
-        });
-
-        if (empty($filtered)) {
-            abort(404);
-        }
-
-        $foundProduk = reset($filtered);
-        return view('produk.detail', ['produk' => $foundProduk]);
-    }
-
-    public function showOrderForm($id)
-    {
-        $produkToOrder = null;
-        $filtered = array_filter($this->produk, function ($produk) use ($id) {
-            return $produk['id'] == $id;
-        });
-
-        if (!empty($filtered)) {
-            $produkToOrder = reset($filtered);
-        } else {
-            abort(404);
-        }
-
-        // Kirim data produk yang akan dipesan ke view 'order'
-        return view('produk.order', ['produk' => $produkToOrder]);
-    }
-
-      // ----- Admin methods -----
+    
     public function index()
     {
-        // blade admin expects $produks
-        return view('admin.admin-produk', ['produks' => $this->produk]);
+        // Menampilkan halaman utama dengan semua produk
+        return view('admin.admin-produk', ['produk' => $this->produk]);
     }
 
     public function create()
     {
+        // Menampilkan form untuk menambah produk baru
         return view('admin.create-produk');
     }
 
     public function store(Request $request)
     {
-        // contoh sederhana: tidak ada DB saat ini, redirect kembali dengan pesan
-        return redirect()->route('produk.index')->with('success', 'Produk baru berhasil ditambahkan (simulasi).');
+        // SIMULASI: Seolah-olah menyimpan data baru
+        // Di aplikasi nyata, di sinilah kode untuk menyimpan ke database
+        return redirect()->route('admin.produk.index')->with('success', 'Produk baru berhasil ditambahkan!');
     }
 
     public function edit($id)
     {
-        $filtered = array_filter($this->produk, fn($item) => $item['id'] == $id);
-        if (empty($filtered)) abort(404);
-        $foundProduk = reset($filtered);
-        return view('admin.edit-produk', ['produk' => $foundProduk]);
+        // Mencari produk untuk diedit (simulasi)
+        $produk = collect($this->produk)->firstWhere('id', $id);
+        if (!$produk) {
+            abort(404);
+        }
+        // Menampilkan form edit dengan data produk
+        return view('admin.edit-produk', ['produk' => $produk]);
     }
 
     public function update(Request $request, $id)
     {
-        // simulasi update
-        return redirect()->route('produk.index')->with('success', 'Produk berhasil diperbarui (simulasi).');
+        // SIMULASI: Seolah-olah memperbarui data
+        return redirect()->route('admin.produk.index')->with('success', "Produk dengan ID {$id} berhasil diperbarui!");
     }
 
     public function destroy($id)
     {
-        // simulasi hapus
-        return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus (simulasi).');
+        // SIMULASI: Seolah-olah menghapus data
+        return redirect()->route('admin.produk.index')->with('success', "Produk dengan ID {$id} berhasil dihapus!");
     }
-
 }
-
