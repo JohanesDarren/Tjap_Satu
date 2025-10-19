@@ -1,4 +1,4 @@
-<footer class="text-white pt-5 pb-3 position-relative footer-gradient">
+<footer class="text-white position-relative footer-gradient">
     <div class="container position-relative" style="z-index: 2;">
         <div class="row g-4 align-items-start">
             <!-- Kolom 1: Logo & Deskripsi -->
@@ -66,9 +66,6 @@
          alt="Contact Us" 
          class="contact-image">
 
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
     <!-- Style -->
     <style>
         footer {
@@ -107,7 +104,6 @@
             color: #ff8a33 !important;
         }
 
-        /* 📸 Gambar Contactus diperbesar lagi */
         .contact-image {
             position: absolute;
             bottom: 0;

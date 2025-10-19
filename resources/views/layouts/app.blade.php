@@ -28,7 +28,7 @@
 <body>
 
     {{-- Memanggil komponen Header Anda --}}
-    @include('components.header')
+    @extends('components.header')
 
     <main class="container my-5">
         {{-- Ini adalah area di mana konten spesifik halaman akan ditampilkan --}}
