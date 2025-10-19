@@ -39,28 +39,13 @@ class ProdukController extends Controller
         return view('produk.detail', ['produk' => $foundProduk]);
     }
 
-    public function showOrderForm($id)
-    {
-        $produkToOrder = null;
-        $filtered = array_filter($this->produk, function ($produk) use ($id) {
-            return $produk['id'] == $id;
-        });
-
-        if (!empty($filtered)) {
-            $produkToOrder = reset($filtered);
-        } else {
-            abort(404);
-        }
-
-        // Kirim data produk yang akan dipesan ke view 'order'
-        return view('produk.order', ['produk' => $produkToOrder]);
-    }
+    
 
       // ----- Admin methods -----
     public function index()
     {
-        // blade admin expects $produks
-        return view('admin.admin-produk', ['produks' => $this->produk]);
+
+        return view('admin.admin-produk', ['produk' => $this->produk]);
     }
 
     public function create()

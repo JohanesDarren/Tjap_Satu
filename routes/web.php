@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\Admin\ProdukController as AdminProdukController;
+use App\Http\Controllers\Admin\PesananController as AdminPesananController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -11,8 +13,7 @@ Route::get('/', function () {
 // menu route
 Route::get('/menu', [ProdukController::class, 'menu'])->name('produk.menu');
 Route::get('/menu/{id}', [ProdukController::class, 'show'])->name('produk.show');
-// orderan route
-Route::get('/pesan/{id}', [ProdukController::class, 'showOrderForm'])->name('produk.order');
+
 // admin produk route
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/produk', [AdminProdukController::class, 'index'])->name('produk.index');
@@ -22,6 +23,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/produk/{id}', [AdminProdukController::class, 'update'])->name('produk.update');
     Route::delete('/produk/{id}', [AdminProdukController::class, 'destroy'])->name('produk.destroy');
 });
+//admin pesanan route
+Route::get('/admin/pesanan', [AdminPesananController::class, 'index'])->name('admin.pesanan.index');
+//admin report route
+Route::get('/admin/report', [AdminReportController::class, 'index'])->name('admin.report.index');
 
 // About Page Route
 use App\Http\Controllers\AboutController;

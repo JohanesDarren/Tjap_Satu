@@ -22,45 +22,29 @@ class ProdukController extends Controller
         ['id' => 12, 'nama' => 'Gayo', 'jenis' => 'Arabika', 'proses' => 'Wine', 'harga' => ['100gr' => 42000, '200gr' => 84000, '500gr' => 210000], 'gambar' => 'images/produk2.jpg'],
     ];
     
-    public function index()
-    {
-        // Menampilkan halaman utama dengan semua produk
+    public function index(){
         return view('admin.admin-produk', ['produk' => $this->produk]);
     }
 
-    public function create()
-    {
-        // Menampilkan form untuk menambah produk baru
+    public function create(){
         return view('admin.create-produk');
     }
 
-    public function store(Request $request)
-    {
-        // SIMULASI: Seolah-olah menyimpan data baru
-        // Di aplikasi nyata, di sinilah kode untuk menyimpan ke database
+    public function store(Request $request){
         return redirect()->route('admin.produk.index')->with('success', 'Produk baru berhasil ditambahkan!');
     }
 
-    public function edit($id)
-    {
-        // Mencari produk untuk diedit (simulasi)
-        $produk = collect($this->produk)->firstWhere('id', $id);
-        if (!$produk) {
-            abort(404);
-        }
-        // Menampilkan form edit dengan data produk
-        return view('admin.edit-produk', ['produk' => $produk]);
+    public function edit($id){
+        $found = collect($this->produk)->firstWhere('id', (int) $id);
+        if(!$found) abort(404);
+        return view('admin.edit-produk', ['produk' => $found]);
     }
 
-    public function update(Request $request, $id)
-    {
-        // SIMULASI: Seolah-olah memperbarui data
+    public function update(Request $request, $id){
         return redirect()->route('admin.produk.index')->with('success', "Produk dengan ID {$id} berhasil diperbarui!");
     }
 
-    public function destroy($id)
-    {
-        // SIMULASI: Seolah-olah menghapus data
+    public function destroy($id){
         return redirect()->route('admin.produk.index')->with('success', "Produk dengan ID {$id} berhasil dihapus!");
     }
 }

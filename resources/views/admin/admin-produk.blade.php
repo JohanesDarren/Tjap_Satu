@@ -1,11 +1,9 @@
 @extends('layouts.app')
-
-@section('title', 'Manajemen Produk')
-
+@section('title', 'Product Management')
 @section('content')
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="header-title">Manajemen Produk</h1>
+        <h1 class="header-title">Product Management</h1>
         <a href="{{ route('admin.produk.create') }}" class="btn btn-success">
             <i class="bi bi-plus-circle"></i> Tambah Produk Baru
         </a>
@@ -24,7 +22,7 @@
             <table class="table table-hover align-middle">
                 <thead class="table-dark">
                     <tr>
-                        <th scope="col">#ID</th>
+                        <th scope="col">ID</th>
                         <th scope="col">Nama Produk</th>
                         <th scope="col">Jenis</th>
                         <th scope="col">Proses</th>
@@ -41,8 +39,8 @@
                             <td>{{ $produk['proses'] }}</td>
                             <td>Rp {{ number_format($produk['harga']['100gr'], 0, ',', '.') }}</td>
                             <td class="text-center">
-                                <a href="{{ route('admin.edit-produk', $produk['id']) }}" class="btn btn-sm btn-primary" title="Edit">
-                                    <i class="bi bi-pencil-square"></i>
+                                <a href="{{ route('admin.produk.edit', $produk['id']) }}" class="btn btn-sm btn-primary" title="Edit">
+                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                                 <form action="{{ route('admin.produk.destroy', $produk['id']) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
                                     @csrf
