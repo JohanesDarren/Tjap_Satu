@@ -36,3 +36,12 @@ use App\Http\Controllers\CheckoutController;
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+
+// login
+use App\Http\Controllers\AuthController;
+// Order — hanya tampil jika sudah login (simulasi)
+Route::get('/order', [AuthController::class, 'order'])->name('order.index');
+
+Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
+Route::get('/signup', [AuthController::class, 'showRegister'])->name('signup.show');
+Route::post('/signup', [AuthController::class, 'register'])->name('signup.attempt');
