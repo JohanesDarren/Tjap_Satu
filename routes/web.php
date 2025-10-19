@@ -3,12 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\Admin\ProdukController as AdminProdukController;
-use App\Http\Controllers\Admin\PesananController as AdminPesananController;
-use App\Http\Controllers\Admin\ReportController as AdminReportController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [LandingController::class, 'index'])->name('home');
 
 // menu route
 Route::get('/menu', [ProdukController::class, 'menu'])->name('produk.menu');
@@ -42,11 +38,18 @@ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.in
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 
-// login
-use App\Http\Controllers\AuthController;
-// Order — hanya tampil jika sudah login (simulasi)
-Route::get('/order', [AuthController::class, 'order'])->name('order.index');
+// === LOGIN FLOW (tanpa auth logic) ===
 
-Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
-Route::get('/signup', [AuthController::class, 'showRegister'])->name('signup.show');
-Route::post('/signup', [AuthController::class, 'register'])->name('signup.attempt');
+// buka popup login di mana saja via #loginModal
+Route::post('/login', function () {
+    // langsung redirect ke halaman home
+    return redirect()->route('home')->with('user', true);
+})->name('login.submit');
+
+// ====== LOGIN (tanpa logic, hanya redirect balik ke home) ======
+use App\Http\Controllers\AuthFlowController;
+Route::post('/login', [AuthFlowController::class, 'submitLogin'])->name('login.submit');
+
+// ====== REGISTER ======
+Route::get('/register', [AuthFlowController::class, 'showRegister'])->name('register.page');
+Route::post('/register', [AuthFlowController::class, 'submitRegister'])->name('register.submit');

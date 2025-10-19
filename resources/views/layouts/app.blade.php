@@ -27,6 +27,10 @@
 </head>
 <body>
     @include('components.header')
+
+    {{-- Memanggil komponen Header Anda --}}
+    @extends('components.header')
+
     <main class="container my-5">
         @yield('content')
     </main>

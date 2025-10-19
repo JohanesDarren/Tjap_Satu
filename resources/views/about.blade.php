@@ -3,7 +3,7 @@
 @section('title', 'Tentang TJAP SATU')
 
 @section('content')
-@include('components.header')
+@extends('components.header')
 
 @include('components.about.hero')
 @include('components.about.cerita')

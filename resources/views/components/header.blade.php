@@ -14,9 +14,9 @@
     <!-- Menu -->
     <div class="collapse navbar-collapse justify-content-end" id="navbarMain">
       <ul class="navbar-nav align-items-lg-center ms-auto gap-lg-3">
-        <li class="nav-item"><a class="nav-link menu-link" href="#about">Home</a></li>
-        <li class="nav-item"><a class="nav-link menu-link" href="#menu">Menu</a></li>
+        <li class="nav-item"><a class="nav-link menu-link" href="#">Home</a></li>
         <li class="nav-item"><a class="nav-link menu-link" href="#about">Tentang</a></li>
+        <li class="nav-item"><a class="nav-link menu-link" href="#menu">Menu</a></li>
         <li class="nav-item"><a class="nav-link menu-link" href="#location">Lokasi</a></li>
 
         <!-- Keranjang -->
@@ -34,18 +34,11 @@
 
         <!-- Order -->
         <li class="nav-item mt-2 mt-lg-0">
-          @if(session('user'))
-            {{-- Sudah login --}}
-            <a href="{{ route('order.index') }}" class="btn btn-warning fw-bold text-white px-4 rounded-pill order-btn">
-              Order
-            </a>
-          @else
             {{-- Belum login -> buka modal --}}
             <a href="#" class="btn btn-warning fw-bold text-white px-4 rounded-pill order-btn" data-bs-toggle="modal"
               data-bs-target="#loginModal">
               Order
             </a>
-          @endif
         </li>
       </ul>
     </div>
