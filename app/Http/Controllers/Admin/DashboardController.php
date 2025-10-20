@@ -30,11 +30,11 @@ class DashboardController extends Controller
         ];
 
         $topProducts = [
-            ['name' => 'Kopi Susu Gula Aren', 'sold' => 185],
-            ['name' => 'Americano',            'sold' => 142],
-            ['name' => 'Cappuccino',           'sold' => 128],
-            ['name' => 'Espresso',             'sold' => 118],
-            ['name' => 'Matcha Latte',         'sold' => 92],
+            ['name' => 'Gn.Puntang', 'sold' => 185],
+            ['name' => 'Toraja Sapan',            'sold' => 142],
+            ['name' => 'Flores Bajawa',           'sold' => 128],
+            ['name' => 'Timor Leste',             'sold' => 118],
+            ['name' => 'Temanggung',         'sold' => 92],
         ];
 
         $orderSummary = [
