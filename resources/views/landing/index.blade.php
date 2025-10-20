@@ -366,7 +366,7 @@
             <span class="kicker">Roasted • Crafted • Shared</span>
             <h1 class="display-3 fw-bold mt-2">Coffee House</h1>
             <p class="fs-5 mb-4">Perpaduan rasa yang jujur, dari tangan roaster ke cangkir Anda.</p>
-            <small class="scroll-cue">Scroll untuk melihat ⤵</small>
+            <small class="scroll-cue">Scroll untuk melihat</small>
         </div>
         <div class="divider-bottom" aria-hidden="true">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 70" preserveAspectRatio="none">
