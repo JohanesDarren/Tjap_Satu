@@ -19,7 +19,7 @@ class ContentController extends Controller
         }
         if (!session()->has('cms.promos')) {
             session()->put('cms.promos', [
-                ['id' => Str::uuid(), 'title' => 'Buy 1 Get 1', 'description' => 'Khusus Jam 14.00–16.00', 'start_date' => now()->toDateString(), 'end_date' => now()->addWeek()->toDateString(), 'active' => true],
+                ['id' => Str::uuid(), 'title' => 'Buy 1 Get 1', 'description' => 'Khusus Jam 14.00-16.00', 'start_date' => now()->toDateString(), 'end_date' => now()->addWeek()->toDateString(), 'active' => true],
             ]);
         }
         if (!session()->has('cms.blogs')) {
