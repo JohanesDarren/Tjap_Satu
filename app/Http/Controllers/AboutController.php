@@ -16,7 +16,7 @@ class AboutController extends Controller
                 'desc' => 'Diaz adalah sosok visioner di balik lahirnya TJAP SATU. Berpengalaman dalam branding dan strategi bisnis, ia berfokus menjadikan kopi sebagai medium yang menyatukan manusia.'
             ],
             [
-                'name' => 'Mang Ajang',
+                'name' => 'Mang Ajangl',
                 'position' => 'Co-Founder & CMO',
                 'image' => 'owner3.jpg',
                 'desc' => 'Mang Ajang memimpin strategi pemasaran kreatif TJAP SATU. Ia memastikan brand selalu hidup dengan storytelling yang kuat experience bagi pelanggan.'
