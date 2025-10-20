@@ -20,8 +20,8 @@
     @yield('content')
   </main>
 
-    {{-- LOGIN MODAL (selalu tersedia di layout) --}}
-  @include('components.login-modal')
+{{-- LOGIN MODAL (selalu tersedia di layout) --}}
+@include('components.login-modal')
 
 @include('components.about.hero')
 @include('components.about.cerita')

@@ -14,6 +14,10 @@ Route::get('/', [LandingController::class, 'index'])->name('home');
 // menu route
 Route::get('/menu', [ProdukController::class, 'menu'])->name('produk.menu');
 Route::get('/menu/{id}', [ProdukController::class, 'show'])->name('produk.show');
+//admin pesanan route
+Route::get('/admin/pesanan', [AdminPesananController::class, 'index'])->name('admin.pesanan.index');
+//admin report route
+Route::get('/admin/report', [AdminReportController::class, 'index'])->name('admin.report.index');
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CustomerController;
@@ -52,10 +56,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/produk/{id}', [AdminProdukController::class, 'update'])->name('produk.update');
     Route::delete('/produk/{id}', [AdminProdukController::class, 'destroy'])->name('produk.destroy');
 });
-//admin pesanan route
-Route::get('/admin/pesanan', [AdminPesananController::class, 'index'])->name('admin.pesanan.index');
-//admin report route
-Route::get('/admin/report', [AdminReportController::class, 'index'])->name('admin.report.index');
+
 
 // About Page Route
 use App\Http\Controllers\AboutController;
