@@ -17,7 +17,7 @@
     <!-- Menu -->
     <div class="collapse navbar-collapse justify-content-end" id="navbarMain">
       <ul class="navbar-nav align-items-lg-center ms-auto gap-lg-3">
-        <li class="nav-item"><a class="nav-link menu-link" href="{{ route('home') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link menu-link" href="{{ route('home') }}">Beranda</a></li>
         <li class="nav-item"><a class="nav-link menu-link" href="{{ route('tentang') }}">Tentang</a></li>
         <li class="nav-item"><a class="nav-link menu-link" href="{{ route('produk.menu') }}">Menu</a></li>
         <li class="nav-item"><a class="nav-link menu-link" href="#location">Lokasi</a></li>
@@ -40,13 +40,13 @@
           @if(session('user'))
             {{-- Sudah login --}}
             <a href="{{ route('order.index') }}" class="btn btn-warning fw-bold text-white px-4 rounded-pill order-btn">
-              Order
+              Pesan
             </a>
           @else
             {{-- Belum login -> buka modal --}}
             <a href="#" class="btn btn-warning fw-bold text-white px-4 rounded-pill order-btn" data-bs-toggle="modal"
               data-bs-target="#loginModal">
-              Order
+              Pesan
             </a>
           @endif
         </li>
