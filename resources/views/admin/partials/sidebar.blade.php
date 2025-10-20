@@ -49,7 +49,6 @@
         min-height: 100vh;
         position: sticky;
         top: 0;
-        /* supaya ikut scroll halaman */
     }
 
     @media (max-width: 991.98px) {

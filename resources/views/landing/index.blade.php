@@ -273,11 +273,24 @@
         }
 
         /* Animasi halus ala Bootstrap untuk card & tombol */
-.card-elev { transition: transform .3s ease, box-shadow .3s ease, filter .3s ease; }
-.card-elev:hover { transform: translateY(-6px); box-shadow: 0 28px 70px rgba(46,55,61,.24); filter: saturate(1.04) contrast(1.02); }
+        .card-elev {
+            transition: transform .3s ease, box-shadow .3s ease, filter .3s ease;
+        }
 
-.card-elev .btn-outline-dark { transition: transform .2s ease, box-shadow .2s ease; }
-.card-elev .btn-outline-dark:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.16); }
+        .card-elev:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 28px 70px rgba(46, 55, 61, .24);
+            filter: saturate(1.04) contrast(1.02);
+        }
+
+        .card-elev .btn-outline-dark {
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .card-elev .btn-outline-dark:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .16);
+        }
 
         /* ===== Maps/Lokasi preview ===== */
         .map-preview {
@@ -424,85 +437,80 @@
     </section>
 
     <!-- ============= PRODUCT CARDS (dengan animasi Bootstrap) ============= -->
-<section id="menu" class="section bg-sand">
-    <div class="container">
-      <div class="text-center mb-5 reveal">
-        <h2 class="fw-bold title-underline">Menu</h2>
-        <p class="text-secondary mb-0">Daftar menu.</p>
-      </div>
-  
-      <div class="row g-4">
-        @for ($i = 1; $i <= 6; $i++)
-          @php
-            $title = "Signature Beans #{$i}";
-            $price = 80 + $i * 3;
-            $desc  = "Origin single, roast medium, tasting notes: caramel, cocoa, hint of citrus. Cocok untuk espresso & manual brew.";
-          @endphp
-  
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="card-elev product-card position-relative">
-              <img src="{{ asset('images/biji.JPG') }}" class="w-100" alt="Produk {{ $i }}">
-              <div class="p-3 p-md-4">
-                <h5 class="mb-1">{{ $title }}</h5>
-                <p class="text-secondary">{{ $desc }}</p>
-  
-                <div class="d-flex justify-content-between align-items-center mt-2">
-                  <span class="fw-semibold">IDR {{ $price }}k</span>
-  
-                  <!-- Tombol Detail: tooltip + buka modal (fade animasi Bootstrap) -->
-                  <button
-                    class="btn btn-sm btn-outline-dark rounded-pill"
-                    data-bs-toggle="tooltip"
-                    data-bs-title="Lihat detail produk"
-                    data-bs-placement="top"
-                    data-bs-custom-class="tooltip-dark"
-                    data-bs-trigger="hover focus"
-                    data-bs-offset="0,8"
-                    data-bs-container="body"
-                    data-bs-dismiss="tooltip"
-                    data-bs-target="#productModal{{ $i }}"
-                    data-bs-toggle="modal"
-                  >
-                    Detail
-                  </button>
-                </div>
-              </div>
+    <section id="menu" class="section bg-sand">
+        <div class="container">
+            <div class="text-center mb-5 reveal">
+                <h2 class="fw-bold title-underline">Menu</h2>
+                <p class="text-secondary mb-0">Daftar menu.</p>
             </div>
-          </div>
-  
-          <!-- MODAL QUICK VIEW (fade = animasi Bootstrap) -->
-          <div class="modal fade" id="productModal{{ $i }}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-              <div class="modal-content border-0 shadow rounded-4">
-                <div class="modal-header bg-dark text-white rounded-top-4">
-                  <h5 class="modal-title">{{ $title }}</h5>
-                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0">
-                  <div class="row g-0">
-                    <div class="col-md-6">
-                      <img src="{{ asset('images/biji.JPG') }}" class="w-100 h-100 object-fit-cover rounded-start-4" alt="{{ $title }}">
+
+            <div class="row g-4">
+                @for ($i = 1; $i <= 6; $i++)
+                    @php
+                        $title = "Signature Beans #{$i}";
+                        $price = 80 + $i * 3;
+                        $desc = "Origin single, roast medium, tasting notes: caramel, cocoa, hint of citrus. Cocok untuk espresso & manual brew.";
+                      @endphp
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card-elev product-card position-relative">
+                            <img src="{{ asset('images/biji.JPG') }}" class="w-100" alt="Produk {{ $i }}">
+                            <div class="p-3 p-md-4">
+                                <h5 class="mb-1">{{ $title }}</h5>
+                                <p class="text-secondary">{{ $desc }}</p>
+
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <span class="fw-semibold">IDR {{ $price }}k</span>
+
+                                    <!-- Tombol Detail: tooltip + buka modal (fade animasi Bootstrap) -->
+                                    <button class="btn btn-sm btn-outline-dark rounded-pill" data-bs-toggle="tooltip"
+                                        data-bs-title="Lihat detail produk" data-bs-placement="top"
+                                        data-bs-custom-class="tooltip-dark" data-bs-trigger="hover focus"
+                                        data-bs-offset="0,8" data-bs-container="body" data-bs-dismiss="tooltip"
+                                        data-bs-target="#productModal{{ $i }}" data-bs-toggle="modal">
+                                        Detail
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6 p-4">
-                      <p class="text-secondary mb-3">{{ $desc }}</p>
-                      <div class="d-flex justify-content-between align-items-center">
-                        <span class="h5 mb-0">IDR {{ $price }}k</span>
-                        <button class="btn btn-rust btn-pill">Tambah ke Keranjang</button>
-                      </div>
+
+                    <!-- MODAL QUICK VIEW (fade = animasi Bootstrap) -->
+                    <div class="modal fade" id="productModal{{ $i }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content border-0 shadow rounded-4">
+                                <div class="modal-header bg-dark text-white rounded-top-4">
+                                    <h5 class="modal-title">{{ $title }}</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-0">
+                                    <div class="row g-0">
+                                        <div class="col-md-6">
+                                            <img src="{{ asset('images/biji.JPG') }}"
+                                                class="w-100 h-100 object-fit-cover rounded-start-4" alt="{{ $title }}">
+                                        </div>
+                                        <div class="col-md-6 p-4">
+                                            <p class="text-secondary mb-3">{{ $desc }}</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="h5 mb-0">IDR {{ $price }}k</span>
+                                                <button class="btn btn-rust btn-pill">Tambah ke Keranjang</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer bg-light rounded-bottom-4">
+                                    <button type="button" class="btn btn-outline-secondary btn-pill"
+                                        data-bs-dismiss="modal">Tutup</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                </div>
-                <div class="modal-footer bg-light rounded-bottom-4">
-                  <button type="button" class="btn btn-outline-secondary btn-pill" data-bs-dismiss="modal">Tutup</button>
-                </div>
-              </div>
+                @endfor
             </div>
-          </div>
-        @endfor
-      </div>
-    </div>
-  </section>
-  
+        </div>
+    </section>
+
 
     <!-- ============= MAPS / LOKASI ============= -->
     <section id="location" class="section">
@@ -581,10 +589,10 @@
             track.addEventListener('mouseenter', () => track.style.animationPlayState = 'paused');
             track.addEventListener('mouseleave', () => track.style.animationPlayState = 'running');
         }
-        
+
         document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
-    new bootstrap.Tooltip(el);
-  });
+            new bootstrap.Tooltip(el);
+        });
     </script>
 </body>
 
