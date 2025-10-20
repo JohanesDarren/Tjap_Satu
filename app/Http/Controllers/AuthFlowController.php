@@ -9,7 +9,7 @@ class AuthFlowController extends Controller
     // GET /register
     public function showRegister()
     {
-        return view('auth.register');
+        return view('Auth.register');
     }
 
     // POST /login (tanpa validasi/auth, hanya redirect)
