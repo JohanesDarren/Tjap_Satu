@@ -56,7 +56,6 @@
             position: fixed;
             left: -280px;
             top: 56px;
-            /* kira-kira setinggi header */
             height: calc(100vh - 56px);
             z-index: 1030;
             transition: left .25s ease;

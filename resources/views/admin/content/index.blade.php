@@ -15,13 +15,11 @@
         white-space: nowrap;
     }
 
-    /* ✅ Perbaiki backdrop modal agar tidak transparan */
     .modal-backdrop.show {
         opacity: 0.6 !important;
         background-color: rgba(0, 0, 0, 0.6) !important;
     }
 
-    /* ✅ Modal isi solid dan terlihat jelas */
     .modal-content {
         background-color: #ffffff !important;
         border-radius: 0.75rem;
@@ -29,14 +27,12 @@
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     }
 
-    /* ✅ Form dalam modal punya background solid */
     .modal-body {
         background-color: #f8f9fa !important;
         border-radius: 0.5rem;
         padding: 1.25rem;
     }
 
-    /* ✅ Style tambahan untuk input di modal agar lebih rapi */
     .modal-body .form-control,
     .modal-body textarea {
         background-color: #fff;
@@ -51,7 +47,6 @@
         box-shadow: 0 0 0 0.15rem rgba(27, 42, 65, 0.25);
     }
 
-    /* Tambahan efek hover pada tombol */
     .btn-dark:hover {
         background-color: #222;
         color: #fff;
