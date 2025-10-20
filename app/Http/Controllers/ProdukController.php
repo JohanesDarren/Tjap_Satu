@@ -42,40 +42,31 @@ class ProdukController extends Controller
     
 
       // ----- Admin methods -----
-    public function index()
-    {
+    public function index(){
 
         return view('admin.admin-produk', ['produk' => $this->produk]);
     }
 
-    public function create()
-    {
+    public function create(){
         return view('admin.create-produk');
     }
 
-    public function store(Request $request)
-    {
-        // contoh sederhana: tidak ada DB saat ini, redirect kembali dengan pesan
+    public function store(Request $request){
         return redirect()->route('produk.index')->with('success', 'Produk baru berhasil ditambahkan (simulasi).');
     }
 
-    public function edit($id)
-    {
+    public function edit($id){
         $filtered = array_filter($this->produk, fn($item) => $item['id'] == $id);
         if (empty($filtered)) abort(404);
         $foundProduk = reset($filtered);
         return view('admin.edit-produk', ['produk' => $foundProduk]);
     }
 
-    public function update(Request $request, $id)
-    {
-        // simulasi update
+    public function update(Request $request, $id){
         return redirect()->route('produk.index')->with('success', 'Produk berhasil diperbarui (simulasi).');
     }
 
-    public function destroy($id)
-    {
-        // simulasi hapus
+    public function destroy($id){
         return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus (simulasi).');
     }
 
