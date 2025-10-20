@@ -40,7 +40,7 @@
                             <td>Rp {{ number_format($produk['harga']['100gr'], 0, ',', '.') }}</td>
                             <td class="text-center">
                                 <a href="{{ route('admin.produk.edit', $produk['id']) }}" class="btn btn-sm btn-primary" title="Edit">
-                                     <i class="bi bi-pencil-square"></i>
+                                    <i class="bi bi-pencil-square"></i>
                                 </a>
                                 <form action="{{ route('admin.produk.destroy', $produk['id']) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
                                     @csrf
