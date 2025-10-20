@@ -10,28 +10,16 @@ class AboutController extends Controller
     {
         $owners = [
             [
-                'name' => 'Refo Ongko Songo',
+                'name' => 'M. Diaz Bukhori',
                 'position' => 'Founder & CEO',
-                'image' => 'owner1.jpg',
-                'desc' => 'Refo adalah sosok visioner di balik lahirnya TJAP SATU. Berpengalaman dalam branding dan strategi bisnis, ia berfokus menjadikan kopi sebagai medium yang menyatukan manusia.'
-            ],
-            [
-                'name' => 'Ferdian Rama',
-                'position' => 'Co-Founder & CMO',
                 'image' => 'owner2.jpg',
-                'desc' => 'Ferdian memimpin strategi pemasaran kreatif TJAP SATU. Ia memastikan brand selalu hidup dengan storytelling yang kuat dan meaningful experience bagi pelanggan.'
+                'desc' => 'Diaz adalah sosok visioner di balik lahirnya TJAP SATU. Berpengalaman dalam branding dan strategi bisnis, ia berfokus menjadikan kopi sebagai medium yang menyatukan manusia.'
             ],
             [
-                'name' => 'Fahrjin Revandi',
-                'position' => 'Co-Founder & COO',
-                'image' => 'owner1.jpg',
-                'desc' => 'Fahrjin bertanggung jawab atas operasional utama TJAP SATU. Dengan pengalaman dalam hospitality dan manajemen, ia menjaga kualitas layanan dan konsistensi cita rasa.'
-            ],
-            [
-                'name' => 'Albi Fernanda',
-                'position' => 'Co-Founder & COO',
-                'image' => 'owner1.jpg',
-                'desc' => 'Albi memimpin pengalaman pelanggan dengan pendekatan hangat dan autentik. Ia percaya bahwa pelayanan berkualitas adalah kunci membangun loyalitas.'
+                'name' => 'Mang Ajang',
+                'position' => 'Co-Founder & CMO',
+                'image' => 'owner3.jpg',
+                'desc' => 'Mang Ajang memimpin strategi pemasaran kreatif TJAP SATU. Ia memastikan brand selalu hidup dengan storytelling yang kuat experience bagi pelanggan.'
             ],
         ];
 
