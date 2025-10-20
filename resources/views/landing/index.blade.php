@@ -397,7 +397,7 @@
     <!-- ============= INFINITE CAROUSEL (strip) ============= -->
     <section class="strip" aria-label="Our Beans">
         <div class="track" id="track">
-            @php $drinks = ['Espresso', 'Latte', 'Cappuccino', 'Americano', 'Mocha', 'Caramel Macchiato', 'Flat White', 'Affogato']; @endphp
+            @php $drinks = ['Gn. Puntang', 'Temanggung', 'Timor Leste', 'Flores Bajawa', 'Toraja Sapan', 'Gunung Halu', 'Kerinci', 'Bali Kintamani']; @endphp
             @for ($dup = 0; $dup < 2; $dup++)
                 @foreach ($drinks as $drink)
                     <div class="chip">
