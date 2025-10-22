@@ -18,7 +18,7 @@
                 <li onclick="showSection('pesanan', this)"><i class="bi bi-bag"></i> Pesanan Saya</li>
                 <li onclick="showSection('alamat', this)"><i class="bi bi-geo-alt"></i> Alamat</li>
                 <li onclick="showSection('pengaturan', this)"><i class="bi bi-gear"></i> Pengaturan</li>
-                <li><i class="bi bi-box-arrow-right"></i> Keluar</li>
+                <li onclick="window.location.href='{{ route('home') }}'"><i class="bi bi-box-arrow-right"></i> Keluar</li>
             </ul>
         </div>
 

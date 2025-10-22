@@ -39,9 +39,9 @@
                                 @else batal @endif
                             ">{{ $order['status'] }}</span>
                         </div>
-                        <div class="text-end ms-auto">
+                        {{-- <div class="text-end ms-auto">
                             <button class="btn btn-detail btn-sm"><i class="bi bi-eye"></i> Detail</button>
-                        </div>
+                        </div> --}}
                     </div>
                 @endforeach
             </div>
