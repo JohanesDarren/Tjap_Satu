@@ -20,21 +20,21 @@ class DashboardController extends Controller
 
         // === DATA GRAFIK (dummy) ===
         $dailyRevenue = [
-            'labels' => ['Sen','Sel','Rab','Kam','Jum','Sab','Min'],
+            'labels' => ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
             'data'   => [1200000, 1350000, 1500000, 1100000, 1700000, 2100000, 1950000],
         ];
 
         $weeklyRevenue = [
-            'labels' => ['W-35','W-36','W-37','W-38','W-39','W-40','W-41','W-42'],
+            'labels' => ['W-35', 'W-36', 'W-37', 'W-38', 'W-39', 'W-40', 'W-41', 'W-42'],
             'data'   => [7200000, 8150000, 7900000, 9100000, 8600000, 9400000, 10200000, 9800000],
         ];
 
         $topProducts = [
             ['name' => 'Gn.Puntang', 'sold' => 185],
-            ['name' => 'Toraja Sapan',            'sold' => 142],
-            ['name' => 'Flores Bajawa',           'sold' => 128],
-            ['name' => 'Timor Leste',             'sold' => 118],
-            ['name' => 'Temanggung',         'sold' => 92],
+            ['name' => 'Toraja Sapan', 'sold' => 142],
+            ['name' => 'Flores Bajawa', 'sold' => 128],
+            ['name' => 'Timor Leste', 'sold' => 118],
+            ['name' => 'Temanggung', 'sold' => 92],
         ];
 
         $orderSummary = [
@@ -45,7 +45,11 @@ class DashboardController extends Controller
         ];
 
         return view('admin.dashboard', compact(
-            'metrics', 'dailyRevenue', 'weeklyRevenue', 'topProducts', 'orderSummary'
+            'metrics',
+            'dailyRevenue',
+            'weeklyRevenue',
+            'topProducts',
+            'orderSummary'
         ));
     }
 }
