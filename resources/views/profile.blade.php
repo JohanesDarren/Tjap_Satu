@@ -16,8 +16,8 @@
             <ul class="menu">
                 <li class="active" onclick="showSection('dataDiri', this)"><i class="bi bi-person-circle"></i> Profil</li>
                 <li onclick="showSection('pesanan', this)"><i class="bi bi-bag"></i> Pesanan Saya</li>
-                <li onclick="showSection('alamat', this)"><i class="bi bi-geo-alt"></i> Alamat</li>
-                <li onclick="showSection('pengaturan', this)"><i class="bi bi-gear"></i> Pengaturan</li>
+                {{-- <li onclick="showSection('alamat', this)"><i class="bi bi-geo-alt"></i> Alamat</li>
+                <li onclick="showSection('pengaturan', this)"><i class="bi bi-gear"></i> Pengaturan</li> --}}
                 <li onclick="window.location.href='{{ route('home') }}'"><i class="bi bi-box-arrow-right"></i> Keluar</li>
             </ul>
         </div>
