@@ -8,7 +8,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // === METRIC RINGKASAN (dummy) ===
         $metrics = [
             'orders_today'      => 62,
             'revenue_today'     => 1450000,   // Rp
@@ -18,7 +17,6 @@ class DashboardController extends Controller
             'unique_customers'  => 139,
         ];
 
-        // === DATA GRAFIK (dummy) ===
         $dailyRevenue = [
             'labels' => ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
             'data'   => [1200000, 1350000, 1500000, 1100000, 1700000, 2100000, 1950000],

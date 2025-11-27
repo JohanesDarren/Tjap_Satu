@@ -172,7 +172,6 @@
     {{-- Chart.js CDN (kalau belum ada di layout admin) --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Helper: format Rupiah tanpa simbol untuk tooltip
         function rupiah(x) { return new Intl.NumberFormat('id-ID').format(x); }
 
         // === DAILY REVENUE (Line) ===
