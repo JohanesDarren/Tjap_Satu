@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('customer', function (Blueprint $table) {
             // PK Custom sesuai ERD
             $table->id('id_cust'); 
-            
+            $table->string('foto')->nullable();
             $table->string('nama_lengkap');
             $table->text('alamat');
             $table->string('email')->unique(); // Email harus unik

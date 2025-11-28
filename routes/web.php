@@ -57,30 +57,30 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/produk/{id}', [AdminProdukController::class, 'destroy'])->name('produk.destroy');
 });
 
+//========== PUNYA AFDIKKKKKK ============//
 
 // About Page Route
 use App\Http\Controllers\AboutController;
-
 Route::get('/about', [AboutController::class, 'index'])->name('tentang');
 
 // Cart Page Route
 use App\Http\Controllers\CartController;
-
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
 // Checkout Page Routes
 use App\Http\Controllers\CheckoutController;
-
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 
 // Profile Page Route
-//profile
 use App\Http\Controllers\ProfileController;
-
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
-Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+Route::post('/logout', [ProfileController::class, 'logout'])->name('logout');
+
+//=======================================//
 
 // === LOGIN FLOW (tanpa auth logic) ===
 
