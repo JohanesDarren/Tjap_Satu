@@ -11,69 +11,60 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        // Ambil customer pertama (Sesuaikan logic ini jika sudah ada fitur login)
-        $data_customer = Customer::first();
-        
-        // Ambil data order untuk history
-     $data_order = Order::where('id_cust', $data_customer->id_cust)
-                       ->with('detailOrders.product') // Agar gambar produk tidak berat
-                       ->orderBy('id_order', 'desc') // <--- KUNCI RAHASIANYA DISINI
+        $auth = Auth::guard('customer');
+        $customer = $auth->user();
+        if (!$customer) {
+            return redirect()->route('home', ['login' => 1]);
+        }
+
+        $orders = Order::where('id_cust', $customer->id_cust)
+                       ->with('detailOrders.product')
+                       ->orderBy('id_order', 'desc')
                        ->get();
 
-        // Kirim data ke view profile
         return view('profile.profile', [
-            'customer' => $data_customer,
-            'orders' => $data_order
+            'customer' => $customer,
+            'orders' => $orders
         ]);
     }
 
-    // Method ini menggabungkan logic upload foto & update data diri
-    // Gayanya mengikuti method update() di DosenController kamu
     public function update(Request $a)
     {
-        // Cari data customer berdasarkan ID (disini kita ambil yang first dulu)
-        $data_customer = Customer::first();
+        $auth = Auth::guard('customer');
+        $customer = $auth->user();
+        if (!$customer) {
+            return redirect()->route('home', ['login' => 1]);
+        }
 
-        // 1. UPDATE FOTO JIKA ADA FILE BARU
+        // Update foto jika ada
         if ($a->hasFile('foto')) {
-            
-            // Hapus foto lama jika ada
-            if ($data_customer->foto) {
-                $path = public_path('uploads/' . $data_customer->foto);
-                if (File::exists($path)) {
-                    File::delete($path);
+            if ($customer->foto) {
+                $path = public_path('uploads/' . $customer->foto);
+                if (\Illuminate\Support\Facades\File::exists($path)) {
+                    \Illuminate\Support\Facades\File::delete($path);
                 }
             }
-
-            // Upload foto baru ke folder public/uploads
             $file = $a->file('foto');
-            // Nama file: waktu + nama asli file agar unik
             $namaFile = time() . '-' . $file->getClientOriginalName();
             $file->move(public_path('uploads'), $namaFile);
-
-            // Simpan nama file ke database
-            $data_customer->foto = $namaFile;
+            $customer->foto = $namaFile;
         }
 
-        // 2. UPDATE FIELD LAIN
-        $data_customer->nama_lengkap = $a->nama_lengkap;
-        $data_customer->email = $a->email;
-        $data_customer->no_telp = $a->no_telp;
-        
-        // Alamat (Optional, jika di form ada input name="alamat")
-        if($a->filled('alamat')) {
-            $data_customer->alamat = $a->alamat;
-        }
-
-        $data_customer->save();
+        $customer->nama_lengkap = $a->nama_lengkap;
+        $customer->email = $a->email;
+        $customer->no_telp = $a->no_telp;
+        if ($a->filled('alamat')) { $customer->alamat = $a->alamat; }
+        $customer->save();
 
         return redirect('/profile')->with('success', 'Data diri berhasil diperbarui');
     }
 
     public function detailOrder($id)
     {
-        // PERBAIKAN: Gunakan 'detailOrders.product' (Sesuai nama fungsi di Model Order kamu)
-        $order = \App\Models\Order::with('detailOrders.product') 
+        $auth = Auth::guard('customer');
+        if (!$auth->check()) { return redirect()->route('home', ['login' => 1]); }
+
+        $order = \App\Models\Order::with('detailOrders.product')
                     ->where('id_order', $id)
                     ->firstOrFail();
 
@@ -84,10 +75,8 @@ class ProfileController extends Controller
     {
         $request->validate([
             'current_password' => 'required',
-            // ATURAN BARU DISINI:
-            'password' => 'required|min:8|confirmed|regex:/[A-Z]/', 
+            'password' => 'required|min:8|confirmed|regex:/[A-Z]/',
         ], [
-            // PESAN ERROR BAHASA INDONESIA:
             'current_password.required' => 'Password lama wajib diisi.',
             'password.required' => 'Password baru wajib diisi.',
             'password.min' => 'Password minimal harus 8 karakter.',
@@ -95,15 +84,14 @@ class ProfileController extends Controller
             'password.regex' => 'Password harus mengandung setidaknya satu huruf besar (A-Z).',
         ]);
 
-        $customer = \App\Models\Customer::first(); // Sesuaikan dengan Auth nanti
+        $customer = Auth::guard('customer')->user();
+        if (!$customer) { return redirect()->route('home', ['login' => 1]); }
 
-        // Cek password lama
-        if (!\Illuminate\Support\Facades\Hash::check($request->current_password, $customer->password)) {
+        if (!Hash::check($request->current_password, $customer->password)) {
             return back()->withErrors(['current_password' => 'Password lama salah!']);
         }
 
-        // Update password
-        $customer->password = \Illuminate\Support\Facades\Hash::make($request->password);
+        $customer->password = $request->password; // akan di-hash via cast
         $customer->save();
 
         return back()->with('success', 'Password berhasil diubah!');
@@ -111,7 +99,7 @@ class ProfileController extends Controller
 
     public function logout(Request $a)
     {
-        Auth::logout();
+        Auth::guard('customer')->logout();
         $a->session()->invalidate();
         $a->session()->regenerateToken();
 

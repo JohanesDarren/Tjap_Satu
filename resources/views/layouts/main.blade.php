@@ -34,8 +34,10 @@
   {{-- FOOTER --}}
   @includeIf('components.footer')
 
-  {{-- LOGIN MODAL --}}
-  @include('components.login-modal')
+  {{-- LOGIN MODAL: only show for guests --}}
+  @guest('customer')
+    @include('components.login-modal')
+  @endguest
 
   {{-- Vendor JS --}}
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

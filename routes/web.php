@@ -43,7 +43,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/konten/promo/{id}', [ContentController::class, 'updatePromo'])->name('content.promo.update');
     Route::delete('/konten/promo/{id}', [ContentController::class, 'deletePromo'])->name('content.promo.delete');
 
-    // Blog 
+    // Blog
     Route::post('/konten/blog', [ContentController::class, 'storeBlog'])->name('content.blog.store');
     Route::post('/konten/blog/{id}', [ContentController::class, 'updateBlog'])->name('content.blog.update');
     Route::delete('/konten/blog/{id}', [ContentController::class, 'deleteBlog'])->name('content.blog.delete');
@@ -69,32 +69,28 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
 // Checkout Page Routes
 use App\Http\Controllers\CheckoutController;
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
-Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
-
 // Profile Page Route
 use App\Http\Controllers\ProfileController;
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
-Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
-Route::post('/logout', [ProfileController::class, 'logout'])->name('logout');
-Route::get('/profile/order/{id}', [ProfileController::class, 'detailOrder'])->name('profile.order.detail');
-//=======================================//
 
-// === LOGIN FLOW (tanpa auth logic) ===
+Route::middleware('auth:customer')->group(function () {
+    // Checkout protected
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 
-// buka popup login di mana saja via #loginModal
-Route::post('/login', function () {
-    // langsung redirect ke halaman home
-    return redirect()->route('home')->with('user', true);
-})->name('login.submit');
+    // Profile protected
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::get('/profile/order/{id}', [ProfileController::class, 'detailOrder'])->name('profile.order.detail');
 
-// ====== LOGIN (tanpa logic, hanya redirect balik ke home) ======
+    // Logout
+    Route::post('/logout', [ProfileController::class, 'logout'])->name('logout');
+});
+
+// ====== LOGIN / REGISTER ======
 use App\Http\Controllers\AuthFlowController;
-
+Route::get('/login', function(){ return redirect()->route('home', ['login' => 1]); })->name('login');
 Route::post('/login', [AuthFlowController::class, 'submitLogin'])->name('login.submit');
-
-// ====== REGISTER ======
 Route::get('/register', [AuthFlowController::class, 'showRegister'])->name('register.page');
 Route::post('/register', [AuthFlowController::class, 'submitRegister'])->name('register.submit');

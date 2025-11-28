@@ -1,384 +1,155 @@
-{{-- resources/views/landing.blade.php --}}
 <!doctype html>
 <html lang="id">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Beranda')</title>
+    <title>Beranda</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-        /* ===== Color Palette (dipakai di seluruh halaman) ===== */
-        :root {
-            --bg: #F3E3C2;
-            /* sand */
-            --coffee: #55351D;
-            /* deep brown */
-            --ink: #2E373D;
-            /* dark slate */
-            --rust: #AF461F;
-            /* rusty red (CTA) */
-            --teal: #325B56;
-            /* deep teal (accent) */
+        :root { --bg:#F3E3C2; --coffee:#55351D; --ink:#2E373D; --rust:#AF461F; --teal:#325B56; --surface:#fff; --shadow:0 20px 50px rgba(46,55,61,.18); --radius-xl:24px; --radius-2xl:1.6rem; }
+        * { scroll-behavior: smooth; }
+        body { background:var(--bg); color:var(--ink); font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif; overflow-x:hidden; }
+        h1,h2,h3,h4 { font-family:"Playfair Display",serif; color:var(--coffee); letter-spacing:.02em; }
+        .hero { position:relative; min-height:100vh; overflow:hidden; isolation:isolate; }
+        .hero video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:contrast(1.06) saturate(1.05) brightness(.95); }
+        .hero::after { content:""; position:absolute; inset:0; z-index:1; background:linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,.25) 60%, rgba(0,0,0,0) 100%); }
+        .hero-content { position:relative; z-index:2; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; padding:9rem 1rem 11rem; text-align:center; color:#fff; text-shadow:0 2px 20px rgba(0,0,0,.5); }
+        .kicker { text-transform:uppercase; letter-spacing:.28em; font-weight:600; opacity:.9; }
+        .btn-pill { border-radius:999px; padding:.9rem 1.2rem; font-weight:600; letter-spacing:.02em; box-shadow:0 10px 24px rgba(175,70,31,.25); }
+        .btn-rust { background:var(--rust); color:#fff; border:none; }
+        .btn-rust:hover { filter:brightness(.95) saturate(1.03); }
+        .btn-ghost { border:1px solid rgba(255,255,255,.6); color:#fff; background:rgba(255,255,255,.08); }
+        .btn-ghost:hover { background:rgba(255,255,255,.16); }
+        .scroll-cue { position:absolute; bottom:1.25rem; left:50%; transform:translateX(-50%); color:#fff; opacity:.85; font-size:.95rem; }
+        .divider-bottom { line-height:0; }
+        .divider-bottom svg { display:block; width:100%; height:70px; }
+        .strip { --gap:26px; --h:190px; --w:260px; --speed:28s; position:relative; overflow:hidden; padding-block:26px; background:linear-gradient(180deg,#f8edd0,var(--bg)); mask-image:linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); border-top:1px solid rgba(46,55,61,.06); border-bottom:1px solid rgba(46,55,61,.06); }
+        .track { display:flex; gap:var(--gap); width:max-content; will-change:transform; animation:marquee var(--speed) linear infinite; }
+        @keyframes marquee { to { transform: translateX(calc(-50% - var(--gap))); } }
+        .chip { width:var(--w); height:var(--h); flex:0 0 auto; border-radius:18px; overflow:hidden; background:var(--surface); box-shadow:var(--shadow); border:1px solid rgba(46,55,61,.06); }
+        .chip img { width:100%; height:60%; object-fit:cover; display:block; }
+        .chip .meta { padding:.75rem .9rem; display:flex; align-items:center; justify-content:space-between; }
+        .chip .name { color:var(--coffee); font-weight:700; }
+        .chip .price { background:var(--teal); color:#fff; padding:.25rem .6rem; border-radius:999px; font-size:.85rem; }
+        section.section { padding:84px 0; scroll-margin-top: 84px; }
+        .lead-muted { color:#5a676c; opacity:.9; }
+        .rounded-2xl { border-radius:var(--radius-2xl); }
+        .card-elev { background:var(--surface); border:none; border-radius:var(--radius-xl); box-shadow:var(--shadow); transform:translateY(38px); opacity:0; transition:transform .45s ease, box-shadow .28s ease, filter .28s ease; border:1px solid rgba(46,55,61,.06); }
+        .card-elev:hover { transform:translateY(-6px); box-shadow:0 28px 70px rgba(0,0,0,.24); filter:saturate(1.04) contrast(1.02); }
+        .card-elev img { height:230px; object-fit:cover; }
+        .card-elev .btn-outline-dark { transition:transform .2s ease, box-shadow .2s ease; }
+        .card-elev .btn-outline-dark:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,.16); }
+        .map-preview { position:relative; height:380px; border-radius:var(--radius-2xl); background:radial-gradient(120px 120px at 20% 30%, rgba(50,91,86,.20), transparent 60%), radial-gradient(160px 120px at 70% 60%, rgba(175,70,31,.16), transparent 60%), linear-gradient(180deg, #f7ead0, var(--bg)); box-shadow:var(--shadow); border:1px solid rgba(46,55,61,.08); overflow:hidden; }
+        .map-pin { position:absolute; inset:0; display:grid; place-items:center; }
+        .map-pin svg { width:82px; height:82px; filter:drop-shadow(0 10px 20px rgba(0,0,0,.25)); }
+        .map-hint { position:absolute; bottom:14px; right:16px; background:#fff; color:var(--ink); padding:.45rem .75rem; border-radius:999px; font-size:.9rem; box-shadow:var(--shadow); }
+        .reveal { opacity:0; transform:translateY(30px); }
+        .title-underline { position:relative; display:inline-block; }
+        .title-underline::after { content:""; position:absolute; left:6px; right:-6px; bottom:-8px; height:8px; border-radius:999px; background:linear-gradient(90deg, var(--rust), var(--teal)); opacity:.25; }
+        .text-teal { color:var(--teal); }
+        .bg-sand { background:var(--bg); }
+        .text-rust { color:var(--rust); }
+        .testimonial { background:var(--surface); border-radius:var(--radius-xl); box-shadow:var(--shadow); padding:1.25rem; border:1px solid rgba(46,55,61,.06); }
+        .avatar { width:48px; height:48px; border-radius:50%; object-fit:cover; }
+        footer { background:linear-gradient(180deg, var(--bg), #e8d8b4); border-top:1px solid rgba(46,55,61,.08); }
 
-            --surface: #fff;
-            --shadow: 0 20px 50px rgba(46, 55, 61, .18);
-            --radius-xl: 24px;
-            --radius-2xl: 1.6rem;
+        /* Glass Register Card */
+        .glass-card{
+            position:relative;
+            background:linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,.14));
+            border:1px solid rgba(255,255,255,.35);
+            box-shadow:0 18px 60px rgba(46,55,61,.22);
+            border-radius:24px;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            overflow:hidden;
+        }
+        .glass-card::before{
+            content:""; position:absolute; inset:0; pointer-events:none;
+            background: radial-gradient(280px 140px at -10% -20%, rgba(175,70,31,.18), transparent 60%),
+                        radial-gradient(320px 180px at 110% 120%, rgba(50,91,86,.16), transparent 60%);
+        }
+        .glass-title{ color:var(--coffee); letter-spacing:.02em; }
+
+        .glass-input{
+            background: rgba(255,255,255,.65);
+            border:1px solid rgba(46,55,61,.22);
+            border-radius:14px; padding: .9rem 1rem; height:auto;
+            transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+        .glass-input:focus{
+            background: rgba(255,255,255,.85);
+            border-color: rgba(175,70,31,.6);
+            box-shadow: 0 0 0 .15rem rgba(175,70,31,.25);
+        }
+        .input-label{ font-weight:600; color:#3a454b; }
+        .helper-text{ color:#6b767b; font-size:.9rem; }
+
+        .btn-gradient{
+            background: linear-gradient(135deg, var(--rust), #c96931);
+            color:#fff; border:none; border-radius:999px;
+            padding:.9rem 1.2rem; font-weight:700; letter-spacing:.02em;
+            box-shadow:0 14px 30px rgba(175,70,31,.28);
+        }
+        .btn-gradient:hover{ filter:brightness(.98) saturate(1.04); }
+        .link-rust{ color:var(--rust); }
+        .link-rust:hover{ color:#c96931; }
+
+        .pw-wrap{ position:relative; }
+        .pw-toggle{
+            position:absolute; right:.6rem; top:50%; transform:translateY(-50%);
+            border:none; background:transparent; padding:.35rem; color:#6b767b;
         }
 
-        * {
-            scroll-behavior: smooth;
-        }
+        /* ===== Menu Card Hover Enhancements ===== */
+        .product-card { overflow: hidden; border-radius: var(--radius-xl); }
+        .product-card .product-img { transition: transform .7s cubic-bezier(.2,.75,.2,1), filter .5s ease; will-change: transform; }
+        .product-card:hover .product-img { transform: scale(1.06); filter: saturate(1.04) contrast(1.02); }
+        .product-card::after{ content:""; position:absolute; inset:auto auto 0 0; width:65%; height:40%; pointer-events:none; background:radial-gradient(240px 120px at 0% 100%, rgba(175,70,31,.18), transparent 60%); opacity:.0; transition:opacity .45s ease; }
+        .product-card:hover::after{ opacity:1; }
+        .product-card:hover{ box-shadow:0 28px 70px rgba(46,55,61,.24); }
+        .product-card .btn-outline-dark{ transition: transform .2s ease, box-shadow .2s ease, background .25s ease, color .25s ease, border-color .25s ease; }
+        .product-card:hover .btn-outline-dark{ background: var(--rust); color:#fff; border-color: var(--rust); transform: translateY(-2px); box-shadow:0 8px 18px rgba(175,70,31,.35); }
+        .product-card .price-label{ background: rgba(50,91,86,.12); color: var(--ink); padding:.25rem .6rem; border-radius:999px; font-weight:700; transition: transform .25s ease, background .25s ease; }
+        .product-card:hover .price-label{ background: rgba(50,91,86,.18); transform: translateY(-1px); }
 
-        body {
-            background: var(--bg);
-            color: var(--ink);
-            font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-            overflow-x: hidden;
-        }
+        /* Keyboard focus styles */
+        .product-card:focus-within { outline: 2px solid rgba(175,70,31,.55); outline-offset: 3px; }
+        .product-card .btn-outline-dark:focus-visible { box-shadow: 0 0 0 .18rem rgba(175,70,31,.35); }
 
-        h1,
-        h2,
-        h3,
-        h4 {
-            font-family: "Playfair Display", serif;
-            color: var(--coffee);
-            letter-spacing: .02em;
-        }
-
-        /* ===== HERO (video) ===== */
-        .hero {
-            position: relative;
-            min-height: 100vh;
-            overflow: hidden;
-            isolation: isolate;
-        }
-
-        .hero video {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: contrast(1.06) saturate(1.05) brightness(.95);
-        }
-
-        .hero::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            /* overlay hitam cinematic */
-            background: linear-gradient(to top, rgba(0, 0, 0, .55) 0%, rgba(0, 0, 0, .25) 60%, rgba(0, 0, 0, 0) 100%);
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-            padding: 7rem 1rem 9rem;
-            text-align: center;
-            color: #fff;
-            text-shadow: 0 2px 20px rgba(0, 0, 0, .5);
-        }
-
-        .kicker {
-            text-transform: uppercase;
-            letter-spacing: .28em;
-            font-weight: 600;
-            opacity: .9;
-        }
-
-        .btn-pill {
-            border-radius: 999px;
-            padding: .9rem 1.6rem;
-            font-weight: 600;
-            letter-spacing: .02em;
-            box-shadow: 0 10px 24px rgba(175, 70, 31, .25);
-        }
-
-        .btn-rust {
-            background: var(--rust);
-            color: #fff;
-            border: none;
-        }
-
-        .btn-rust:hover {
-            filter: brightness(.95) saturate(1.03);
-        }
-
-        .scroll-cue {
-            position: absolute;
-            bottom: 1.25rem;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #fff;
-            opacity: .85;
-            font-size: .95rem;
-        }
-
-        /* ===== Divider wave ===== */
-        .divider-bottom {
-            line-height: 0;
-        }
-
-        .divider-bottom svg {
-            display: block;
-            width: 100%;
-            height: 70px;
-        }
-
-        /* ===== PARALLAX STRIP ===== */
-        .parallax {
-            position: relative;
-            height: 64vh;
-            display: grid;
-            place-items: center;
-            overflow: hidden;
-            background: url('{{ asset('images/biji.JPG') }}') center/cover no-repeat fixed;
-        }
-
-        .parallax .veil {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(50, 91, 86, .45), rgba(50, 91, 86, .25), rgba(243, 227, 194, .9));
-            mix-blend: multiply;
-        }
-
-        .parallax h2 {
-            position: relative;
-            z-index: 2;
-            color: #fff;
-            font-weight: 800;
-            text-shadow: 0 18px 40px rgba(0, 0, 0, .35);
-            font-size: clamp(2.6rem, 8vw, 5rem);
-            letter-spacing: .06em;
-        }
-
-        /* ===== INFINITE CAROUSEL (strip) ===== */
-        .strip {
-            --gap: 26px;
-            --h: 190px;
-            --w: 260px;
-            --speed: 28s;
-            position: relative;
-            overflow: hidden;
-            padding-block: 26px;
-            background: linear-gradient(180deg, #f8edd0, var(--bg));
-            mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-            border-top: 1px solid rgba(46, 55, 61, .06);
-            border-bottom: 1px solid rgba(46, 55, 61, .06);
-        }
-
-        .track {
-            display: flex;
-            gap: var(--gap);
-            width: max-content;
-            will-change: transform;
-            animation: marquee var(--speed) linear infinite;
-        }
-
-        @keyframes marquee {
-            to {
-                transform: translateX(calc(-50% - var(--gap)));
-            }
-        }
-
-        .chip {
-            width: var(--w);
-            height: var(--h);
-            flex: 0 0 auto;
-            border-radius: 18px;
-            overflow: hidden;
-            background: var(--surface);
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(46, 55, 61, .06);
-        }
-
-        .chip img {
-            width: 100%;
-            height: 60%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .chip .meta {
-            padding: .75rem .9rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .chip .name {
-            color: var(--coffee);
-            font-weight: 700;
-        }
-
-        .chip .price {
-            background: var(--teal);
-            color: #fff;
-            padding: .25rem .6rem;
-            border-radius: 999px;
-            font-size: .85rem;
-        }
-
-        /* ===== Sections & Cards ===== */
-        section.section {
-            padding: 84px 0;
-        }
-
-        .lead-muted {
-            color: #5a676c;
-            opacity: .9;
-        }
-
-        .rounded-2xl {
-            border-radius: var(--radius-2xl);
-        }
-
-        .card-elev {
-            background: var(--surface);
-            border: none;
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow);
-            transform: translateY(38px);
-            opacity: 0;
-            transition: transform .45s ease, box-shadow .28s ease, filter .28s ease;
-            border: 1px solid rgba(46, 55, 61, .06);
-        }
-
-        .card-elev:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 28px 70px rgba(46, 55, 61, .24);
-            filter: saturate(1.04) contrast(1.02);
-        }
-
-        .card-elev img {
-            height: 230px;
-            object-fit: cover;
-        }
-
-        /* Animasi halus ala Bootstrap untuk card & tombol */
-        .card-elev {
-            transition: transform .3s ease, box-shadow .3s ease, filter .3s ease;
-        }
-
-        .card-elev:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 28px 70px rgba(46, 55, 61, .24);
-            filter: saturate(1.04) contrast(1.02);
-        }
-
-        .card-elev .btn-outline-dark {
-            transition: transform .2s ease, box-shadow .2s ease;
-        }
-
-        .card-elev .btn-outline-dark:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, .16);
-        }
-
-        /* ===== Maps/Lokasi preview ===== */
-        .map-preview {
-            position: relative;
-            height: 380px;
-            border-radius: var(--radius-2xl);
-            background:
-                radial-gradient(120px 120px at 20% 30%, rgba(50, 91, 86, .20), transparent 60%),
-                radial-gradient(160px 120px at 70% 60%, rgba(175, 70, 31, .16), transparent 60%),
-                linear-gradient(180deg, #f7ead0, var(--bg));
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(46, 55, 61, .08);
-            overflow: hidden;
-        }
-
-        .map-pin {
-            position: absolute;
-            inset: 0;
-            display: grid;
-            place-items: center;
-        }
-
-        .map-pin svg {
-            width: 82px;
-            height: 82px;
-            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, .25));
-        }
-
-        .map-hint {
-            position: absolute;
-            bottom: 14px;
-            right: 16px;
-            background: #fff;
-            color: var(--ink);
-            padding: .45rem .75rem;
-            border-radius: 999px;
-            font-size: .9rem;
-            box-shadow: var(--shadow);
-        }
-
-        /* ===== Reveal & titles ===== */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        .title-underline {
-            position: relative;
-            display: inline-block;
-        }
-
-        .title-underline::after {
-            content: "";
-            position: absolute;
-            left: 6px;
-            right: -6px;
-            bottom: -8px;
-            height: 8px;
-            border-radius: 999px;
-            background: linear-gradient(90deg, var(--rust), var(--teal));
-            opacity: .25;
-        }
-
-        /* ===== Utilities dipakai di markup ===== */
-        .text-teal {
-            color: var(--teal);
-        }
-
-        .bg-sand {
-            background: var(--bg);
-        }
-
-        .text-rust {
-            color: var(--rust);
+        /* Respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .product-card .product-img { transition: none; }
+            .product-card:hover .product-img { transform: none; filter: none; }
+            .card-elev, .reveal { transition: none !important; }
+            .track { animation: none !important; }
         }
     </style>
 </head>
-
 <body>
-    @extends('layouts.main')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- ============= HERO (Video buatkopi.mp4) ============= -->
+    @include('components.header')
+
+    <!-- HERO -->
     <header class="hero">
         <video src="{{ asset('videos/buatkopi.mp4') }}" autoplay muted playsinline loop></video>
         <div class="hero-content container">
             <span class="kicker">Roasted • Crafted • Shared</span>
             <h1 class="display-3 fw-bold mt-2">Coffee House</h1>
             <p class="fs-5 mb-4">Perpaduan rasa yang jujur, dari tangan roaster ke cangkir Anda.</p>
+            <div class="d-flex gap-2">
+                <a href="#menu" class="btn btn-rust btn-pill">Lihat Menu</a>
+                <a href="#about" class="btn btn-ghost btn-pill">Tentang Kami</a>
+            </div>
             <small class="scroll-cue">Scroll untuk melihat</small>
         </div>
         <div class="divider-bottom" aria-hidden="true">
@@ -388,20 +159,14 @@
         </div>
     </header>
 
-    <!-- ============= PARALLAX "Coffee Shop" ============= -->
-    <section class="parallax">
-        <div class="veil"></div>
-        <h2 class="fw-bold text-uppercase">Coffee&nbsp;Shop</h2>
-    </section>
-
-    <!-- ============= INFINITE CAROUSEL (strip) ============= -->
+    <!-- STRIP -->
     <section class="strip" aria-label="Our Beans">
         <div class="track" id="track">
             @php $drinks = ['Gn. Puntang', 'Temanggung', 'Timor Leste', 'Flores Bajawa', 'Toraja Sapan', 'Gunung Halu', 'Kerinci', 'Bali Kintamani']; @endphp
             @for ($dup = 0; $dup < 2; $dup++)
                 @foreach ($drinks as $drink)
                     <div class="chip">
-                        <img src="{{ asset('images/biji.JPG') }}" alt="Biji kopi - {{ $drink }}">
+                        <img src="{{ asset('images/biji.JPG') }}" alt="Biji kopi - {{ $drink }}" loading="lazy">
                         <div class="meta">
                             <span class="name">{{ $drink }}</span>
                             <span class="price">IDR {{ 20 + (int) (crc32($drink) % 18) }}k</span>
@@ -412,7 +177,7 @@
         </div>
     </section>
 
-    <!-- ============= ABOUT ============= -->
+    <!-- ABOUT -->
     <section id="about" class="section">
         <div class="container">
             <div class="row g-5 align-items-center">
@@ -430,13 +195,13 @@
                         cerita—antara barista, petani, dan Anda.</p>
                 </div>
                 <div class="col-lg-6 reveal">
-                    <img src="{{ asset('images/biji.JPG') }}" class="w-100 rounded-2xl shadow" alt="Biji kopi pilihan">
+                    <img src="{{ asset('images/biji.JPG') }}" class="w-100 rounded-2xl shadow" alt="Biji kopi pilihan" loading="lazy">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ============= PRODUCT CARDS (dengan animasi Bootstrap) ============= -->
+    <!-- MENU / PRODUCTS -->
     <section id="menu" class="section bg-sand">
         <div class="container">
             <div class="text-center mb-5 reveal">
@@ -454,22 +219,17 @@
 
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="card-elev product-card position-relative">
-                            <img src="{{ asset('images/biji.JPG') }}" class="w-100" alt="Produk {{ $i }}">
+                            <img src="{{ asset('images/biji.JPG') }}" class="w-100 product-img" alt="Produk {{ $i }}" loading="lazy">
                             <div class="p-3 p-md-4">
                                 <h5 class="mb-1">{{ $title }}</h5>
                                 <p class="text-secondary">{{ $desc }}</p>
 
                                 <div class="d-flex justify-content-between align-items-center mt-2">
-                                    <span class="fw-semibold">IDR {{ $price }}k</span>
+                                    <span class="fw-semibold price-label">IDR {{ $price }}k</span>
 
                                     <!-- Tombol Detail: tooltip + buka modal (fade animasi Bootstrap) -->
-                                    <button class="btn btn-sm btn-outline-dark rounded-pill" data-bs-toggle="tooltip"
-                                        data-bs-title="Lihat detail produk" data-bs-placement="top"
-                                        data-bs-custom-class="tooltip-dark" data-bs-trigger="hover focus"
-                                        data-bs-offset="0,8" data-bs-container="body" data-bs-dismiss="tooltip"
-                                        data-bs-target="#productModal{{ $i }}" data-bs-toggle="modal">
-                                        Detail
-                                    </button>
+                                    <button class="btn btn-sm btn-outline-dark rounded-pill" data-bs-toggle="modal"
+                                        data-bs-target="#productModal{{ $i }}" aria-label="Lihat detail {{ $title }}">Detail</button>
                                 </div>
                             </div>
                         </div>
@@ -488,7 +248,7 @@
                                     <div class="row g-0">
                                         <div class="col-md-6">
                                             <img src="{{ asset('images/biji.JPG') }}"
-                                                class="w-100 h-100 object-fit-cover rounded-start-4" alt="{{ $title }}">
+                                                class="w-100 h-100 object-fit-cover rounded-start-4" alt="{{ $title }}" loading="lazy">
                                         </div>
                                         <div class="col-md-6 p-4">
                                             <p class="text-secondary mb-3">{{ $desc }}</p>
@@ -511,8 +271,7 @@
         </div>
     </section>
 
-
-    <!-- ============= MAPS / LOKASI ============= -->
+    <!-- MAP / LOKASI -->
     <section id="location" class="section">
         <div class="container">
             <div class="row g-4 align-items-center">
@@ -543,57 +302,123 @@
         </div>
     </section>
 
-    <!-- Bootstrap + GSAP -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AUTH CTA (Login / Register) -->
+    <!-- diganti menjadi FORM REGISTRASI INLINE -->
+    @guest('customer')
+    <section id="register" class="section bg-sand">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-7 col-xl-6">
+            <div class="glass-card p-4 p-md-5">
+              <div class="text-center mb-4">
+                <h2 class="fw-bold glass-title title-underline mb-2">Buat Akun</h2>
+                <p class="text-secondary mb-0">Isi data berikut untuk mendaftar. Kolom yang diperlukan: nama lengkap, alamat, email, nomor telepon, dan kata sandi.</p>
+              </div>
+
+              <form action="{{ route('register.submit') }}" method="POST" class="reveal" novalidate>
+                @csrf
+                <div class="mb-3">
+                  <label class="input-label" for="reg_nama">Nama Lengkap</label>
+                  <input id="reg_nama" type="text" name="nama_lengkap" class="form-control glass-input @error('nama_lengkap') is-invalid @enderror" placeholder="Nama lengkap kamu" autocomplete="name" value="{{ old('nama_lengkap') }}" required>
+                  @error('nama_lengkap')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="mb-3">
+                  <label class="input-label" for="reg_alamat">Alamat</label>
+                  <input id="reg_alamat" type="text" name="alamat" class="form-control glass-input @error('alamat') is-invalid @enderror" placeholder="Alamat lengkap" autocomplete="street-address" value="{{ old('alamat') }}">
+                  @error('alamat')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="mb-3">
+                  <label class="input-label" for="reg_email">Email</label>
+                  <input id="reg_email" type="email" name="email" class="form-control glass-input @error('email') is-invalid @enderror" placeholder="nama@email.com" autocomplete="email" value="{{ old('email') }}" required>
+                  @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="mb-3">
+                  <label class="input-label" for="reg_telp">Nomor Telepon</label>
+                  <input id="reg_telp" type="tel" name="no_telp" class="form-control glass-input @error('no_telp') is-invalid @enderror" placeholder="08xxxxxxxxxx" autocomplete="tel" pattern="[0-9 +]+" value="{{ old('no_telp') }}" required>
+                  @error('no_telp')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="mb-1 pw-wrap">
+                  <label class="input-label" for="reg_password">Kata Sandi</label>
+                  <input id="reg_password" type="password" name="password" class="form-control glass-input @error('password') is-invalid @enderror" placeholder="Minimal 8 karakter" minlength="8" autocomplete="new-password" required>
+                  <button type="button" class="pw-toggle" aria-label="Tampilkan/sembunyikan sandi" data-toggle-password="#reg_password">👁️</button>
+                  @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                <div class="helper-text mb-3"><small>Minimal 8 karakter. Simpan sandi Anda dengan aman.</small></div>
+
+                <button type="submit" class="btn btn-gradient w-100">Daftar</button>
+              </form>
+
+              <div class="text-center mt-3">
+                <small class="text-muted">Sudah punya akun?
+                  <button type="button" class="btn btn-link p-0 link-rust fw-semibold text-decoration-none" data-bs-toggle="modal" data-bs-target="#loginModal">Masuk di sini</button>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    @endguest
+
+    @guest('customer')
+      @include('components.login-modal')
+    @endguest
+
+    <!-- GSAP -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script>
+        // Inisialisasi Tooltip Bootstrap agar atribut data-bs-toggle="tooltip" berfungsi
+        const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+
         gsap.registerPlugin(ScrollTrigger);
-
-        // HERO text entrance
-        gsap.from(".kicker", { y: 20, opacity: 0, duration: .8, ease: "power2.out" });
-        gsap.from(".hero h1", { y: 24, opacity: 0, duration: .9, delay: .1, ease: "power3.out" });
-        gsap.from(".hero p", { y: 26, opacity: 0, duration: .9, delay: .18, ease: "power3.out" });
-
-        // gentle parallax on hero video
-        gsap.to('.hero video', {
-            scale: 1.06, transformOrigin: "center",
-            scrollTrigger: { trigger: '.hero', start: "top top", end: "bottom top", scrub: true }
-        });
-
-        // Parallax headline float
-        gsap.to('.parallax h2', {
-            yPercent: -20, ease: "none",
-            scrollTrigger: { trigger: '.parallax', start: "top bottom", end: "bottom top", scrub: true }
-        });
-
-        // Reveal on scroll
-        gsap.utils.toArray('.reveal').forEach((el) => {
-            gsap.to(el, {
-                y: 0, opacity: 1, duration: .9, ease: "power2.out",
-                scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" }
-            });
-        });
-
-        // Elevation cards rise on scroll
-        gsap.utils.toArray('.card-elev').forEach((card) => {
-            gsap.to(card, {
-                y: 0, opacity: 1, duration: .75, ease: "power3.out",
-                scrollTrigger: { trigger: card, start: "top 90%", toggleActions: "play none none reverse" }
-            });
-        });
-
-        // Pause/resume marquee on hover
+        gsap.from('.kicker', { y: 20, opacity: 0, duration: .8, ease: 'power2.out' });
+        gsap.from('.hero h1', { y: 24, opacity: 0, duration: .9, delay: .1, ease: 'power3.out' });
+        gsap.from('.hero p', { y: 26, opacity: 0, duration: .9, delay: .18, ease: 'power3.out' });
+        gsap.from('.hero .btn', { y: 18, opacity: 0, duration: .7, delay: .28, stagger: .08, ease: 'power2.out' });
+        gsap.to('.hero video', { scale: 1.06, transformOrigin: 'center', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+        gsap.utils.toArray('.reveal').forEach((el) => { gsap.to(el, { y: 0, opacity: 1, duration: .9, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' } }); });
+        gsap.utils.toArray('.card-elev').forEach((card) => { gsap.to(card, { y: 0, opacity: 1, duration: .75, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 90%', toggleActions: 'play none none reverse' } }); });
         const track = document.getElementById('track');
-        if (track) {
-            track.addEventListener('mouseenter', () => track.style.animationPlayState = 'paused');
-            track.addEventListener('mouseleave', () => track.style.animationPlayState = 'running');
-        }
+        if (track) { track.addEventListener('mouseenter', () => track.style.animationPlayState = 'paused'); track.addEventListener('mouseleave', () => track.style.animationPlayState = 'running'); }
 
-        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
-            new bootstrap.Tooltip(el);
+        document.addEventListener('DOMContentLoaded', () => {
+            const usp = new URLSearchParams(location.search);
+            if (usp.get('login') === '1') {
+                const modalEl = document.getElementById('loginModal');
+                if (modalEl) new bootstrap.Modal(modalEl).show();
+            }
+        });
+
+        // Toggle show/hide password (fixed)
+        document.querySelectorAll('[data-toggle-password]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const sel = btn.getAttribute('data-toggle-password');
+                const input = document.querySelector(sel);
+                if (!input) return;
+                const isPwd = input.type === 'password';
+                input.type = isPwd ? 'text' : 'password';
+                btn.textContent = isPwd ? '🙈' : '👁️';
+            });
         });
     </script>
-</body>
 
+    @if($errors->any() && !session('show_login'))
+      <script>
+        document.addEventListener('DOMContentLoaded', function(){
+          const sec = document.getElementById('register');
+          if (sec && typeof sec.scrollIntoView === 'function') {
+            sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      </script>
+    @endif
+
+    @include('components.footer')
+</body>
 </html>

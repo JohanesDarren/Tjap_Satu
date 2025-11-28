@@ -1,13 +1,10 @@
 <nav class="navbar navbar-expand-lg navbar-dark py-3 position-fixed w-100 top-0 custom-navbar">
-  <div class="container-fluid px-4">
+  <div class="container px-4">
     <!-- Brand -->
-    <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="/" style="letter-spacing:1px;">
+    <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="{{ route('home') }}" style="letter-spacing:1px;">
       <span class="brand-dot"></span> <span class="brand-text">TOKOKOPITJAP1</span>
     </a>
 
-    <!-- Bootstrap CSS & Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Burger -->
     <button id="navbarToggler" class="navbar-toggler border-0 shadow-none" type="button" aria-controls="navbarMain"
       aria-expanded="false" aria-label="Toggle navigation">
@@ -17,10 +14,10 @@
     <!-- Menu -->
     <div class="collapse navbar-collapse justify-content-end" id="navbarMain">
       <ul class="navbar-nav align-items-lg-center ms-auto gap-lg-3">
-        <li class="nav-item"><a class="nav-link menu-link" href="{{ route('home') }}">Beranda</a></li>
-        <li class="nav-item"><a class="nav-link menu-link" href="{{ route('tentang') }}">Tentang</a></li>
-        <li class="nav-item"><a class="nav-link menu-link" href="{{ route('produk.menu') }}">Menu</a></li>
-        <li class="nav-item"><a class="nav-link menu-link" href="#location">Lokasi</a></li>
+        <li class="nav-item"><a class="nav-link menu-link @if(request()->routeIs('home')) active @endif" href="{{ route('home') }}">Beranda</a></li>
+        <li class="nav-item"><a class="nav-link menu-link @if(request()->routeIs('tentang')) active @endif" href="{{ route('tentang') }}">Tentang</a></li>
+        <li class="nav-item"><a class="nav-link menu-link @if(request()->routeIs('produk.menu')) active @endif" href="{{ route('produk.menu') }}">Menu</a></li>
+        <li class="nav-item"><a class="nav-link menu-link" href="{{ route('home') }}#location">Lokasi</a></li>
 
         <!-- Keranjang -->
         <li class="nav-item">
@@ -37,18 +34,11 @@
 
         <!-- Order -->
         <li class="nav-item mt-2 mt-lg-0">
-          @if(session('user'))
-            {{-- Sudah login --}}
-            <a href="{{ route('order.index') }}" class="btn btn-warning fw-bold text-white px-4 rounded-pill order-btn">
-              Pesan
-            </a>
+          @auth('customer')
+            <a href="{{ route('checkout.index') }}" class="btn btn-warning fw-bold text-white px-4 rounded-pill order-btn">Pesan</a>
           @else
-            {{-- Belum login -> buka modal --}}
-            <a href="#" class="btn btn-warning fw-bold text-white px-4 rounded-pill order-btn" data-bs-toggle="modal"
-              data-bs-target="#loginModal">
-              Pesan
-            </a>
-          @endif
+            <a href="#" class="btn btn-warning fw-bold text-white px-4 rounded-pill order-btn" data-bs-toggle="modal" data-bs-target="#loginModal">Pesan</a>
+          @endauth
         </li>
       </ul>
     </div>
@@ -64,8 +54,8 @@
 
     .custom-navbar.scrolled {
       background-color: rgba(0, 0, 0, .82) !important;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 6px 24px rgba(0, 0, 0, .25);
+      backdrop-filter: blur(8px) saturate(1.05);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, .3);
     }
 
     /* Brand */
@@ -108,6 +98,13 @@
     .menu-link:hover::after {
       width: 100%;
     }
+
+    /* Active state for current page */
+    .menu-link.active,
+    .menu-link:focus {
+      color: #ff5c00 !important;
+    }
+    .menu-link.active::after { width: 100%; }
 
     /* Tombol Order */
     .order-btn {
