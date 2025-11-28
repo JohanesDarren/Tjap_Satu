@@ -1,6 +1,6 @@
 <footer class="text-white position-relative footer-gradient">
     <div class="container position-relative" style="z-index: 2;">
-        <div class="row g-4 align-items-start">
+        <div class="row g-4 align-items-start m-3">
             <!-- Kolom 1: Logo & Deskripsi -->
             <div class="col-md-5">
                 <h3 class="fw-bold text-uppercase text-brand">TOKOKOPITJAP1</h3>
