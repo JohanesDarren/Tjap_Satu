@@ -79,7 +79,7 @@ Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index
 Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
 Route::post('/logout', [ProfileController::class, 'logout'])->name('logout');
-
+Route::get('/profile/order/{id}', [ProfileController::class, 'detailOrder'])->name('profile.order.detail');
 //=======================================//
 
 // === LOGIN FLOW (tanpa auth logic) ===

@@ -15,9 +15,10 @@ class ProfileController extends Controller
         $data_customer = Customer::first();
         
         // Ambil data order untuk history
-        $data_order = Order::where('id_cust', $data_customer->id_cust)
-                           ->orderBy('created_at', 'desc')
-                           ->get();
+     $data_order = Order::where('id_cust', $data_customer->id_cust)
+                       ->with('detailOrders.product') // Agar gambar produk tidak berat
+                       ->orderBy('id_order', 'desc') // <--- KUNCI RAHASIANYA DISINI
+                       ->get();
 
         // Kirim data ke view profile
         return view('profile.profile', [
@@ -67,6 +68,16 @@ class ProfileController extends Controller
         $data_customer->save();
 
         return redirect('/profile')->with('success', 'Data diri berhasil diperbarui');
+    }
+
+    public function detailOrder($id)
+    {
+        // PERBAIKAN: Gunakan 'detailOrders.product' (Sesuai nama fungsi di Model Order kamu)
+        $order = \App\Models\Order::with('detailOrders.product') 
+                    ->where('id_order', $id)
+                    ->firstOrFail();
+
+        return view('profile.detail_order', compact('order'));
     }
 
     public function updatePassword(Request $request)
