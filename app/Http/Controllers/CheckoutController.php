@@ -24,7 +24,7 @@ class CheckoutController extends Controller
         $shippingCost = 15000;
 
 
-        return view('checkout', compact('cartItems', 'subtotal', 'shippingCost'));
+        return view('checkout.checkout', compact('cartItems', 'subtotal', 'shippingCost'));
     }
 
 

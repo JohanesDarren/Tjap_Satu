@@ -47,7 +47,7 @@ class ProfileController extends Controller
         ],
     ];
 
-    return view('profile', compact('profile', 'orders'));
+    return view('profile.profile', compact('profile', 'orders'));
 }
 
 }

@@ -23,6 +23,6 @@ class AboutController extends Controller
             ],
         ];
 
-        return view('about', compact('owners'));
+        return view('about.about', compact('owners'));
     }
 }
