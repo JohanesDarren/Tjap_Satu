@@ -19,17 +19,41 @@
         <li class="nav-item"><a class="nav-link menu-link @if(request()->routeIs('produk.menu')) active @endif" href="{{ route('produk.menu') }}">Menu</a></li>
         <li class="nav-item"><a class="nav-link menu-link" href="{{ route('home') }}#location">Lokasi</a></li>
 
-        <!-- Keranjang -->
-        <li class="nav-item">
-          <a class="nav-link menu-link pe-2" href="{{ route('cart.index') }}">
-            <span class="cart-icon position-relative d-inline-block">
+        <!-- Keranjang: ikon desktop, teks mobile -->
+        <li class="nav-item d-flex align-items-center gap-2">
+          <a class="nav-link menu-link pe-2" href="{{ route('cart.index') }}" title="Keranjang">
+            <span class="cart-icon position-relative d-none d-lg-inline-block">
               <i class="bi bi-bag fs-5"></i>
               @if(($cartCount ?? 0) > 0)
                 <span class="cart-badge">{{ $cartCount }}</span>
               @endif
             </span>
-            <span class="d-lg-none ms-2">Keranjang</span>
+            <span class="d-inline d-lg-none">Keranjang</span>
           </a>
+        </li>
+
+        <!-- Profile Avatar -->
+        <li class="nav-item d-flex align-items-center gap-2">
+            @auth('customer')
+              @php($cust = Auth::guard('customer')->user())
+              <a href="{{ route('profile.index') }}" class="nav-link p-0 profile-link d-none d-lg-inline-flex" title="Profile">
+                @if(!empty($cust->foto))
+                  <img src="{{ asset('uploads/'.$cust->foto) }}" alt="{{ $cust->nama_lengkap }}" class="profile-avatar rounded-circle">
+                @else
+                  <div class="profile-avatar profile-fallback rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-person-fill"></i>
+                  </div>
+                @endif
+              </a>
+              <a href="{{ route('profile.index') }}" class="nav-link menu-link d-inline d-lg-none">Profil</a>
+            @else
+              <a href="#" class="nav-link p-0 profile-link d-none d-lg-inline-flex" data-bs-toggle="modal" data-bs-target="#loginModal" title="Masuk">
+                <div class="profile-avatar profile-fallback rounded-circle d-flex align-items-center justify-content-center">
+                  <i class="bi bi-person"></i>
+                </div>
+              </a>
+              <a href="#" class="nav-link menu-link d-inline d-lg-none" data-bs-toggle="modal" data-bs-target="#loginModal">Profil</a>
+            @endauth
         </li>
 
         <!-- Order -->
@@ -150,6 +174,18 @@
       font-weight: 700;
       box-shadow: 0 0 0 2px rgba(0, 0, 0, .35);
     }
+
+    /* Profile Avatar */
+    .profile-link { display:inline-flex; align-items:center; }
+    .profile-avatar { width:42px; height:42px; object-fit:cover; border:2px solid rgba(255,255,255,.35); transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+    .profile-avatar:hover { transform:scale(1.06); box-shadow:0 0 0 3px rgba(255,92,0,.4); border-color:#ff5c00; }
+    .profile-fallback { background:rgba(255,255,255,.12); color:#ff5c00; font-size:1.2rem; }
+
+    @media (max-width:1199.98px){ .profile-avatar{ width:40px; height:40px; } }
+    @media (max-width:991.98px){ .profile-avatar{ width:38px; height:38px; } }
+    @media (max-width:767.98px){ .profile-avatar{ width:36px; height:36px; } }
+    @media (max-width:575.98px){ .profile-avatar{ width:34px; height:34px; } }
+    @media (max-width:360px){ .profile-avatar{ width:32px; height:32px; } }
 
     /* ====== BREAKPOINTS ====== */
 

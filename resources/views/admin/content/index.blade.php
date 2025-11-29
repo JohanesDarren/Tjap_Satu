@@ -108,16 +108,16 @@
                     <div class="card h-100">
                         <div class="card-header fw-semibold">Tambah / Update Banner</div>
                         <div class="card-body">
-                            <form method="post" action="{{ route('admin.content.banner.store') }}">
+                            <form method="post" action="{{ route('admin.content.banner.store') }}" enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="form-label">Judul</label>
                                     <input name="title" class="form-control" placeholder="Judul banner" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Gambar URL</label>
-                                    <input name="image_url" class="form-control" placeholder="https://..." required>
-                                    <div class="form-text">Gunakan URL gambar (CDN/placeholder).</div>
+                                    <label class="form-label">Gambar (jpg, jpeg, png, webp)</label>
+                                    <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp" required>
+                                    <div class="form-text">Unggah file gambar dari komputer Anda.</div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Link (opsional)</label>
@@ -147,64 +147,60 @@
                                 <tbody>
                                     @forelse($banners as $b)
                                         <tr>
-                                            <td><img class="thumb-banner" src="{{ $b['image_url'] }}" alt=""></td>
-                                            <td class="fw-semibold">{{ $b['title'] }}</td>
+                                            <td>
+                                                @if($b->image_path)
+                                                    <img class="thumb-banner" src="{{ asset('storage/'.$b->image_path) }}" alt="">
+                                                @endif
+                                            </td>
+                                            <td class="fw-semibold">{{ $b->title }}</td>
                                             <td class="text-truncate" style="max-width: 220px;">
-                                                <a href="{{ $b['link_url'] ?? '#' }}"
-                                                    target="_blank">{{ $b['link_url'] ?? '-' }}</a>
+                                                @if($b->link_url)
+                                                    <a href="{{ $b->link_url }}" target="_blank">{{ $b->link_url }}</a>
+                                                @else - @endif
                                             </td>
                                             <td class="text-end">
-                                                <!-- Modal trigger edit -->
-                                                <button type="button" class="btn btn-sm btn-outline-secondary"
-                                                    data-bs-toggle="modal" data-bs-target="#editBanner-{{ $b['id'] }}">
-                                                    Edit
-                                                </button>
-                                                <form class="d-inline" method="post"
-                                                    action="{{ route('admin.content.banner.delete', $b['id']) }}">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editBanner-{{ $b->id }}">Edit</button>
+                                                <form class="d-inline" method="post" action="{{ route('admin.content.banner.delete', $b) }}">
                                                     @csrf @method('DELETE')
-                                                    <button class="btn btn-sm btn-outline-danger"
-                                                        onclick="return confirm('Hapus banner ini?')">Hapus</button>
+                                                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Hapus banner ini?')">Hapus</button>
                                                 </form>
                                             </td>
                                         </tr>
-
-                                        <!-- Modal Edit -->
-                                        <div class="modal fade" id="editBanner-{{ $b['id'] }}" tabindex="-1" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <form method="post"
-                                                    action="{{ route('admin.content.banner.update', $b['id']) }}"
-                                                    class="modal-content">
-                                                    @csrf
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Edit Banner</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Judul</label>
-                                                            <input name="title" class="form-control" value="{{ $b['title'] }}"
-                                                                required>
+                                        @push('modals')
+                                            <div class="modal fade" id="editBanner-{{ $b->id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form method="post" action="{{ route('admin.content.banner.update', $b) }}" class="modal-content" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Edit Banner</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Gambar URL</label>
-                                                            <input name="image_url" class="form-control"
-                                                                value="{{ $b['image_url'] }}" required>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Judul</label>
+                                                                <input name="title" class="form-control" value="{{ $b->title }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Gambar (jpg, jpeg, png, webp)</label>
+                                                                <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp">
+                                                                @if($b->image_path)
+                                                                    <small class="text-muted d-block mt-1">Gambar saat ini:</small>
+                                                                    <img class="thumb-banner mt-1" src="{{ asset('storage/'.$b->image_path) }}" alt="">
+                                                                @endif
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Link (opsional)</label>
+                                                                <input name="link_url" class="form-control" value="{{ $b->link_url }}">
+                                                            </div>
                                                         </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Link (opsional)</label>
-                                                            <input name="link_url" class="form-control"
-                                                                value="{{ $b['link_url'] ?? '' }}">
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                                                            <button class="btn btn-dark">Simpan</button>
                                                         </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-light"
-                                                            data-bs-dismiss="modal">Batal</button>
-                                                        <button class="btn btn-dark">Simpan</button>
-                                                    </div>
-                                                </form>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endpush
                                     @empty
                                         <tr>
                                             <td colspan="4" class="text-center py-4 text-muted">Belum ada banner.</td>
@@ -292,56 +288,47 @@
                                                 </form>
                                             </td>
                                         </tr>
-
-                                        <!-- Modal Edit Promo -->
-                                        <div class="modal fade" id="editPromo-{{ $p['id'] }}" tabindex="-1" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <form method="post" action="{{ route('admin.content.promo.update', $p['id']) }}"
-                                                    class="modal-content">
-                                                    @csrf
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Edit Promo</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Judul</label>
-                                                            <input name="title" class="form-control" value="{{ $p['title'] }}"
-                                                                required>
+                                        @push('modals')
+                                            <div class="modal fade" id="editPromo-{{ $p->id ?? $p['id'] }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form method="post" action="{{ route('admin.content.promo.update', $p->id ?? $p['id']) }}" class="modal-content">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Edit Promo</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Deskripsi</label>
-                                                            <textarea name="description" class="form-control"
-                                                                rows="3">{{ $p['description'] ?? '' }}</textarea>
-                                                        </div>
-                                                        <div class="row g-2 mb-3">
-                                                            <div class="col">
-                                                                <label class="form-label">Mulai</label>
-                                                                <input type="date" name="start_date" class="form-control"
-                                                                    value="{{ $p['start_date'] }}" required>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Judul</label>
+                                                                <input name="title" class="form-control" value="{{ $p->title ?? $p['title'] }}" required>
                                                             </div>
-                                                            <div class="col">
-                                                                <label class="form-label">Selesai</label>
-                                                                <input type="date" name="end_date" class="form-control"
-                                                                    value="{{ $p['end_date'] }}" required>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Deskripsi</label>
+                                                                <textarea name="description" class="form-control" rows="3">{{ $p->description ?? $p['description'] ?? '' }}</textarea>
+                                                            </div>
+                                                            <div class="row g-2 mb-3">
+                                                                <div class="col">
+                                                                    <label class="form-label">Mulai</label>
+                                                                    <input type="date" name="start_date" class="form-control" value="{{ ($p->start_date ?? $p['start_date']) }}" required>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <label class="form-label">Selesai</label>
+                                                                    <input type="date" name="end_date" class="form-control" value="{{ ($p->end_date ?? $p['end_date']) }}" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="active" id="promoActive{{ $p->id ?? $p['id'] }}" {{ !empty($p->active ?? $p['active']) ? 'checked' : '' }}>
+                                                                <label class="form-check-label" for="promoActive{{ $p->id ?? $p['id'] }}">Aktif</label>
                                                             </div>
                                                         </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" name="active"
-                                                                id="promoActive{{ $p['id'] }}" {{ !empty($p['active']) ? 'checked' : '' }}>
-                                                            <label class="form-check-label"
-                                                                for="promoActive{{ $p['id'] }}">Aktif</label>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                                                            <button class="btn btn-dark">Simpan</button>
                                                         </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-light"
-                                                            data-bs-dismiss="modal">Batal</button>
-                                                        <button class="btn btn-dark">Simpan</button>
-                                                    </div>
-                                                </form>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endpush
                                     @empty
                                         <tr>
                                             <td colspan="4" class="text-center py-4 text-muted">Belum ada promo.</td>
@@ -362,15 +349,15 @@
                     <div class="card h-100">
                         <div class="card-header fw-semibold">Tambah / Update Blog</div>
                         <div class="card-body">
-                            <form method="post" action="{{ route('admin.content.blog.store') }}">
+                            <form method="post" action="{{ route('admin.content.blog.store') }}" enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-3">
                                     <label class="form-label">Judul</label>
                                     <input name="title" class="form-control" placeholder="Judul artikel" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Cover URL (opsional)</label>
-                                    <input name="cover_url" class="form-control" placeholder="https://...">
+                                    <label class="form-label">Cover (opsional)</label>
+                                    <input type="file" name="cover" class="form-control" accept="image/jpeg,image/png,image/webp">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Ringkasan (opsional)</label>
@@ -411,73 +398,68 @@
                                     @forelse($blogs as $b)
                                         <tr>
                                             <td class="fw-semibold">
-                                                <div>{{ $b['title'] }}</div>
-                                                @if(!empty($b['cover_url']))
-                                                    <small class="text-muted"><a href="{{ $b['cover_url'] }}" target="_blank">Lihat
-                                                            cover</a></small>
+                                                <div>{{ $b->title }}</div>
+                                                @if($b->cover_path)
+                                                    <small class="text-muted d-block mt-1"><a href="{{ asset('storage/'.$b->cover_path) }}" target="_blank">Lihat cover</a></small>
                                                 @endif
                                             </td>
-                                            <td>{{ $b['published_at'] ?? '-' }}</td>
-                                            <td class="text-truncate" style="max-width: 320px;">{{ $b['excerpt'] ?? '-' }}</td>
+                                            <td>{{ $b->published_at ? $b->published_at->toDateString() : '-' }}</td>
+                                            <td class="text-truncate" style="max-width: 320px;">{{ $b->excerpt ?? '-' }}</td>
                                             <td class="text-end">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editBlog-{{ $b['id'] }}">Edit</button>
-                                                <form class="d-inline" method="post"
-                                                    action="{{ route('admin.content.blog.delete', $b['id']) }}">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editBlog-{{ $b->id }}">Edit</button>
+                                                <form class="d-inline" method="post" action="{{ route('admin.content.blog.delete', $b) }}">
                                                     @csrf @method('DELETE')
-                                                    <button class="btn btn-sm btn-outline-danger"
-                                                        onclick="return confirm('Hapus posting ini?')">Hapus</button>
+                                                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Hapus posting ini?')">Hapus</button>
                                                 </form>
                                             </td>
                                         </tr>
-
-                                        <!-- Modal Edit Blog -->
-                                        <div class="modal fade" id="editBlog-{{ $b['id'] }}" tabindex="-1" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg">
-                                                <form method="post" action="{{ route('admin.content.blog.update', $b['id']) }}"
-                                                    class="modal-content">
-                                                    @csrf
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Edit Blog</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Judul</label>
-                                                            <input name="title" class="form-control" value="{{ $b['title'] }}"
-                                                                required>
+                                        @push('modals')
+                                            <div class="modal fade" id="editBlog-{{ $b->id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <form method="post" action="{{ route('admin.content.blog.update', $b) }}" class="modal-content" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Edit Blog</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Cover URL (opsional)</label>
-                                                            <input name="cover_url" class="form-control"
-                                                                value="{{ $b['cover_url'] ?? '' }}">
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Judul</label>
+                                                                <input name="title" class="form-control" value="{{ $b->title }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Cover (opsional)</label>
+                                                                <input type="file" name="cover" class="form-control" accept="image/jpeg,image/png,image/webp">
+                                                                @if($b->cover_path)
+                                                                    <small class="text-muted d-block mt-1">Cover saat ini:</small>
+                                                                    <img class="thumb-banner mt-1" src="{{ asset('storage/'.$b->cover_path) }}" alt="">
+                                                                @endif
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Ringkasan (opsional)</label>
+                                                                <textarea name="excerpt" class="form-control"
+                                                                    rows="2">{{ $b->excerpt ?? '' }}</textarea>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Konten</label>
+                                                                <textarea name="content" class="form-control" rows="8"
+                                                                    required>{{ $b->content }}</textarea>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Tanggal Publikasi (opsional)</label>
+                                                                <input type="date" name="published_at" class="form-control"
+                                                                    value="{{ $b->published_at ? $b->published_at->toDateString() : '' }}">
+                                                            </div>
                                                         </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Ringkasan (opsional)</label>
-                                                            <textarea name="excerpt" class="form-control"
-                                                                rows="2">{{ $b['excerpt'] ?? '' }}</textarea>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light"
+                                                                data-bs-dismiss="modal">Batal</button>
+                                                            <button class="btn btn-dark">Simpan</button>
                                                         </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Konten</label>
-                                                            <textarea name="content" class="form-control" rows="8"
-                                                                required>{{ $b['content'] }}</textarea>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label">Tanggal Publikasi (opsional)</label>
-                                                            <input type="date" name="published_at" class="form-control"
-                                                                value="{{ $b['published_at'] ?? '' }}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-light"
-                                                            data-bs-dismiss="modal">Batal</button>
-                                                        <button class="btn btn-dark">Simpan</button>
-                                                    </div>
-                                                </form>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endpush
                                     @empty
                                         <tr>
                                             <td colspan="4" class="text-center py-4 text-muted">Belum ada postingan.</td>
@@ -492,3 +474,5 @@
         </div>
     </div>
 @endsection
+
+@stack('modals')

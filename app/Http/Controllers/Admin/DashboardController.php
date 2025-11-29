@@ -3,44 +3,94 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\DetailOrder;
+use App\Models\Product;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        // === METRICS ===
+        $today = Carbon::today();
+        $ordersToday = Order::whereDate('tanggal_order', $today)->count();
+        $revenueToday = (int) Order::whereDate('tanggal_order', $today)->sum('total_harga');
+        $startWeek = Carbon::now()->startOfWeek();
+        $endWeek = Carbon::now()->endOfWeek();
+        $revenueThisWeek = (int) Order::whereBetween('tanggal_order', [$startWeek, $endWeek])->sum('total_harga');
+        $avgOrderValue = (int) round(Order::avg('total_harga') ?: 0);
+        $itemsSold = (int) DetailOrder::sum('jumlah');
+        $uniqueCustomers = (int) Order::distinct('id_cust')->count('id_cust');
+
         $metrics = [
-            'orders_today'      => 62,
-            'revenue_today'     => 1450000,   // Rp
-            'revenue_this_week' => 9800000,   // Rp
-            'avg_order_value'   => 234000,    // Rp
-            'items_sold'        => 420,
-            'unique_customers'  => 139,
+            'orders_today'      => $ordersToday,
+            'revenue_today'     => $revenueToday,
+            'revenue_this_week' => $revenueThisWeek,
+            'avg_order_value'   => $avgOrderValue,
+            'items_sold'        => $itemsSold,
+            'unique_customers'  => $uniqueCustomers,
         ];
 
-        $dailyRevenue = [
-            'labels' => ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
-            'data'   => [1200000, 1350000, 1500000, 1100000, 1700000, 2100000, 1950000],
+        // === DAILY REVENUE (Last 7 days) ===
+        $daysBack = 7;
+        $startDaily = Carbon::now()->subDays($daysBack - 1)->startOfDay();
+        $rawDaily = Order::where('tanggal_order', '>=', $startDaily)
+            ->selectRaw('DATE(tanggal_order) as d, SUM(total_harga) as total')
+            ->groupBy('d')
+            ->pluck('total', 'd');
+        $dayNameMap = [
+            'Monday' => 'Sen', 'Tuesday' => 'Sel', 'Wednesday' => 'Rab', 'Thursday' => 'Kam',
+            'Friday' => 'Jum', 'Saturday' => 'Sab', 'Sunday' => 'Min'
         ];
+        $dailyLabels = [];
+        $dailyData = [];
+        for ($i = 0; $i < $daysBack; $i++) {
+            $d = (clone $startDaily)->addDays($i);
+            $dateKey = $d->format('Y-m-d');
+            $dailyLabels[] = $dayNameMap[$d->englishDayOfWeek] ?? $d->format('D');
+            $dailyData[] = (int) ($rawDaily[$dateKey] ?? 0);
+        }
+        $dailyRevenue = ['labels' => $dailyLabels, 'data' => $dailyData];
 
-        $weeklyRevenue = [
-            'labels' => ['W-35', 'W-36', 'W-37', 'W-38', 'W-39', 'W-40', 'W-41', 'W-42'],
-            'data'   => [7200000, 8150000, 7900000, 9100000, 8600000, 9400000, 10200000, 9800000],
-        ];
+        // === WEEKLY REVENUE (Last 8 weeks) ===
+        $weeksBack = 8;
+        $startWeekly = Carbon::now()->subWeeks($weeksBack - 1)->startOfWeek();
+        $rawWeekly = Order::where('tanggal_order', '>=', $startWeekly)
+            ->selectRaw('YEAR(tanggal_order) as y, WEEK(tanggal_order, 1) as w, SUM(total_harga) as total')
+            ->groupBy('y', 'w')
+            ->orderBy('y')->orderBy('w')
+            ->get()
+            ->map(fn($r) => [ 'key' => $r->y.'-'.$r->w, 'total' => (int) $r->total ])
+            ->keyBy('key');
+        $weeklyLabels = [];
+        $weeklyData = [];
+        for ($i = 0; $i < $weeksBack; $i++) {
+            $weekDate = (clone $startWeekly)->addWeeks($i);
+            $weekKey = $weekDate->format('Y').'-'.$weekDate->format('W');
+            $weeklyLabels[] = 'W-'.$weekDate->format('W');
+            $weeklyData[] = $rawWeekly[$weekKey]['total'] ?? 0;
+        }
+        $weeklyRevenue = ['labels' => $weeklyLabels, 'data' => $weeklyData];
 
-        $topProducts = [
-            ['name' => 'Gn.Puntang', 'sold' => 185],
-            ['name' => 'Toraja Sapan', 'sold' => 142],
-            ['name' => 'Flores Bajawa', 'sold' => 128],
-            ['name' => 'Timor Leste', 'sold' => 118],
-            ['name' => 'Temanggung', 'sold' => 92],
-        ];
+        // === TOP PRODUCTS (By quantity sold) ===
+        $topProductsRaw = DetailOrder::select('id_product', DB::raw('SUM(jumlah) as sold'))
+            ->groupBy('id_product')
+            ->orderByDesc('sold')
+            ->with('product:id_product,nama_produk')
+            ->limit(5)
+            ->get();
+        $topProducts = $topProductsRaw->map(fn($row) => [
+            'name' => optional($row->product)->nama_produk ?? 'Produk #'.$row->id_product,
+            'sold' => (int) $row->sold,
+        ])->toArray();
 
-        $orderSummary = [
-            'Pending'    => 18,
-            'Diproses'   => 24,
-            'Selesai'    => 198,
-            'Dibatalkan' => 7,
-        ];
+        // === ORDER SUMMARY (Counts per status) ===
+        $orderSummaryRaw = Order::select('status_pesanan', DB::raw('COUNT(*) as c'))
+            ->groupBy('status_pesanan')
+            ->pluck('c', 'status_pesanan');
+        $orderSummary = $orderSummaryRaw->toArray();
 
         return view('admin.dashboard', compact(
             'metrics',

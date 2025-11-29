@@ -33,20 +33,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Halaman CMS
     Route::get('/konten', [ContentController::class, 'index'])->name('content.index');
 
-    // Banner
+    // Banner (CRUD, route model binding)
     Route::post('/konten/banner', [ContentController::class, 'storeBanner'])->name('content.banner.store');
-    Route::post('/konten/banner/{id}', [ContentController::class, 'updateBanner'])->name('content.banner.update');
-    Route::delete('/konten/banner/{id}', [ContentController::class, 'deleteBanner'])->name('content.banner.delete');
+    Route::post('/konten/banner/{banner}', [ContentController::class, 'updateBanner'])->name('content.banner.update');
+    Route::delete('/konten/banner/{banner}', [ContentController::class, 'deleteBanner'])->name('content.banner.delete');
 
-    // Promo
+    // Promo (CRUD)
     Route::post('/konten/promo', [ContentController::class, 'storePromo'])->name('content.promo.store');
-    Route::post('/konten/promo/{id}', [ContentController::class, 'updatePromo'])->name('content.promo.update');
-    Route::delete('/konten/promo/{id}', [ContentController::class, 'deletePromo'])->name('content.promo.delete');
+    Route::post('/konten/promo/{promo}', [ContentController::class, 'updatePromo'])->name('content.promo.update');
+    Route::delete('/konten/promo/{promo}', [ContentController::class, 'deletePromo'])->name('content.promo.delete');
 
-    // Blog
+    // Blog (CRUD, route model binding)
     Route::post('/konten/blog', [ContentController::class, 'storeBlog'])->name('content.blog.store');
-    Route::post('/konten/blog/{id}', [ContentController::class, 'updateBlog'])->name('content.blog.update');
-    Route::delete('/konten/blog/{id}', [ContentController::class, 'deleteBlog'])->name('content.blog.delete');
+    Route::post('/konten/blog/{blog}', [ContentController::class, 'updateBlog'])->name('content.blog.update');
+    Route::delete('/konten/blog/{blog}', [ContentController::class, 'deleteBlog'])->name('content.blog.delete');
 
     // Produk Admin
     Route::get('/produk', [AdminProdukController::class, 'index'])->name('produk.index');

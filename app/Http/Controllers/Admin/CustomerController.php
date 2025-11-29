@@ -4,98 +4,103 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Customer;
+use App\Models\Order;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // === DATA DUMMY PELANGGAN ===
-        $customers = collect([
-            [
-                'id' => 1,
-                'nama' => 'Andi Saputra',
-                'email' => 'andi@mail.com',
-                'telepon' => '081234567890',
-                'orders_count' => 5,
-                'total_spent' => 750000,
-                'last_order_at' => '2025-10-18 10:00:00',
-            ],
-            [
-                'id' => 2,
-                'nama' => 'Budi Hartono',
-                'email' => 'budi@mail.com',
-                'telepon' => '082345678901',
-                'orders_count' => 3,
-                'total_spent' => 320000,
-                'last_order_at' => '2025-10-17 09:30:00',
-            ],
-            [
-                'id' => 3,
-                'nama' => 'Citra Dewi',
-                'email' => 'citra@mail.com',
-                'telepon' => '083456789012',
-                'orders_count' => 7,
-                'total_spent' => 980000,
-                'last_order_at' => '2025-10-20 14:10:00',
-            ],
-        ]);
+        $q    = trim($request->get('q', ''));
+        $from = $request->get('from');
+        $to   = $request->get('to');
 
-        return view('admin.customers.index', [
-            'customers' => $customers,
-            'q' => '',
-            'from' => '',
-            'to' => '',
-        ]);
+        $customersQuery = Customer::query()
+            ->select('customer.*')
+            ->selectSub(function($sub) use ($from,$to){
+                $sub->from('order')
+                    ->selectRaw('COALESCE(SUM(total_harga),0)')
+                    ->whereColumn('order.id_cust','customer.id_cust');
+                if ($from) $sub->whereDate('tanggal_order','>=',$from);
+                if ($to)   $sub->whereDate('tanggal_order','<=',$to);
+            }, 'total_spent')
+            ->selectSub(function($sub) use ($from,$to){
+                $sub->from('order')
+                    ->selectRaw('COUNT(*)')
+                    ->whereColumn('order.id_cust','customer.id_cust');
+                if ($from) $sub->whereDate('tanggal_order','>=',$from);
+                if ($to)   $sub->whereDate('tanggal_order','<=',$to);
+            }, 'orders_count')
+            ->selectSub(function($sub) use ($from,$to){
+                $sub->from('order')
+                    ->selectRaw('MAX(tanggal_order)')
+                    ->whereColumn('order.id_cust','customer.id_cust');
+                if ($from) $sub->whereDate('tanggal_order','>=',$from);
+                if ($to)   $sub->whereDate('tanggal_order','<=',$to);
+            }, 'last_order_at')
+            ->orderByDesc(DB::raw('last_order_at IS NULL'))
+            ->orderByDesc('last_order_at');
+
+        if ($q !== '') {
+            $customersQuery->where(function($w) use ($q){
+                $w->where('nama_lengkap','like',"%$q%")
+                  ->orWhere('email','like',"%$q%")
+                  ->orWhere('no_telp','like',"%$q%");
+            });
+        }
+        if ($from || $to) {
+            // Ensure only customers having orders in range appear if date filter applied
+            $customersQuery->whereExists(function($sub) use ($from,$to){
+                $sub->selectRaw(1)
+                    ->from('order')
+                    ->whereColumn('order.id_cust','customer.id_cust');
+                if ($from) $sub->whereDate('tanggal_order','>=',$from);
+                if ($to)   $sub->whereDate('tanggal_order','<=',$to);
+            });
+        }
+
+        $customers = $customersQuery->get();
+
+        return view('admin.customers.index', compact('customers','q','from','to'));
     }
 
     public function show($id)
     {
-        // === DATA DUMMY DETAIL ===
-        $customer = [
-            'id' => $id,
-            'nama' => 'Andi Saputra',
-            'email' => 'andi@mail.com',
-            'telepon' => '081234567890',
-            'alamat' => 'Jl. Merdeka No. 10, Bandung',
-        ];
+        $customer = Customer::where('id_cust',$id)->firstOrFail();
 
-        // ubah array ke object
-        $customer = json_decode(json_encode($customer));
+        // Orders with items (detail + product)
+        $orders = Order::with(['detailOrders.product'])
+            ->where('id_cust',$customer->id_cust)
+            ->orderByDesc('tanggal_order')
+            ->get();
 
         $summary = [
-            'total_orders' => 5,
-            'total_spent' => 750000,
-            'last_order_at' => '2025-10-18',
+            'total_orders' => $orders->count(),
+            'total_spent'  => $orders->sum('total_harga'),
+            'last_order_at'=> optional($orders->first())->tanggal_order,
         ];
 
-        $chartLabels = ['2025-05','2025-06','2025-07','2025-08','2025-09','2025-10'];
-        $chartData   = [120000, 150000, 110000, 180000, 100000, 90000];
+        // Chart: last 6 months spending grouped by month
+        $monthsBack = 6;
+        $startMonth = Carbon::now()->subMonths($monthsBack-1)->startOfMonth();
+        $monthly = Order::selectRaw('DATE_FORMAT(tanggal_order, "%Y-%m") as ym, SUM(total_harga) as total')
+            ->where('id_cust',$customer->id_cust)
+            ->where('tanggal_order','>=',$startMonth)
+            ->groupBy('ym')
+            ->orderBy('ym')
+            ->pluck('total','ym');
 
-        $orders = collect([
-            [
-                'id' => 101,
-                'kode_pesanan' => 'ORD-001',
-                'status' => 'Selesai',
-                'created_at' => '2025-10-18 10:00:00',
-                'total_order' => 150000,
-                'items' => [
-                    ['produk' => 'Kopi Susu Gula Aren', 'jumlah' => 2, 'harga' => 25000],
-                    ['produk' => 'Americano', 'jumlah' => 1, 'harga' => 20000],
-                ],
-            ],
-            [
-                'id' => 102,
-                'kode_pesanan' => 'ORD-002',
-                'status' => 'Selesai',
-                'created_at' => '2025-10-12 14:30:00',
-                'total_order' => 180000,
-                'items' => [
-                    ['produk' => 'Cappuccino', 'jumlah' => 3, 'harga' => 30000],
-                ],
-            ],
-        ]);
-        
+        $chartLabels = [];
+        $chartData   = [];
+        for ($i=0;$i<$monthsBack;$i++) {
+            $m = (clone $startMonth)->addMonths($i);
+            $key = $m->format('Y-m');
+            $chartLabels[] = $key;
+            $chartData[]   = (int) ($monthly[$key] ?? 0);
+        }
 
-        return view('admin.customers.show', compact('customer', 'summary', 'orders', 'chartLabels', 'chartData'));
+        return view('admin.customers.show', compact('customer','summary','orders','chartLabels','chartData'));
     }
 }

@@ -16,15 +16,15 @@
     </a>
 </div>
 
-<form class="row g-2 mb-3" method="get" action="#">
+<form class="row g-2 mb-3" method="get" action="{{ route('admin.customers.index') }}">
     <div class="col-md-4">
         <input type="text" name="q" value="{{ $q }}" class="form-control" placeholder="Cari nama / email / telepon">
     </div>
     <div class="col-md-3">
-        <input type="date" name="from" value="{{ $from }}" class="form-control">
+        <input type="date" name="from" value="{{ $from }}" class="form-control" placeholder="Dari tanggal">
     </div>
     <div class="col-md-3">
-        <input type="date" name="to" value="{{ $to }}" class="form-control">
+        <input type="date" name="to" value="{{ $to }}" class="form-control" placeholder="Sampai tanggal">
     </div>
     <div class="col-md-2 d-grid">
         <button class="btn btn-dark"><i class="bi bi-search me-1"></i> Filter</button>
@@ -48,19 +48,18 @@
             <tbody>
                 @forelse($customers as $c)
                     <tr>
-                        <td class="fw-semibold">{{ $c['nama'] }}</td>
-                        <td>{{ $c['email'] }}</td>
-                        <td>{{ $c['telepon'] }}</td>
-                        <td class="text-end">{{ number_format($c['orders_count']) }}</td>
-                        <td class="text-end">Rp {{ number_format($c['total_spent'], 0, ',', '.') }}</td>
+                        <td class="fw-semibold">{{ $c->nama_lengkap }}</td>
+                        <td>{{ $c->email }}</td>
+                        <td>{{ $c->no_telp }}</td>
+                        <td class="text-end">{{ number_format($c->orders_count) }}</td>
+                        <td class="text-end">Rp {{ number_format($c->total_spent, 0, ',', '.') }}</td>
                         <td>
-                            {{ $c['last_order_at'] 
-                                ? \Carbon\Carbon::parse($c['last_order_at'])->format('d M Y H:i')
+                            {{ $c->last_order_at
+                                ? \Carbon\Carbon::parse($c->last_order_at)->format('d M Y H:i')
                                 : '-' }}
                         </td>
                         <td class="text-end">
-                            <a href="{{ route('admin.customers.show', $c['id']) }}" 
-                               class="btn btn-sm btn-dark">
+                            <a href="{{ route('admin.customers.show', $c->id_cust) }}" class="btn btn-sm btn-dark">
                                 Detail
                             </a>
                         </td>

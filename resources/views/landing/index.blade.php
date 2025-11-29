@@ -17,7 +17,8 @@
         :root { --bg:#F3E3C2; --coffee:#55351D; --ink:#2E373D; --rust:#AF461F; --teal:#325B56; --surface:#fff; --shadow:0 20px 50px rgba(46,55,61,.18); --radius-xl:24px; --radius-2xl:1.6rem; }
         * { scroll-behavior: smooth; }
         body { background:var(--bg); color:var(--ink); font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif; overflow-x:hidden; }
-        h1,h2,h3,h4 { font-family:"Playfair Display",serif; color:var(--coffee); letter-spacing:.02em; }
+        h1{ font-family:"Playfair Display",serif; color:var(--surface); letter-spacing:.02em; }
+        h2,h3,h4 { font-family:"Playfair Display",serif; color:var(--coffee); letter-spacing:.02em; }
         .hero { position:relative; min-height:100vh; overflow:hidden; isolation:isolate; }
         .hero video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:contrast(1.06) saturate(1.05) brightness(.95); }
         .hero::after { content:""; position:absolute; inset:0; z-index:1; background:linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,.25) 60%, rgba(0,0,0,0) 100%); }
@@ -195,7 +196,10 @@
                         cerita—antara barista, petani, dan Anda.</p>
                 </div>
                 <div class="col-lg-6 reveal">
-                    <img src="{{ asset('images/biji.JPG') }}" class="w-100 rounded-2xl shadow" alt="Biji kopi pilihan" loading="lazy">
+                    <video autoplay muted loop playsinline class="rounded-2xl w-100 shadow object-fit-cover alt="Biji kopi pilihan" loading="lazy" style="margin-top:1.5rem;">
+                        <source src="{{ asset('videos/heroes.mp4') }}" type="video/mp4">
+                        Browser kamu tidak mendukung video HTML5.
+                      </video>
                 </div>
             </div>
         </div>
