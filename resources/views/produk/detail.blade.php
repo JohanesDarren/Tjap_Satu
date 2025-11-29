@@ -1,32 +1,21 @@
 @extends('layouts.app')
 
-@section('title', $produk['nama'] . ' - Tjap Satu')
+@section('title', $produk->nama_produk . ' - Tjap Satu')
 
 @section('content')
 <div class="row">
-    {{-- Kolom Gambar --}}
     <div class="col-md-6 mb-4">
-         <img src="{{ asset($produk['gambar'] ?? 'images/placeholder.jpg') }}" class="img-fluid rounded shadow" alt="{{ $produk['nama'] }}">
+         <img src="{{ asset('storage/' . $produk->gambar) }}" class="img-fluid rounded shadow" alt="{{ $produk->nama_produk }}">
     </div>
 
-    {{-- Kolom Detail --}}
     <div class="col-md-6">
-        <h1 class="header-title">{{ $produk['nama'] }}</h1>
-        <span class="badge bg-success fs-6 mb-3">{{ $produk['jenis'] }}</span>
-        <p class="lead">{{ $produk['proses'] }}</p>
+        <h1 class="header-title">{{ $produk->nama_produk }}</h1>
+        <h3 class="text-success fw-bold my-3">Rp {{ number_format($produk->harga, 0, ',', '.') }}</h3>
+        
+        <p class="lead">{{ $produk->deskripsi }}</p>
+        <p>Stok Tersedia: <strong>{{ $produk->stok }}</strong></p>
 
-        <div class="mt-4">
-            <h4>Harga:</h4>
-            <ul class="list-group">
-                @foreach($produk['harga'] as $berat => $harga)
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <strong>{{ $berat }}</strong>
-                        <span class="fs-5">Rp {{ number_format($harga, 0, ',', '.') }}</span>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-        <a href="{{ route('cart.index', ['id' => $produk['id']]) }}" class="btn btn-success btn-lg mt-4">
+        <a href="{{ route('cart.index', ['id' => $produk->id_product]) }}" class="btn btn-success btn-lg mt-4">
             Masukkan ke Keranjang
         </a>
         

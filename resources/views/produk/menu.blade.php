@@ -85,20 +85,21 @@
     </ul>
 
     <div class="row" id="product-list">
-        @foreach($produk as $produk)
-            <div class="col-lg-4 col-md-6 mb-4 product-item" data-jenis="{{ $produk['jenis'] }}">
-                <a href="{{ route('produk.show', ['id' => $produk['id']]) }}" class="text-decoration-none">
+        @foreach($produk as $item)
+            <div class="col-lg-4 col-md-6 mb-4 product-item">
+                <a href="{{ route('produk.show', ['id' => $item->id_product]) }}" class="text-decoration-none">
                     <div class="card product-card h-100">
-                        <img src="{{ asset($produk['gambar']) }}" class="card-img-top" alt="{{ $produk['nama'] }}" style="height:200px; object-fit:cover;">
+                        <img src="{{ asset('storage/' . $item->gambar) }}" class="card-img-top" alt="{{ $item->nama_produk }}" style="height:200px; object-fit:cover;">
+                        
                         <div class="card-body">
-                            <h5 class="card-title">{{ $produk['nama'] }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{ $produk['proses'] }}</h6>
+                            <h5 class="card-title">{{ $item->nama_produk }}</h5>
+                            
+                            <p class="card-text text-muted small">{{ Str::limit($item->deskripsi, 50) }}</p>
+                            
                             <p class="card-text mt-3">
                                 <span class="card-price">
-                                    Mulai dari Rp {{ number_format($produk['harga']['100gr'], 0, ',', '.') }}
+                                    Rp {{ number_format($item->harga, 0, ',', '.') }}
                                 </span>
-                                <br>
-                                <small>/100gr</small>
                             </p>
                         </div>
                     </div>
@@ -110,7 +111,6 @@
 @include('components.footer')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Kode JavaScript untuk filter tidak perlu diubah, akan bekerja dengan struktur baru.
         const tabButtons = document.querySelectorAll('#categoryTabs .nav-link');
         const productItems = document.querySelectorAll('.product-item');
 
