@@ -1,57 +1,65 @@
-/* General */
-body {
-    background-color: #f3e3c260;
-    font-family: 'Poppins', sans-serif;
-}
+body { font-family: 'Poppins', sans-serif; background-color: #f9fafb; color: #1f2937; padding-bottom: 100px; }
+        
+        .text-custom-green { color: #325B56; }
+        .bg-custom-green { background-color: #325B56; color: white; }
+        .btn-custom-green { background-color: #325B56; color: white; border: none; }
+        .btn-custom-green:hover { background-color: #264541; color: white; }
 
-h4 {
-    font-weight: 600;
-}
+        /* Styling Kartu Pilihan (Radio Box) - PENGIRIMAN (KOTAK) */
+        .shipping-card {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: white;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        
+        /* Styling Kartu Pilihan - PEMBAYARAN (LIST VERTIKAL) */
+        .payment-card-item {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: white;
+            width: 100%;
+            display: flex;
+            align-items: center; /* Ikon dan teks sejajar */
+            position: relative;
+        }
 
-.card {
-    border-radius: 8px;
-    background-color: #fff;
-}
+        /* Hover & Active States */
+        .shipping-card:hover, .payment-card-item:hover { 
+            border-color: #325B56; background-color: #f0fdfa; 
+        }
+        .active { 
+            border-color: #325B56 !important; 
+            background-color: #f0fdfa !important; 
+            box-shadow: 0 0 0 1px #325B56; 
+        }
+        
+        /* Ikon Centang */
+        .check-icon {
+            color: #325B56; 
+            display: none;
+            margin-left: auto; /* Dorong ke paling kanan untuk list view */
+        }
+        .shipping-card .check-icon { position: absolute; top: 10px; right: 10px; margin-left: 0; }
+        .active .check-icon { display: block; }
 
-.list-group-item {
-    border: none;
-    border-radius: 6px;
-    background-color: #fff;
-}
-
-.btn-dark {
-    background-color: #325B56;
-    border: none;
-    border-radius: 30px;
-}
-
-.btn-dark:hover {
-    background-color: #333;
-}
-
-input[type="text"] {
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-.text-warning {
-    font-size: 0.9rem;
-}
-
-/* checkout.css */
-
-.shipping-option:hover,
-.payment-option:hover {
-  border-color: #AF461F; /* merah bata */
-  background-color: rgba(169, 169, 169, 0.268);
-  transition: 0.3s ease;
-}
-
-.form-check-input:checked {
-  background-color: #AF461F;
-  border-color: #AF461F;
-}
-
-label {
-  cursor: pointer;
-}
+        .checkout-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; }
+        
+        .fixed-bottom-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: white; padding: 12px 15px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 1000;
+            border-top: 1px solid #eee;
+        }

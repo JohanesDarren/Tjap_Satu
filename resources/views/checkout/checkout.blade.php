@@ -1,140 +1,274 @@
-@extends('layouts.checkout-app')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Toko Kopi Tjap Satu</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ asset('css/checkout.css') }}">
+</head>
+<body>
 
-@section('title', 'Checkout')
+    <div class="fixed-top d-md-none bg-white shadow-sm px-3 py-3 d-flex align-items-center">
+        <a href="{{ route('cart.index') }}" class="text-decoration-none text-dark d-flex align-items-center">
+            <i class="bi bi-arrow-left fs-5 me-3"></i>
+        </a>
+        <span class="fw-bold fs-5">Checkout</span>
+    </div>
 
-@section('content')
-    <div class="container my-5">
-        <div class="row">
-            <!-- Bag / Cart Items -->
-            <div class="col-md-7">
-                <!-- Metode Pengiriman -->
-                <div class="mb-4">
-                    <h5 class="fw-bold mb-3">Pilih Metode Pengiriman</h5>
-                    <hr>
-                    <!-- Home Delivery -->
-                    <div class="shipping-option p-3 mb-3 border rounded d-flex align-items-start">
-                        <input class="form-check-input me-3 mt-2" type="radio" name="shipping_method" id="home_delivery"
-                            value="home_delivery" checked>
-                        <div class="d-flex flex-column w-100">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="bi bi-truck fs-3 me-3 text-dark"></i>
-                                <div>
-                                    <label for="home_delivery" class="fw-bold mb-0">Home Delivery</label>
-                                    <p class="mb-0 text-muted small">Kami kirimkan order anda ke rumah</p>
+    <div class="container py-4 py-md-5 mt-5 mt-md-0" style="max-width: 1100px;">
+
+        <div class="d-none d-md-block mb-4">
+            <a href="{{ route('cart.index') }}" class="text-decoration-none text-secondary d-inline-flex align-items-center hover-dark">
+                <i class="bi bi-arrow-left me-2"></i> Kembali ke Keranjang
+            </a>
+        </div>
+        
+        <form action="{{ route('checkout.process') }}" method="POST" id="paymentForm">
+            @csrf
+            
+            @foreach($checkoutItems as $item)
+                <input type="hidden" name="items[]" value="{{ $item->id_item }}">
+            @endforeach
+
+            <div class="row g-4">
+                
+                <div class="col-lg-7">
+                    
+                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold fs-6 mb-3"><i class="bi bi-truck me-2 text-custom-green"></i>Metode Pengiriman</h5>
+                            
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <label class="shipping-card w-100" onclick="updateShipping('delivery')">
+                                        <input type="radio" name="shipping_type" value="delivery" class="d-none" checked>
+                                        <i class="bi bi-check-circle-fill check-icon"></i>
+                                        <i class="bi bi-bicycle fs-3 mb-2 text-secondary"></i>
+                                        <span class="small fw-bold">Dikirim Kurir</span>
+                                        <span class="text-muted" style="font-size: 10px;">Ongkir Rp 10.000</span>
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <label class="shipping-card w-100" onclick="updateShipping('pickup')">
+                                        <input type="radio" name="shipping_type" value="pickup" class="d-none">
+                                        <i class="bi bi-check-circle-fill check-icon"></i>
+                                        <i class="bi bi-shop fs-3 mb-2 text-secondary"></i>
+                                        <span class="small fw-bold">Ambil di Toko</span>
+                                        <span class="text-muted" style="font-size: 10px;">Bebas Ongkir</span>
+                                    </label>
                                 </div>
                             </div>
 
-                            <!-- Form Alamat (muncul hanya jika Home Delivery dipilih) -->
-                            @include('components.checkout.alamat')
-                        </div>
-                    </div>
-
-                    <!-- Ambil di Toko -->
-                    <div class="shipping-option p-3 mb-3 border rounded d-flex align-items-center">
-                        <input class="form-check-input me-3" type="radio" name="shipping_method" id="store_pickup"
-                            value="store_pickup">
-                        <div class="d-flex align-items-center w-100">
-                            <i class="bi bi-shop fs-3 me-3 text-dark"></i>
-                            <div>
-                                <label for="store_pickup" class="fw-bold mb-0">Klik & Ambil di Toko</label>
-                                <p class="mb-0 text-muted small">Ambil order anda di toko kami</p>
+                            <div class="mt-3 bg-light p-3 rounded-3 border border-secondary-subtle">
+                                <div id="address-delivery">
+                                    <p class="small text-muted mb-1 text-uppercase fw-bold">Alamat Pengiriman</p>
+                                    <p class="fw-bold mb-1">{{ $customer->nama_lengkap }} <span class="fw-normal text-muted">| {{ $customer->no_telp }}</span></p>
+                                    <p class="small text-secondary mb-0">{{ $customer->alamat ?? 'Harap isi alamat di profil.' }}</p>
+                                </div>
+                                <div id="address-pickup" class="d-none">
+                                    <p class="small text-muted mb-1 text-uppercase fw-bold">Lokasi Pengambilan</p>
+                                    <p class="fw-bold mb-1">Toko Kopi Tjap Satu</p>
+                                    <p class="small text-secondary mb-0">Jl. Kopi Nikmat No. 1, Jakarta Pusat.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold fs-6 mb-3"><i class="bi bi-bag-check me-2 text-custom-green"></i>Rincian Pesanan</h5>
+                            
+                            <div class="vstack gap-3 mb-4">
+                                @foreach($checkoutItems as $item)
+                                <div class="d-flex align-items-center gap-3">
+                                    @if($item->product->gambar)
+                                        <img src="{{ asset('uploads/' . $item->product->gambar) }}" class="checkout-img border" alt="Produk">
+                                    @else
+                                        <div class="checkout-img bg-light d-flex align-items-center justify-content-center text-secondary border">
+                                            <i class="bi bi-cup-hot"></i>
+                                        </div>
+                                    @endif
+                                    
+                                    <div class="flex-grow-1">
+                                        <h6 class="fw-bold mb-0 small">{{ $item->product->nama_produk }}</h6>
+                                        <span class="small text-muted">{{ $item->jumlah }} x Rp {{ number_format($item->product->harga, 0, ',', '.') }}</span>
+                                    </div>
+                                    <div class="fw-bold small">
+                                        Rp {{ number_format($item->product->harga * $item->jumlah, 0, ',', '.') }}
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+
+                            <div>
+                                <label for="note" class="form-label small fw-bold text-secondary">Catatan untuk Penjual (Opsional)</label>
+                                <textarea name="note" id="note" rows="1" class="form-control bg-light border-secondary-subtle" placeholder="Catatan untuk Penjual (Opsional)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                <!-- Bag Items -->
-                <h4 class="mb-4">Bag</h4>
-                @include('components.checkout.item')
+                <div class="col-lg-5">
+                    
+                    <div class="sticky-top" style="top: 20px; z-index: 900;">
+                        
+                        <div class="card border-0 shadow-sm rounded-4 mb-3">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold fs-6 mb-3"><i class="bi bi-wallet2 me-2 text-custom-green"></i>Metode Pembayaran</h5>
+                                
+                                <div class="vstack gap-2">
+                                    <label class="payment-card-item" onclick="selectPayment(this)">
+                                        <input type="radio" name="payment_method" value="qris" class="d-none" checked>
+                                        <i class="bi bi-qr-code-scan fs-4 me-3 text-secondary"></i>
+                                        <div>
+                                            <span class="small fw-bold d-block">QRIS</span>
+                                            <span class="text-muted" style="font-size: 10px;">Scan & Bayar Instan</span>
+                                        </div>
+                                        <i class="bi bi-check-circle-fill check-icon"></i>
+                                    </label>
+
+                                    <label class="payment-card-item" onclick="selectPayment(this)">
+                                        <input type="radio" name="payment_method" value="transfer" class="d-none">
+                                        <i class="bi bi-bank fs-4 me-3 text-secondary"></i>
+                                        <div>
+                                            <span class="small fw-bold d-block">Transfer Bank</span>
+                                            <span class="text-muted" style="font-size: 10px;">BCA, Mandiri, BRI</span>
+                                        </div>
+                                        <i class="bi bi-check-circle-fill check-icon"></i>
+                                    </label>
+
+                                    <label class="payment-card-item" onclick="selectPayment(this)">
+                                        <input type="radio" name="payment_method" value="cod" class="d-none">
+                                        <i class="bi bi-cash-coin fs-4 me-3 text-secondary"></i>
+                                        <div>
+                                            <span class="small fw-bold d-block">Bayar di Tempat (COD)</span>
+                                            <span class="text-muted" style="font-size: 10px;">Bayar saat kurir datang</span>
+                                        </div>
+                                        <i class="bi bi-check-circle-fill check-icon"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold fs-6 mb-4">Ringkasan Pembayaran</h5>
+                                
+                                <div class="d-flex justify-content-between mb-2 small">
+                                    <span class="text-secondary">Total Harga Barang</span>
+                                    <span class="fw-medium">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 small">
+                                    <span class="text-secondary">Ongkos Kirim</span>
+                                    <span class="fw-medium" id="ongkir-display">Rp {{ number_format($ongkir, 0, ',', '.') }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3 small">
+                                    <span class="text-secondary">Biaya Layanan</span>
+                                    <span class="fw-medium">Rp {{ number_format($biayaLayanan, 0, ',', '.') }}</span>
+                                </div>
+
+                                <hr class="border-secondary opacity-10">
+
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <span class="fw-bold text-dark">Total Tagihan</span>
+                                    <span class="fw-bold fs-4 text-custom-green" id="total-display">Rp {{ number_format($totalBayar, 0, ',', '.') }}</span>
+                                </div>
+
+                                <button type="submit" class="btn btn-custom-green w-100 py-2 fw-bold shadow-sm rounded-3 d-none d-lg-block">
+                                    Bayar Sekarang
+                                </button>
+                            </div>
+                        </div>
+
+                    </div> </div>
 
             </div>
-
-            <!-- Summary / Checkout -->
-            <div class="col-md-5">
-                <h4 class="mb-4">Summary</h4>
-                <ul class="list-group mb-3">
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>Subtotal</span>
-                        <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>Biaya Pengiriman</span>
-                        <span>Rp {{ number_format($shippingCost, 0, ',', '.') }}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>Pajak</span>
-                        <span>—</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between fw-bold">
-                        <span>Total</span>
-                        <span>Rp {{ number_format($subtotal + $shippingCost, 0, ',', '.') }}</span>
-                    </li>
-                </ul>
-
-                <!-- Metode Pembayaran -->
-                <div class="mb-3">
-                    <h5 class="fw-bold mb-3">Pilih Metode Pembayaran</h5>
-                    <hr>
-                    <div class="payment-option p-3 mb-3 border rounded d-flex align-items-center">
-                        <input class="form-check-input me-3" type="radio" name="payment_method" id="credit_card"
-                            value="credit_card">
-                        <div class="d-flex align-items-center w-100">
-                            <i class="bi bi-credit-card fs-3 me-3 text-dark"></i>
-                            <div>
-                                <label for="credit_card" class="fw-bold mb-0">Kartu Kredit</label>
-                                <p class="mb-0 text-muted small">Bayar menggunakan kartu debit atau kredit</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="payment-option p-3 mb-3 border rounded d-flex align-items-center">
-                        <input class="form-check-input me-3" type="radio" name="payment_method" id="bank_transfer"
-                            value="bank_transfer">
-                        <div class="d-flex align-items-center w-100">
-                            <i class="bi bi-bank fs-3 me-3 text-dark"></i>
-                            <div>
-                                <label for="bank_transfer" class="fw-bold mb-0">Transfer Bank</label>
-                                <p class="mb-0 text-muted small">Bayar melalui rekening bank Anda</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="payment-option p-3 mb-3 border rounded d-flex align-items-center">
-                        <input class="form-check-input me-3" type="radio" name="payment_method" id="e_wallet"
-                            value="e_wallet">
-                        <div class="d-flex align-items-center w-100">
-                            <i class="bi bi-phone fs-3 me-3 text-dark"></i>
-                            <div>
-                                <label for="e_wallet" class="fw-bold mb-0">E-Wallet</label>
-                                <p class="mb-0 text-muted small">Bayar menggunakan OVO, GoPay, Dana, atau lainnya</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Checkout Buttons -->
-                <button class="btn btn-dark w-100 mb-2">Bayar Sekarang</button>
-            </div>
-        </div>
+        </form>
     </div>
 
-    <!-- Script untuk menampilkan alamat hanya jika Home Delivery dipilih -->
-    <script>
-        const deliveryOption = document.getElementById('home_delivery');
-        const pickupOption = document.getElementById('store_pickup');
-        const addressForm = document.getElementById('delivery_address');
+    <div class="fixed-bottom-bar d-lg-none d-flex align-items-center justify-content-between">
+        <div>
+            <span class="small text-muted d-block" style="font-size: 11px;">Total Tagihan</span>
+            <span class="fw-bold fs-5 text-custom-green" id="mobile-total-display">Rp {{ number_format($totalBayar, 0, ',', '.') }}</span>
+        </div>
+        <button type="button" onclick="document.getElementById('paymentForm').submit();" class="btn btn-custom-green px-5 py-2 fw-bold rounded-3">
+            Bayar
+        </button>
+    </div>
 
-        function toggleAddress() {
-            if (deliveryOption.checked) {
-                addressForm.style.display = 'block';
-            } else {
-                addressForm.style.display = 'none';
-            }
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const subtotal = {{ $subtotal }};
+        const biayaLayanan = {{ $biayaLayanan }};
+        let ongkir = {{ $ongkir }};
+
+        function formatRupiah(angka) {
+            return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        deliveryOption.addEventListener('change', toggleAddress);
-        pickupOption.addEventListener('change', toggleAddress);
+        function updateShipping(type) {
+            const radios = document.getElementsByName('shipping_type');
+            radios.forEach(radio => {
+                const card = radio.closest('.shipping-card');
+                if (radio.value === type) {
+                    card.classList.add('active');
+                    radio.checked = true;
+                } else {
+                    card.classList.remove('active');
+                }
+            });
 
-        toggleAddress();
+            if (type === 'pickup') {
+                document.getElementById('address-delivery').classList.add('d-none');
+                document.getElementById('address-pickup').classList.remove('d-none');
+                
+                ongkir = 0;
+                document.getElementById('ongkir-display').innerText = "Gratis";
+                document.getElementById('ongkir-display').classList.add('text-success');
+            } else {
+                document.getElementById('address-delivery').classList.remove('d-none');
+                document.getElementById('address-pickup').classList.add('d-none');
+                
+                ongkir = {{ $ongkir }};
+                document.getElementById('ongkir-display').innerText = formatRupiah(ongkir);
+                document.getElementById('ongkir-display').classList.remove('text-success');
+            }
+
+            let totalBaru = subtotal + ongkir + biayaLayanan;
+            document.getElementById('total-display').innerText = formatRupiah(totalBaru);
+            document.getElementById('mobile-total-display').innerText = formatRupiah(totalBaru);
+        }
+
+        function selectPayment(element) {
+            const allOptions = document.querySelectorAll('.payment-card-item');
+            
+            allOptions.forEach(opt => {
+                opt.classList.remove('active');
+                const icon = opt.querySelector('.bi-qr-code-scan, .bi-bank, .bi-cash-coin');
+                if(icon) icon.classList.remove('text-custom-green');
+            });
+
+            element.classList.add('active');
+            const iconActive = element.querySelector('.bi-qr-code-scan, .bi-bank, .bi-cash-coin');
+            if(iconActive) iconActive.classList.add('text-custom-green');
+            
+            element.querySelector('input').checked = true;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateShipping('delivery');
+            
+            const checkedPayment = document.querySelector('input[name="payment_method"]:checked');
+            if(checkedPayment) {
+                selectPayment(checkedPayment.closest('.payment-card-item'));
+            }
+        });
     </script>
-@endsection
+</body>
+</html>

@@ -65,8 +65,6 @@ Route::get('/about', [AboutController::class, 'index'])->name('tentang');
 
 // Cart Page Route
 use App\Http\Controllers\CartController;
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-
 // Checkout Page Routes
 use App\Http\Controllers\CheckoutController;
 // Profile Page Route
@@ -75,8 +73,14 @@ use App\Http\Controllers\ProfileController;
 Route::middleware('auth:customer')->group(function () {
     // Checkout protected
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+
+    //cart
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add/{id_product}', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::delete('/cart/remove/{id_item}', [CartController::class, 'deleteItem'])->name('cart.remove');
+    Route::get('/cart/update/{id_item}/{action}', [CartController::class, 'updateQuantity'])->name('cart.update');
 
     // Profile protected
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');

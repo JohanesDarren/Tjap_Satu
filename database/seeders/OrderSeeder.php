@@ -38,7 +38,7 @@ class OrderSeeder extends Seeder
             'tanggal_order'  => Carbon::now()->subDays(1), // Kemarin
             'total_harga'    => 42000,
             'tipe_pesanan'   => 'Delivery',
-            'status_pesanan' => 'Proses', // Sedang diantar
+            'status_pesanan' => 'dibatalkan', // Sedang diantar
             'id_cust'        => $cust->id_cust,
             'id_kurir'       => $kurir ? $kurir->id_kurir : null,
         ]);
@@ -49,7 +49,7 @@ class OrderSeeder extends Seeder
             'tanggal_order'  => Carbon::now(), // Hari ini
             'total_harga'    => 53000,
             'tipe_pesanan'   => 'Take-away',
-            'status_pesanan' => 'Pending', // Baru pesan
+            'status_pesanan' => 'selesai', // Baru pesan
             'id_cust'        => $cust->id_cust,
             'id_kurir'       => null,
         ]);
@@ -60,7 +60,7 @@ class OrderSeeder extends Seeder
             'tanggal_order'  => Carbon::now(),
             'total_harga'    => 70000,
             'tipe_pesanan'   => 'Delivery',
-            'status_pesanan' => 'Selesai',
+            'status_pesanan' => 'proses',
             'id_cust'        => $cust->id_cust,
             'id_kurir'       => $kurir ? $kurir->id_kurir : null,
         ]);

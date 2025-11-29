@@ -26,6 +26,15 @@ body {
   z-index: 2;
 }
 
+.hero-section video {
+      object-fit: cover;
+      filter: brightness(90%);
+    }
+
+.hero-section span {
+      color: #ff8a33;
+    }
+
 /* //Bagian Owner */
 .owner-card {
   background-color: #fff;
