@@ -3,7 +3,7 @@
 @section('title', 'Tentang TJAP SATU')
 
 @section('content')
-  @extends('components.header')
+  @include('components.header')
 
   {{-- CONTENT --}}
   <main>

@@ -94,6 +94,7 @@
 
     .brand-text {
       display: inline-block;
+      color: #fff !important; /* pastikan selalu putih seperti header lain */
     }
 
     /* Link */
