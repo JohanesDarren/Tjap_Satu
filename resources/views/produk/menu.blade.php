@@ -86,10 +86,10 @@
 
     <div class="row" id="product-list">
         @foreach($produk as $item)
-            <div class="col-lg-4 col-md-6 mb-4 product-item">
+            <div class="col-lg-4 col-md-6 mb-4 product-item" data-jenis="{{ $item->jenis ?? 'semua' }}">
                 <a href="{{ route('produk.show', ['id' => $item->id_product]) }}" class="text-decoration-none">
                     <div class="card product-card h-100">
-                        <img src="{{ asset('storage/' . $item->gambar) }}" class="card-img-top" alt="{{ $item->nama_produk }}" style="height:200px; object-fit:cover;">
+                        <img src="{{ asset($item->gambar ? 'storage/' . $item->gambar : 'images/placeholder.jpg') }}" class="card-img-top" alt="{{ $item->nama_produk }}" style="height:200px; object-fit:cover;">
                         
                         <div class="card-body">
                             <h5 class="card-title">{{ $item->nama_produk }}</h5>

@@ -3,8 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\Admin\ProdukController as AdminProdukController;
+use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\PesananController as AdminPesananController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 
 use App\Http\Controllers\LandingController;
 
@@ -19,43 +22,44 @@ Route::get('/admin/pesanan', [AdminPesananController::class, 'index'])->name('ad
 //admin report route
 Route::get('/admin/report', [AdminReportController::class, 'index'])->name('admin.report.index');
 
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\CustomerController;
-use App\Http\Controllers\Admin\ContentController;
-// admin produk route
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    // 1. Dashboard
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    //pelanggan route
+    // 2. Produk (Resource)
+    Route::resource('produk', AdminProdukController::class)->names('produk')->parameters(['produk' => 'id']);
+
+    // 3. Pesanan
+    Route::get('/pesanan', [AdminPesananController::class, 'index'])->name('pesanan.index');
+    // TAMBAHAN PENTING: Route untuk update status pesanan
+    Route::put('/pesanan/{id}/status', [AdminPesananController::class, 'updateStatus'])->name('pesanan.updateStatus');
+
+    // 4. Laporan
+    Route::get('/report', [AdminReportController::class, 'index'])->name('report.index');
+
+    // 5. Customer
     Route::get('/pelanggan', [CustomerController::class, 'index'])->name('customers.index');
     Route::get('/pelanggan/{id}', [CustomerController::class, 'show'])->name('customers.show');
+    Route::delete('/pelanggan/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');
 
-    // Halaman CMS
+    // 6. Manajemen Konten (CMS)
     Route::get('/konten', [ContentController::class, 'index'])->name('content.index');
-
-    // Banner (CRUD, route model binding)
+    
+    // Banner Routes
     Route::post('/konten/banner', [ContentController::class, 'storeBanner'])->name('content.banner.store');
     Route::post('/konten/banner/{banner}', [ContentController::class, 'updateBanner'])->name('content.banner.update');
     Route::delete('/konten/banner/{banner}', [ContentController::class, 'deleteBanner'])->name('content.banner.delete');
 
-    // Promo (CRUD)
+    // Promo Routes (YANG SEBELUMNYA HILANG)
     Route::post('/konten/promo', [ContentController::class, 'storePromo'])->name('content.promo.store');
     Route::post('/konten/promo/{promo}', [ContentController::class, 'updatePromo'])->name('content.promo.update');
     Route::delete('/konten/promo/{promo}', [ContentController::class, 'deletePromo'])->name('content.promo.delete');
 
-    // Blog (CRUD, route model binding)
+    // Blog Routes (YANG SEBELUMNYA HILANG)
     Route::post('/konten/blog', [ContentController::class, 'storeBlog'])->name('content.blog.store');
     Route::post('/konten/blog/{blog}', [ContentController::class, 'updateBlog'])->name('content.blog.update');
     Route::delete('/konten/blog/{blog}', [ContentController::class, 'deleteBlog'])->name('content.blog.delete');
-
-    // Produk Admin
-    Route::get('/produk', [AdminProdukController::class, 'index'])->name('produk.index');
-    Route::get('/produk/create', [AdminProdukController::class, 'create'])->name('produk.create');
-    Route::post('/produk', [AdminProdukController::class, 'store'])->name('produk.store');
-    Route::get('/produk/{id}/edit', [AdminProdukController::class, 'edit'])->name('produk.edit');
-    Route::put('/produk/{id}', [AdminProdukController::class, 'update'])->name('produk.update');
-    Route::delete('/produk/{id}', [AdminProdukController::class, 'destroy'])->name('produk.destroy');
-});
+});;
 
 //========== PUNYA AFDIKKKKKK ============//
 

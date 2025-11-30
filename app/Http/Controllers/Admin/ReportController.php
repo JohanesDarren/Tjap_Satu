@@ -37,7 +37,7 @@ class ReportController extends Controller
                 return [Carbon::parse($item->date)->format('d M') => $item->total];
             });
 
-        return view('admin.admin-report', [
+        return view('admin.laporan.index', [
             'totalPendapatan' => $totalPendapatan,
             'totalPesanan' => $totalPesanan,
             'rataRataPesanan' => $rataRataPesanan,

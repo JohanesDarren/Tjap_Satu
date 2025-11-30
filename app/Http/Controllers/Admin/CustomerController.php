@@ -17,10 +17,11 @@ class CustomerController extends Controller
         $from = $request->get('from');
         $to   = $request->get('to');
 
+        // Query Builder canggih untuk statistik customer
         $customersQuery = Customer::query()
-            ->select('customer.*')
+            ->select('customer.*') // Pastikan nama tabel sesuai migrasi (customer)
             ->selectSub(function($sub) use ($from,$to){
-                $sub->from('order')
+                $sub->from('order') // Pastikan nama tabel sesuai migrasi (order)
                     ->selectRaw('COALESCE(SUM(total_harga),0)')
                     ->whereColumn('order.id_cust','customer.id_cust');
                 if ($from) $sub->whereDate('tanggal_order','>=',$from);
@@ -40,18 +41,20 @@ class CustomerController extends Controller
                 if ($from) $sub->whereDate('tanggal_order','>=',$from);
                 if ($to)   $sub->whereDate('tanggal_order','<=',$to);
             }, 'last_order_at')
-            ->orderByDesc(DB::raw('last_order_at IS NULL'))
+            ->orderByDesc(DB::raw('last_order_at IS NULL')) // Customer aktif di atas
             ->orderByDesc('last_order_at');
 
+        // Fitur Pencarian
         if ($q !== '') {
             $customersQuery->where(function($w) use ($q){
-                $w->where('nama_lengkap','like',"%$q%")
+                $w->where('nama','like',"%$q%") // Sesuaikan dengan kolom di DB (nama/nama_lengkap)
                   ->orWhere('email','like',"%$q%")
                   ->orWhere('no_telp','like',"%$q%");
             });
         }
+        
+        // Filter Tanggal
         if ($from || $to) {
-            // Ensure only customers having orders in range appear if date filter applied
             $customersQuery->whereExists(function($sub) use ($from,$to){
                 $sub->selectRaw(1)
                     ->from('order')
@@ -63,16 +66,16 @@ class CustomerController extends Controller
 
         $customers = $customersQuery->get();
 
-        return view('admin.customers.index', compact('customers','q','from','to'));
+        return view('admin.customer.index', compact('customers','q','from','to'));
     }
 
     public function show($id)
     {
         $customer = Customer::where('id_cust',$id)->firstOrFail();
 
-        // Orders with items (detail + product)
+        // Mengambil histori order beserta detail produknya
         $orders = Order::with(['detailOrders.product'])
-            ->where('id_cust',$customer->id_cust)
+            ->where('id_cust', $customer->id_cust)
             ->orderByDesc('tanggal_order')
             ->get();
 
@@ -82,9 +85,10 @@ class CustomerController extends Controller
             'last_order_at'=> optional($orders->first())->tanggal_order,
         ];
 
-        // Chart: last 6 months spending grouped by month
+        // Data untuk Grafik: Pengeluaran 6 bulan terakhir
         $monthsBack = 6;
         $startMonth = Carbon::now()->subMonths($monthsBack-1)->startOfMonth();
+        
         $monthly = Order::selectRaw('DATE_FORMAT(tanggal_order, "%Y-%m") as ym, SUM(total_harga) as total')
             ->where('id_cust',$customer->id_cust)
             ->where('tanggal_order','>=',$startMonth)
@@ -97,10 +101,18 @@ class CustomerController extends Controller
         for ($i=0;$i<$monthsBack;$i++) {
             $m = (clone $startMonth)->addMonths($i);
             $key = $m->format('Y-m');
-            $chartLabels[] = $key;
+            $chartLabels[] = $m->format('M Y'); // Label Bulan (Jan 2025)
             $chartData[]   = (int) ($monthly[$key] ?? 0);
         }
 
-        return view('admin.customers.show', compact('customer','summary','orders','chartLabels','chartData'));
+        return view('admin.customer.show', compact('customer','summary','orders','chartLabels','chartData'));
+    }
+
+    public function destroy($id)
+    {
+        $customer = Customer::where('id_cust', $id)->firstOrFail();
+        $customer->delete();
+        
+        return redirect()->route('admin.customers.index')->with('success', 'Data pelanggan berhasil dihapus.');
     }
 }

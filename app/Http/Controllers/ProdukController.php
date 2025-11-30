@@ -16,6 +16,15 @@ class ProdukController extends Controller
     public function show($id)
     {
         $foundProduk = Product::findOrFail($id);
-        return view('produk.detail', ['produk' => $foundProduk]);
+        $produk = [
+            'id_product' => $foundProduk->id_product,
+            'nama' => $foundProduk->nama_produk,
+            'gambar' => $foundProduk->gambar,
+            'harga' => ['100gr' => $foundProduk->harga],
+            'deskripsi' => $foundProduk->deskripsi,
+            'jenis' => $foundProduk->jenis ?? '-',
+            'proses' => $foundProduk->proses ?? '-',
+        ];
+        return view('produk.detail', ['produk' => $produk]);
     }
 }
