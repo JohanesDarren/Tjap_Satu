@@ -33,7 +33,7 @@
                             </span>
                         </div>
                         <p class="small text-muted mb-0">
-                            {{ \Carbon\Carbon::parse($order->tanggal_order)->format('d M Y, H:i') }}</p>
+                            {{ \Carbon\Carbon::parse($order->tanggal_order ?? now())->setTimezone('Asia/Jakarta')->format('d M Y, H:i') }}</p>
                     </div>
                 </div>
 

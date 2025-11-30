@@ -62,7 +62,7 @@
             <div>
                 <h1 class="h3 fw-bold mb-1">Order #{{ $order->id_order }}</h1>
                 <p class="text-muted small mb-0">
-                    {{ \Carbon\Carbon::parse($order->tanggal_order)->format('d F Y, H:i') }} WIB
+                    {{ \Carbon\Carbon::parse($order->tanggal_order ?? now())->setTimezone('Asia/Jakarta')->format('d F Y, H:i') }} WIB
                 </p>
             </div>
             @php

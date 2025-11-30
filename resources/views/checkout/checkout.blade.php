@@ -72,7 +72,7 @@
                                 <div id="address-pickup" class="d-none">
                                     <p class="small text-muted mb-1 text-uppercase fw-bold">Lokasi Pengambilan</p>
                                     <p class="fw-bold mb-1">Toko Kopi Tjap Satu</p>
-                                    <p class="small text-secondary mb-0">Jl. Kopi Nikmat No. 1, Jakarta Pusat.</p>
+                                    <p class="small text-secondary mb-0">Jl. Raya Soreang - Kopo No.430, Cingcin, Kec. Soreang, Kabupaten Bandung, Jawa Barat 40922</p>
                                 </div>
                             </div>
                         </div>
