@@ -27,7 +27,7 @@
                         <tr>
                             <td>
                                 @if($item->gambar)
-                                    <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->nama_produk }}" width="50" height="50" class="rounded object-fit-cover">
+                                    <img src="{{ asset('uploads/' . $item->gambar) }}" alt="{{ $item->nama_produk }}" width="50" height="50" class="rounded object-fit-cover">
                                 @else
                                     <span class="text-muted small">No Img</span>
                                 @endif
@@ -39,13 +39,13 @@
                                     {{ $item->stok }}
                                 </span>
                             </td>
-                            <td><small class="text-muted">{{ Str::limit($item->deskripsi, 50) }}</small></td>
+                            <td><small class="text-muted">{{ \Illuminate\Support\Str::limit($item->deskripsi, 50) }}</small></td>
                             <td>
                                 <div class="d-flex gap-2">
                                     <a href="{{ route('admin.produk.edit', $item->id_product) }}" class="btn btn-sm btn-warning text-white">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    
+
                                     <form action="{{ route('admin.produk.destroy', $item->id_product) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus produk ini?');">
                                         @csrf
                                         @method('DELETE')

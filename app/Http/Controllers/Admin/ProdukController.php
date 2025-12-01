@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product; // Pastikan Model Product sudah ada
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProdukController extends Controller
 {
@@ -34,11 +35,15 @@ class ProdukController extends Controller
             'gambar'      => 'required|image|mimes:jpeg,png,jpg|max:2048', // Wajib upload gambar
         ]);
 
-        // 2. Upload Gambar
-        $imagePath = null;
+        // Upload ke public/uploads dan simpan hanya filename
+        $filename = null;
         if ($request->hasFile('gambar')) {
-            // Simpan ke storage/app/public/products
-            $imagePath = $request->file('gambar')->store('products', 'public');
+            $file = $request->file('gambar');
+            $ext = $file->getClientOriginalExtension();
+            $base = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $safe = Str::slug($base);
+            $filename = uniqid($safe . '_') . '.' . $ext;
+            $file->move(public_path('uploads'), $filename);
         }
 
         // 3. Simpan Data
@@ -47,7 +52,7 @@ class ProdukController extends Controller
             'harga'       => $request->harga,
             'stok'        => $request->stok,
             'deskripsi'   => $request->deskripsi,
-            'gambar'      => $imagePath
+            'gambar'      => $filename
         ]);
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil ditambahkan!');
@@ -76,12 +81,23 @@ class ProdukController extends Controller
 
         // Cek jika user mengupload gambar baru
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama
-            if ($produk->gambar && Storage::disk('public')->exists($produk->gambar)) {
-                Storage::disk('public')->delete($produk->gambar);
+            // Hapus gambar lama (dukung dua skema penyimpanan lama/baru)
+            if ($produk->gambar) {
+                if (Str::startsWith($produk->gambar, 'products/') && Storage::disk('public')->exists($produk->gambar)) {
+                    Storage::disk('public')->delete($produk->gambar);
+                } elseif (file_exists(public_path('uploads/' . $produk->gambar))) {
+                    @unlink(public_path('uploads/' . $produk->gambar));
+                }
             }
-            // Simpan gambar baru
-            $data['gambar'] = $request->file('gambar')->store('products', 'public');
+
+            // Simpan gambar baru ke public/uploads dengan filename saja
+            $file = $request->file('gambar');
+            $ext = $file->getClientOriginalExtension();
+            $base = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $safe = Str::slug($base);
+            $newName = uniqid($safe . '_') . '.' . $ext;
+            $file->move(public_path('uploads'), $newName);
+            $data['gambar'] = $newName;
         }
 
         $produk->update($data);
@@ -97,6 +113,8 @@ class ProdukController extends Controller
         // Hapus gambar fisik
         if ($produk->gambar && Storage::disk('public')->exists($produk->gambar)) {
             Storage::disk('public')->delete($produk->gambar);
+        } elseif (file_exists(public_path('uploads/' . $produk->gambar))) {
+            @unlink(public_path('uploads/' . $produk->gambar));
         }
 
         $produk->delete();

@@ -94,13 +94,31 @@
 
                             <div class="vstack gap-3 mb-4">
                                 @foreach($checkoutItems as $item)
+                                    @php
+                                        $g = $item->product->gambar ?? null;
+                                        $imgSrc = null;
+                                        if ($g) {
+                                            if (preg_match('/^https?:\/\//', $g)) {
+                                                $imgSrc = $g;
+                                            } elseif (\Illuminate\Support\Str::startsWith($g, 'storage/')) {
+                                                $imgSrc = asset($g);
+                                            } elseif (\Illuminate\Support\Str::startsWith($g, 'products/')) {
+                                                // old storage path stored as products/.. on public disk
+                                                $imgSrc = asset('storage/' . ltrim($g, '/'));
+                                            } elseif (\Illuminate\Support\Str::startsWith($g, 'uploads/')) {
+                                                $imgSrc = asset($g);
+                                            } elseif (\Illuminate\Support\Str::startsWith($g, '/')) {
+                                                $imgSrc = asset(ltrim($g, '/'));
+                                            } else {
+                                                $imgSrc = asset('uploads/' . ltrim($g, '/'));
+                                            }
+                                        }
+                                    @endphp
                                     <div class="d-flex align-items-center gap-3">
-                                        @if($item->product->gambar)
-                                            <img src="{{ asset('uploads/' . $item->product->gambar) }}"
-                                                class="checkout-img border" alt="Produk">
+                                        @if($imgSrc)
+                                            <img src="{{ $imgSrc }}" class="checkout-img border" alt="Produk">
                                         @else
-                                            <div
-                                                class="checkout-img bg-light d-flex align-items-center justify-content-center text-secondary border">
+                                            <div class="checkout-img bg-light d-flex align-items-center justify-content-center text-secondary border">
                                                 <i class="bi bi-cup-hot"></i>
                                             </div>
                                         @endif

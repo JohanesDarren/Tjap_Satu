@@ -11,7 +11,7 @@
         <form action="{{ route('admin.produk.update', $produk->id_product) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            
+
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label">Nama Produk</label>
@@ -32,10 +32,10 @@
                     <label class="form-label">Gambar Produk (Opsional)</label>
                     <input type="file" name="gambar" class="form-control" accept="image/*">
                     <div class="form-text">Biarkan kosong jika tidak ingin mengubah gambar.</div>
-                    
+
                     @if($produk->gambar)
                         <div class="mt-2">
-                            <img src="{{ asset('storage/' . $produk->gambar) }}" alt="Preview" class="img-thumbnail" style="max-height: 150px;">
+                            <img src="{{ asset('uploads/' . $produk->gambar) }}" alt="Preview" class="img-thumbnail" style="max-height: 150px;">
                         </div>
                     @endif
                 </div>

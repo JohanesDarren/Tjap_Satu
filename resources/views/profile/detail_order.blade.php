@@ -66,7 +66,7 @@
                 </p>
             </div>
             @php
-        
+
                 $status = strtolower($order->status_pesanan);
 
                 // Cek kondisi
@@ -98,30 +98,39 @@
                         </thead>
                         <tbody>
                             @foreach($order->detailOrders as $detail)
+                                @php
+                                    $g = $detail->product->gambar ?? null;
+                                    if ($g) {
+                                        if (preg_match('/^https?:\/\//', $g)) {
+                                            $imgSrc = $g;
+                                        } elseif (\Illuminate\Support\Str::startsWith($g, ['uploads/', '/'])) {
+                                            $imgSrc = asset($g);
+                                        } else {
+                                            $imgSrc = asset('uploads/' . ltrim($g, '/'));
+                                        }
+                                    } else {
+                                        $imgSrc = null;
+                                    }
+                                @endphp
                                 <tr>
                                     <td class="ps-4 py-3">
                                         <div class="d-flex align-items-center">
-                                            @if($detail->product->foto ?? false)
-                                                <img src="{{ asset('uploads/' . $detail->product->foto) }}"
-                                                    class="product-img me-3 border" alt="Produk">
+                                            @if($imgSrc)
+                                                <img src="{{ $imgSrc }}" class="product-img me-3 border" alt="Produk">
                                             @else
-                                                <div
-                                                    class="product-img me-3 bg-light d-flex align-items-center justify-content-center text-secondary ">
-                                                    <img src="{{ asset('uploads/' . $detail->product->gambar) }}"
-                                                        class="product-img " alt="Produk">
+                                                <div class="product-img me-3 bg-light d-flex align-items-center justify-content-center text-secondary">
+                                                    <i class="bi bi-cup-hot"></i>
                                                 </div>
                                             @endif
 
                                             <div>
                                                 <h6 class="fw-bold mb-0 text-dark">{{ $detail->product->nama_produk }}</h6>
-                                                <small class="text-muted">Rp
-                                                    {{ number_format($detail->product->harga, 0, ',', '.') }} / item</small>
+                                                <small class="text-muted">Rp {{ number_format($detail->product->harga, 0, ',', '.') }} / item</small>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="text-center fw-medium">{{ $detail->jumlah }}x</td>
-                                    <td class="pe-4 text-end fw-bold">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}
-                                    </td>
+                                    <td class="pe-4 text-end fw-bold">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

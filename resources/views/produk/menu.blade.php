@@ -46,7 +46,7 @@
         }
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px A15px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
             border-color: var(--tjap-green);
         }
         .card-title {
@@ -86,15 +86,38 @@
 
     <div class="row" id="product-list">
         @foreach($produk as $item)
+            @php
+                $g = $item->gambar ?? null;
+                $imgSrc = null;
+                if ($g) {
+                    if (preg_match('/^https?:\/\//', $g)) {
+                        $imgSrc = $g;
+                    } elseif (\Illuminate\Support\Str::startsWith($g, 'storage/')) {
+                        $imgSrc = asset($g);
+                    } elseif (\Illuminate\Support\Str::startsWith($g, 'products/')) {
+                        $imgSrc = asset('storage/' . ltrim($g, '/'));
+                    } elseif (\Illuminate\Support\Str::startsWith($g, 'uploads/')) {
+                        $imgSrc = asset($g);
+                    } elseif (\Illuminate\Support\Str::startsWith($g, '/')) {
+                        $imgSrc = asset(ltrim($g, '/'));
+                    } else {
+                        $imgSrc = asset('uploads/' . ltrim($g, '/'));
+                    }
+                }
+            @endphp
             <div class="col-lg-4 col-md-6 mb-4 product-item" data-jenis="{{ $item->jenis ?? 'semua' }}">
                 <a href="{{ route('produk.show', ['id' => $item->id_product]) }}" class="text-decoration-none">
                     <div class="card product-card h-100">
-                        <img src="{{ asset($item->gambar ? 'storage/' . $item->gambar : 'images/placeholder.jpg') }}" class="card-img-top" alt="{{ $item->nama_produk }}" style="height:200px; object-fit:cover;">
+                        @if($imgSrc)
+                            <img src="{{ $imgSrc }}" class="card-img-top" alt="{{ $item->nama_produk }}" style="height:200px; object-fit:cover;">
+                        @else
+                            <img src="{{ asset('images/placeholder.jpg') }}" class="card-img-top" alt="{{ $item->nama_produk }}" style="height:200px; object-fit:cover;">
+                        @endif
                         
                         <div class="card-body">
                             <h5 class="card-title">{{ $item->nama_produk }}</h5>
                             
-                            <p class="card-text text-muted small">{{ Str::limit($item->deskripsi, 50) }}</p>
+                            <p class="card-text text-muted small">{{ \Illuminate\Support\Str::limit($item->deskripsi, 50) }}</p>
                             
                             <p class="card-text mt-3">
                                 <span class="card-price">
