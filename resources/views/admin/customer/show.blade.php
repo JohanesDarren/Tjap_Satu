@@ -14,7 +14,7 @@
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body text-center py-4">
                 <div class="display-1 text-secondary mb-3"><i class="bi bi-person-circle"></i></div>
-                <h4>{{ $customer->nama }}</h4>
+                <h4>{{ $customer->nama_lengkap }}</h4>
                 <p class="text-muted">{{ $customer->email }}</p>
                 <hr>
                 <div class="text-start">

@@ -47,7 +47,7 @@ class CustomerController extends Controller
         // Fitur Pencarian
         if ($q !== '') {
             $customersQuery->where(function($w) use ($q){
-                $w->where('nama','like',"%$q%") // Sesuaikan dengan kolom di DB (nama/nama_lengkap)
+                $w->where('nama_lengkap','like',"%$q%") // Sesuaikan dengan kolom di DB (nama/nama_lengkap)
                   ->orWhere('email','like',"%$q%")
                   ->orWhere('no_telp','like',"%$q%");
             });

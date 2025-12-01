@@ -44,7 +44,7 @@
                     @forelse($customers as $cust)
                     <tr>
                         <td class="ps-4">
-                            <div class="fw-bold">{{ $cust->nama }}</div>
+                            <div class="fw-bold">{{ $cust->nama_lengkap }}</div>
                             <small class="text-muted">ID: {{ $cust->id_cust }}</small>
                         </td>
                         <td>

@@ -24,7 +24,7 @@
                     <tr>
                         <td>#{{ $item->id_order }}</td>
                         <td>
-                            {{ $item->customer->nama ?? 'Guest' }}<br>
+                            {{ $item->customer->nama_lengkap ?? 'Guest' }}<br>
                             <small class="text-muted">{{ $item->customer->no_telp ?? '-' }}</small>
                         </td>
                         <td>{{ \Carbon\Carbon::parse($item->tanggal_order)->format('d M Y H:i') }}</td>
