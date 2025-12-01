@@ -96,7 +96,7 @@ class ProfileController extends Controller
             return redirect()->route('home', ['login' => 1]);
         }
 
-        $order = \App\Models\Order::with('detailOrders.product')
+        $order = Order::with('detailOrders.product')
             ->where('id_order', $id)
             ->firstOrFail();
 
