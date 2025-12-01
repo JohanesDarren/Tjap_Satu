@@ -19,6 +19,7 @@ class Customer extends Authenticatable
         'no_telp',
         'password',
         'foto',
+        'is_admin',
     ];
 
     protected $hidden = [
@@ -29,6 +30,7 @@ class Customer extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
     }
 

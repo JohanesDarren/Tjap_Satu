@@ -83,6 +83,13 @@
                             </button>
                         </div>
 
+                        <!-- Tombol ke Dashboard Admin (hanya admin) -->
+                        @if(auth('customer')->check() && (auth('customer')->user()->is_admin ?? false))
+                        <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-primary w-100 mb-3 d-none d-md-block py-2 fw-medium btn-sm shadow-sm">
+                            Ke Dashboard Admin
+                        </a>
+                        @endif
+
                         <button
                             class="btn btn-custom-green w-100 mb-4 d-none d-md-block py-2 fw-medium btn-sm shadow-sm"
                             onclick="triggerTab('v-pills-edit-tab')">

@@ -30,7 +30,7 @@
     </form>
 
     <div class="mt-5 pt-4 border-top">
-        <form action="{{ route('logout') }}" method="POST">
+        <form action="{{ (auth('customer')->check() && (auth('customer')->user()->is_admin ?? false)) ? route('admin.logout') : route('logout') }}" method="POST">
             @csrf
             <button type="submit"
                 class="btn btn-outline-danger w-100 fw-bold btn-sm d-flex align-items-center justify-content-center gap-2">

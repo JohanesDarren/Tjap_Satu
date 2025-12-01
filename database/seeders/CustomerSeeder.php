@@ -19,5 +19,16 @@ class CustomerSeeder extends Seeder
                 'password' => Hash::make('password123'),
             ]
         );
+
+        Customer::updateOrCreate(
+            ['email' => 'admin@tjapsatu.com'],
+            [
+                'nama_lengkap' => 'Administrator',
+                'alamat' => 'Jl. Admin Utama',
+                'no_telp' => '080000000000',
+                'password' => Hash::make('admin123'),
+                'is_admin' => true,
+            ]
+        );
     }
 }

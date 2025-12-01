@@ -12,7 +12,7 @@
           <div class="alert alert-danger py-2 mb-3">{{ $errors->first('email') }}</div>
         @endif
 
-        <form action="{{ route('login.submit') }}" method="POST" novalidate>
+        <form action="{{ session('admin_login') ? route('admin.login.submit') : route('login.submit') }}" method="POST" novalidate>
           @csrf
           <div class="mb-3">
             <label class="form-label">Email</label>
