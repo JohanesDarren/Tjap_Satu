@@ -33,7 +33,7 @@ class AdminAuthController extends Controller
             'password.required' => 'Password wajib diisi.',
         ]);
 
-        // Validasi if exist: customer admin harus ada
+        // Validasi if exist
         $adminExists = \App\Models\Customer::where('email', $credentials['email'])
             ->where('is_admin', true)
             ->exists();

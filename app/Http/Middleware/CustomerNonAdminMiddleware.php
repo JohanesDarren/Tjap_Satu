@@ -18,7 +18,6 @@ class CustomerNonAdminMiddleware
         $guard = \Illuminate\Support\Facades\Auth::guard('customer');
 
         if ($guard->check() && ($guard->user()->is_admin ?? false)) {
-            // Admin tidak boleh akses halaman customer, arahkan ke dashboard admin
             return redirect()->route('admin.dashboard');
         }
 
