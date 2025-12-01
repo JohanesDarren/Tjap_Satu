@@ -44,8 +44,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::put('{id}/status', [AdminPesananController::class, 'updateStatus'])->name('updateStatus');
         });
 
-        Route::get('report', [AdminReportController::class, 'index'])->name('report.index');
-
         Route::prefix('pelanggan')->name('customers.')->group(function () {
             Route::get('/', [CustomerController::class, 'index'])->name('index');
             Route::get('{id}', [CustomerController::class, 'show'])->name('show');
@@ -73,6 +71,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 Route::delete('{blog}', [ContentController::class, 'deleteBlog'])->name('delete');
             });
         });
+
+        Route::get('report', [AdminReportController::class, 'index'])->name('report.index');
+        
     });
 });
 
