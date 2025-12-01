@@ -14,14 +14,6 @@
 </head>
 
 <body>
-
-    <div class="fixed-top d-md-none bg-white shadow-sm px-3 py-3 d-flex align-items-center">
-        <a href="{{ route('cart.index') }}" class="text-decoration-none text-dark d-flex align-items-center">
-            <i class="bi bi-arrow-left fs-5 me-3"></i>
-        </a>
-        <span class="fw-bold fs-5">Checkout</span>
-    </div>
-
     <div class="container py-4 py-md-5 mt-5 mt-md-0" style="max-width: 1100px;">
 
         <div class="d-none d-md-block mb-4">
@@ -81,7 +73,8 @@
                                     <p class="small text-muted mb-1 text-uppercase fw-bold">Lokasi Pengambilan</p>
                                     <p class="fw-bold mb-1">Toko Kopi Tjap Satu</p>
                                     <p class="small text-secondary mb-0">Jl. Raya Soreang - Kopo No.430, Cingcin, Kec.
-                                        Soreang, Kabupaten Bandung, Jawa Barat 40922</p>
+                                        Soreang, Kabupaten Bandung, Jawa Barat 40922
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -94,44 +87,23 @@
 
                             <div class="vstack gap-3 mb-4">
                                 @foreach($checkoutItems as $item)
-                                    @php
-                                        $g = $item->product->gambar ?? null;
-                                        $imgSrc = null;
-                                        if ($g) {
-                                            if (preg_match('/^https?:\/\//', $g)) {
-                                                $imgSrc = $g;
-                                            } elseif (\Illuminate\Support\Str::startsWith($g, 'storage/')) {
-                                                $imgSrc = asset($g);
-                                            } elseif (\Illuminate\Support\Str::startsWith($g, 'products/')) {
-                                                // old storage path stored as products/.. on public disk
-                                                $imgSrc = asset('storage/' . ltrim($g, '/'));
-                                            } elseif (\Illuminate\Support\Str::startsWith($g, 'uploads/')) {
-                                                $imgSrc = asset($g);
-                                            } elseif (\Illuminate\Support\Str::startsWith($g, '/')) {
-                                                $imgSrc = asset(ltrim($g, '/'));
-                                            } else {
-                                                $imgSrc = asset('uploads/' . ltrim($g, '/'));
-                                            }
-                                        }
-                                    @endphp
-                                    <div class="d-flex align-items-center gap-3">
-                                        @if($imgSrc)
-                                            <img src="{{ $imgSrc }}" class="checkout-img border" alt="Produk">
-                                        @else
-                                            <div class="checkout-img bg-light d-flex align-items-center justify-content-center text-secondary border">
-                                                <i class="bi bi-cup-hot"></i>
-                                            </div>
-                                        @endif
-
-                                        <div class="flex-grow-1">
-                                            <h6 class="fw-bold mb-0 small">{{ $item->product->nama_produk }}</h6>
-                                            <span class="small text-muted">{{ $item->jumlah }} x Rp
-                                                {{ number_format($item->product->harga, 0, ',', '.') }}</span>
+                                <div class="d-flex align-items-center gap-3">
+                                    @if($item->product->gambar)
+                                        <img src="{{ asset('uploads/' . $item->product->gambar) }}" class="checkout-img border" alt="Produk">
+                                    @else
+                                        <div class="checkout-img bg-light d-flex align-items-center justify-content-center text-secondary border">
+                                            <i class="bi bi-cup-hot"></i>
                                         </div>
-                                        <div class="fw-bold small">
-                                            Rp {{ number_format($item->product->harga * $item->jumlah, 0, ',', '.') }}
-                                        </div>
+                                    @endif
+                                    
+                                    <div class="flex-grow-1">
+                                        <h6 class="fw-bold mb-0 small">{{ $item->product->nama_produk }}</h6>
+                                        <span class="small text-muted">{{ $item->jumlah }} x Rp {{ number_format($item->product->harga, 0, ',', '.') }}</span>
                                     </div>
+                                    <div class="fw-bold small">
+                                        Rp {{ number_format($item->product->harga * $item->jumlah, 0, ',', '.') }}
+                                    </div>
+                                </div>
                                 @endforeach
                             </div>
 

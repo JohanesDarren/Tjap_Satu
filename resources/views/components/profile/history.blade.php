@@ -7,37 +7,9 @@
                 <div class="d-flex align-items-start gap-3">
 
                     <div class="d-none d-md-block">
-                        @php
-                            $p = optional($order->detailOrders->first())->product;
-                            $g = $p->gambar ?? null;
-                            $imgSrc = null;
-                            if ($g) {
-                                if (preg_match('/^https?:\/\//', $g)) {
-                                    $imgSrc = $g;
-                                } elseif (\Illuminate\Support\Str::startsWith($g, 'storage/')) {
-                                    $imgSrc = asset($g);
-                                } elseif (\Illuminate\Support\Str::startsWith($g, 'products/')) {
-                                    $imgSrc = asset('storage/' . ltrim($g, '/'));
-                                } elseif (\Illuminate\Support\Str::startsWith($g, 'uploads/')) {
-                                    $imgSrc = asset($g);
-                                } elseif (\Illuminate\Support\Str::startsWith($g, '/')) {
-                                    $imgSrc = asset(ltrim($g, '/'));
-                                } else {
-                                    $imgSrc = asset('uploads/' . ltrim($g, '/'));
-                                }
-                            }
-                        @endphp
-
-                        @if($imgSrc)
-                            <img src="{{ $imgSrc }}"
-                                class="rounded border border-secondary-subtle"
-                                style="width: 56px; height: 56px; object-fit: cover;" alt="Produk">
-                        @else
-                            <div class="rounded border border-secondary-subtle d-flex align-items-center justify-content-center"
-                                 style="width: 56px; height: 56px; background:#f2f2f2;">
-                                <i class="bi bi-cup-hot text-secondary"></i>
-                            </div>
-                        @endif
+                        <img src="{{ asset('uploads/' . $order->detailOrders->first()->product->gambar) }}"
+                            class="rounded border border-secondary-subtle"
+                            style="width: 56px; height: 56px; object-fit: cover;" alt="Produk">
                     </div>
 
                     <div>
@@ -46,11 +18,11 @@
                             @php
                                 $status = strtolower($order->status_pesanan);
                                     if ($status == 'selesai') {
-                                        $badgeClass = 'bg-success text-white'; // Hijau Solid (Lebih Jelas)
+                                        $badgeClass = 'bg-success text-white';
                                     } elseif ($status == 'dibatalkan') {
-                                        $badgeClass = 'bg-danger text-white'; // Merah (Opsional)
+                                        $badgeClass = 'bg-danger text-white';
                                     } else {
-                                        $badgeClass = 'bg-warning text-dark'; // Kuning (Pending/Proses)
+                                        $badgeClass = 'bg-warning text-dark';
                                     }
                             @endphp
                             <span class="badge {{ $badgeClass }} text-uppercase" style="font-size: 10px;">

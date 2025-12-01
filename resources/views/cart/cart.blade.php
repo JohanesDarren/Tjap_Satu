@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Keranjang - Toko Kopi Tjap Satu</title>
-
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <style>
         body { font-family: 'Poppins', sans-serif; background-color: #f9fafb; color: #1f2937; padding-bottom: 100px; }
-
+        
         .text-custom-green { color: #325B56; }
         .bg-custom-green { background-color: #325B56; color: white; }
         .btn-custom-green { background-color: #325B56; color: white; border: none; }
@@ -19,7 +19,7 @@
         .btn-custom-green:disabled { background-color: #a0b1af; }
 
         .cart-item-img { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; }
-
+        
         .form-check-input:checked {
             background-color: #325B56;
             border-color: #325B56;
@@ -76,9 +76,9 @@
 
         @if(count($cartItems) > 0)
             <div class="row g-4">
-
+                
                 <div class="col-lg-8">
-
+                    
                     <div class="card border-0 shadow-sm rounded-4 mb-3">
                         <div class="card-body py-3 d-flex align-items-center">
                             <div class="form-check">
@@ -92,45 +92,24 @@
 
                     <div class="card border-0 shadow-sm rounded-4">
                         <div class="card-body p-0">
-                            <form id="checkoutForm" action="{{ route('checkout.index') }}" method="GET">
-
+                            <form id="checkoutForm" action="{{ route('checkout.index') }}" method="GET"> 
+                                
                                 @foreach($cartItems as $item)
                                 <div class="p-3 border-bottom {{ $loop->last ? 'border-0' : '' }}">
                                     <div class="d-flex align-items-start gap-3">
-
+                                        
                                         <div class="pt-4">
-                                            <input class="form-check-input item-checkbox" type="checkbox"
-                                                   name="selected_items[]"
-                                                   value="{{ $item->id_item }}"
-                                                   data-price="{{ $item->product->harga }}"
+                                            <input class="form-check-input item-checkbox" type="checkbox" 
+                                                   name="selected_items[]" 
+                                                   value="{{ $item->id_item }}" 
+                                                   data-price="{{ $item->product->harga }}" 
                                                    data-qty="{{ $item->jumlah }}"
                                                    checked>
                                         </div>
 
                                         <div class="flex-shrink-0">
-                                            @php
-                                                $g = $item->product->gambar ?? null;
-                                                $imgSrc = null;
-                                                if ($g) {
-                                                    if (preg_match('/^https?:\/\//', $g)) {
-                                                        $imgSrc = $g;
-                                                    } elseif (\Illuminate\Support\Str::startsWith($g, 'storage/')) {
-                                                        $imgSrc = asset($g);
-                                                    } elseif (\Illuminate\Support\Str::startsWith($g, 'products/')) {
-                                                        $imgSrc = asset('storage/' . ltrim($g, '/'));
-                                                    } elseif (\Illuminate\Support\Str::startsWith($g, 'uploads/')) {
-                                                        $imgSrc = asset($g);
-                                                    } elseif (\Illuminate\Support\Str::startsWith($g, 'images/')) {
-                                                        $imgSrc = asset($g);
-                                                    } elseif (\Illuminate\Support\Str::startsWith($g, '/')) {
-                                                        $imgSrc = asset(ltrim($g, '/'));
-                                                    } else {
-                                                        $imgSrc = asset('uploads/' . ltrim($g, '/'));
-                                                    }
-                                                }
-                                            @endphp
-                                            @if($imgSrc)
-                                                <img src="{{ $imgSrc }}" class="cart-item-img" alt="Produk">
+                                            @if($item->product->gambar)
+                                                <img src="{{ asset('uploads/' . $item->product->gambar) }}" class="cart-item-img" alt="Produk">
                                             @else
                                                 <div class="cart-item-img bg-light d-flex align-items-center justify-content-center text-secondary">
                                                     <i class="bi bi-cup-hot fs-3"></i>
@@ -155,7 +134,7 @@
                                                     <span class="fw-bold px-2 small">{{ $item->jumlah }}</span>
                                                     <a href="{{ route('cart.update', ['id_item' => $item->id_item, 'action' => 'plus']) }}" class="text-dark text-decoration-none px-2">+</a>
                                                 </div>
-
+                                                
                                                 <span class="small text-muted">
                                                     Subtotal: <span class="fw-bold text-dark">Rp {{ number_format($item->product->harga * $item->jumlah, 0, ',', '.') }}</span>
                                                 </span>
@@ -174,7 +153,7 @@
                     <div class="card border-0 shadow-sm rounded-4 sticky-top" style="top: 90px;">
                         <div class="card-body p-4">
                             <h5 class="fw-bold mb-4">Ringkasan Belanja</h5>
-
+                            
                             <div class="d-flex justify-content-between mb-3">
                                 <span class="text-muted">Total Harga</span>
                                 <span class="fw-bold" id="desktopTotal">Rp 0</span>
