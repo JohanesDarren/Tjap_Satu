@@ -52,7 +52,7 @@ class CustomerController extends Controller
                   ->orWhere('no_telp','like',"%$q%");
             });
         }
-        
+
         // Filter Tanggal
         if ($from || $to) {
             $customersQuery->whereExists(function($sub) use ($from,$to){
@@ -88,7 +88,7 @@ class CustomerController extends Controller
         // Data untuk Grafik: Pengeluaran 6 bulan terakhir
         $monthsBack = 6;
         $startMonth = Carbon::now()->subMonths($monthsBack-1)->startOfMonth();
-        
+
         $monthly = Order::selectRaw('DATE_FORMAT(tanggal_order, "%Y-%m") as ym, SUM(total_harga) as total')
             ->where('id_cust',$customer->id_cust)
             ->where('tanggal_order','>=',$startMonth)
@@ -112,7 +112,7 @@ class CustomerController extends Controller
     {
         $customer = Customer::where('id_cust', $id)->firstOrFail();
         $customer->delete();
-        
+
         return redirect()->route('admin.customers.index')->with('success', 'Data pelanggan berhasil dihapus.');
     }
 }
