@@ -89,8 +89,35 @@ class DashboardController extends Controller
         // === ORDER SUMMARY (Counts per status) ===
         $orderSummaryRaw = Order::select('status_pesanan', DB::raw('COUNT(*) as c'))
             ->groupBy('status_pesanan')
-            ->pluck('c', 'status_pesanan');
-        $orderSummary = $orderSummaryRaw->toArray();
+            ->get()
+            ->map(function($r){
+                $key = strtolower(trim($r->status_pesanan));
+                // Normalisasi variasi status ke bentuk kanonik
+                return [
+                    'key' => match ($key) {
+                        'pending' => 'pending',
+                        'proses', 'diproses' => 'proses',
+                        'kirim', 'dikirim' => 'dikirim',
+                        'selesai', 'done', 'completed' => 'selesai',
+                        'batal', 'dibatalkan', 'cancelled' => 'dibatalkan',
+                        default => $key,
+                    },
+                    'c' => (int) $r->c,
+                ];
+            });
+        // Akumulasikan ke dalam array final dengan label tetap
+        $orderSummary = [
+            'pending' => 0,
+            'proses' => 0,
+            'dikirim' => 0,
+            'selesai' => 0,
+            'dibatalkan' => 0,
+        ];
+        foreach ($orderSummaryRaw as $row) {
+            if (array_key_exists($row['key'], $orderSummary)) {
+                $orderSummary[$row['key']] += $row['c'];
+            }
+        }
 
         return view('admin.dashboard', compact(
             'metrics',
