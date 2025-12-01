@@ -10,12 +10,14 @@ class CustomerSeeder extends Seeder
 {
     public function run()
     {
-        Customer::create([
-            'nama_lengkap' => 'Budi Santoso',
-            'alamat' => 'Jl. Kenangan No. 1, Bandung',
-            'email' => 'budi@example.com',
-            'no_telp' => '081234567890',
-            'password' => Hash::make('password123'),
-        ]);
+        Customer::updateOrCreate(
+            ['email' => 'budi@example.com'], // unique key criteria
+            [
+                'nama_lengkap' => 'Budi Santoso',
+                'alamat' => 'Jl. Kenangan No. 1, Bandung',
+                'no_telp' => '081234567890',
+                'password' => Hash::make('password123'),
+            ]
+        );
     }
 }

@@ -1,144 +1,447 @@
 @extends('layouts.admin')
+@section('title', 'Manajemen Konten')
+
+@push('styles')
+<style>
+    .thumb-banner { width: 180px; height: 56px; object-fit: cover; border-radius: .5rem; }
+    .table-fit td, .table-fit th { white-space: nowrap; }
+    .modal-backdrop.show { opacity: .6 !important; }
+    .modal-dialog { margin-top: 8vh; }
+    .table-hover>tbody>tr:hover { background: #f8fafc; }
+    .nav-pills .nav-link { border-radius: 50px; padding: .55rem 1rem; font-weight: 500; transition:.25s; }
+    .nav-pills .nav-link.active { background: linear-gradient(90deg,#0ea5e9,#2563eb); box-shadow:0 4px 12px rgba(14,165,233,.35); }
+    .nav-pills .nav-link:not(.active):hover { background:#e2e8f0; color:#0f172a; }
+    .card { border:1px solid #e5e7eb; box-shadow:0 2px 6px rgba(0,0,0,.05); transition:.25s; }
+    .card:hover { box-shadow:0 6px 22px rgba(0,0,0,.08); }
+    .card-header { background: #f1f5f9; }
+    .btn { transition: background-color .25s, color .25s, box-shadow .25s, transform .12s; }
+    .btn:active { transform:scale(.96); }
+    .btn-outline-secondary:hover { background:#64748b; color:#fff; }
+    .btn-dark { background: linear-gradient(90deg,#334155,#1e293b); border:0; }
+    .btn-dark:hover { background: linear-gradient(90deg,#475569,#334155); box-shadow:0 4px 14px rgba(0,0,0,.2); }
+    .btn-outline-danger:hover { background:#dc2626; border-color:#dc2626; color:#fff; }
+    .btn-outline-secondary, .btn-outline-danger, .btn-outline-success { backdrop-filter: blur(2px); }
+    .btn-soft-primary { background:#e0f2fe; color:#0369a1; border:1px solid #7dd3fc; }
+    .btn-soft-primary:hover { background:#bae6fd; color:#0c4a6e; }
+    .badge.bg-success { background: linear-gradient(90deg,#16a34a,#15803d); }
+    .badge.bg-secondary { background: linear-gradient(90deg,#475569,#334155); }
+    .modal-content { border:1px solid #e2e8f0; box-shadow:0 10px 30px rgba(0,0,0,.25); }
+    .modal-header { background:#f8fafc; }
+    .form-control { border-color:#cbd5e1; }
+    .form-control:focus { border-color:#2563eb; box-shadow:0 0 0 .2rem rgba(37,99,235,.25); }
+    .form-check-input:checked { background-color:#2563eb; border-color:#2563eb; }
+    .text-truncate a { text-decoration:none; }
+    .text-truncate a:hover { text-decoration:underline; }
+</style>
+@endpush
 
 @section('content')
-<h2 class="mb-4">Manajemen Konten</h2>
-
-<div class="card border-0 shadow-sm">
-    <div class="card-header bg-white">
-        <ul class="nav nav-tabs card-header-tabs" id="contentTabs" role="tablist">
-            <li class="nav-item">
-                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#banner" type="button">Banner Utama</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#promo" type="button">Promo</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#blog" type="button">Blog / Artikel</button>
-            </li>
-        </ul>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h4 mb-1">Manajemen Konten</h1>
+            <div class="text-muted small">Kelola banner, promo, dan blog.</div>
+        </div>
+        <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Kembali ke Dashboard
+        </a>
     </div>
-    <div class="card-body">
-        <div class="tab-content" id="contentTabsContent">
-            
-            <div class="tab-pane fade show active" id="banner" role="tabpanel">
-                <form action="{{ route('admin.content.banner.store') }}" method="POST" enctype="multipart/form-data" class="mb-4 p-3 bg-light rounded">
-                    @csrf
-                    <h6>Tambah Banner Baru</h6>
-                    <div class="row g-2">
-                        <div class="col-md-4">
-                            <input type="text" name="title" class="form-control" placeholder="Judul Banner" required>
-                        </div>
-                        <div class="col-md-4">
-                            <input type="file" name="image" class="form-control" accept="image/*" required>
-                        </div>
-                        <div class="col-md-4">
-                            <button type="submit" class="btn btn-primary w-100">Upload Banner</button>
-                        </div>
-                    </div>
-                </form>
 
-                <div class="row">
-                    @foreach($banners as $banner)
-                    <div class="col-md-4 mb-3">
-                        <div class="card h-100">
-                            <img src="{{ asset('storage/'.$banner->image_path) }}" class="card-img-top" style="height: 150px; object-fit: cover;">
-                            <div class="card-body">
-                                <h6 class="card-title">{{ $banner->title }}</h6>
-                                <form action="{{ route('admin.content.banner.delete', $banner->id) }}" method="POST">
-                                    @csrf @method('DELETE')
-                                    <button class="btn btn-sm btn-danger w-100">Hapus</button>
-                                </form>
-                            </div>
+    @if(session('ok'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>{{ session('ok') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="alert alert-danger mb-3">
+            <div class="fw-semibold mb-1">Validasi gagal</div>
+            <ul class="mb-0 small">
+                @foreach($errors->all() as $e)
+                    <li>{{ $e }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <ul class="nav nav-pills mb-3" id="cmsTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="banner-tab" data-bs-toggle="pill" data-bs-target="#banner-pane" type="button" role="tab">
+                <i class="bi bi-image me-1"></i> Banner
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="promo-tab" data-bs-toggle="pill" data-bs-target="#promo-pane" type="button" role="tab">
+                <i class="bi bi-megaphone me-1"></i> Promo
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="blog-tab" data-bs-toggle="pill" data-bs-target="#blog-pane" type="button" role="tab">
+                <i class="bi bi-journal-text me-1"></i> Blog
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="banner-pane" role="tabpanel" aria-labelledby="banner-tab">
+            <div class="row g-3">
+                <div class="col-lg-5">
+                    <div class="card h-100">
+                        <div class="card-header d-flex align-items-center gap-2">
+                            <i class="bi bi-plus-square"></i>
+                            <span class="fw-semibold">Tambah Banner</span>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="{{ route('admin.content.banner.store') }}" enctype="multipart/form-data">
+                                @csrf
+                                <div class="mb-3">
+                                    <label class="form-label">Judul</label>
+                                    <input name="title" class="form-control" placeholder="Judul banner" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Gambar</label>
+                                    <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp" required>
+                                    <div class="form-text">Format: jpg, jpeg, png, webp. Maks 2MB.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Link (opsional)</label>
+                                    <input name="link_url" class="form-control" placeholder="https://...">
+                                </div>
+                                <div class="d-grid">
+                                    <button class="btn btn-dark"><i class="bi bi-save me-1"></i> Simpan Banner</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    @endforeach
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="card h-100">
+                        <div class="card-header fw-semibold">Daftar Banner</div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm align-middle mb-0 table-fit">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Preview</th>
+                                        <th>Judul</th>
+                                        <th>Link</th>
+                                        <th class="text-end">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($banners as $b)
+                                        <tr>
+                                            <td>@if($b->image_path)<img class="thumb-banner" src="{{ asset('storage/'.$b->image_path) }}" alt="">@endif</td>
+                                            <td class="fw-semibold">{{ $b->title }}</td>
+                                            <td class="text-truncate" style="max-width: 240px;">@if($b->link_url)<a href="{{ $b->link_url }}" target="_blank">{{ $b->link_url }}</a>@else - @endif</td>
+                                            <td class="text-end">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editBanner-{{ $b->id }}">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <form class="d-inline" method="post" action="{{ route('admin.content.banner.delete', $b->id) }}">
+                                                    @csrf @method('DELETE')
+                                                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Hapus banner ini?')"><i class="bi bi-trash"></i></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        @push('modals')
+                                            <div class="modal fade" id="editBanner-{{ $b->id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form method="post" action="{{ route('admin.content.banner.update', $b->id) }}" class="modal-content" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Edit Banner</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Judul</label>
+                                                                <input name="title" class="form-control" value="{{ $b->title }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Gambar</label>
+                                                                <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp">
+                                                                @if($b->image_path)
+                                                                    <small class="text-muted d-block mt-1">Gambar saat ini:</small>
+                                                                    <img class="thumb-banner mt-1" src="{{ asset('storage/'.$b->image_path) }}" alt="">
+                                                                @endif
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Link (opsional)</label>
+                                                                <input name="link_url" class="form-control" value="{{ $b->link_url }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                                                            <button class="btn btn-dark">Simpan</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        @endpush
+                                    @empty
+                                        <tr>
+                                            <td colspan="4" class="text-center py-4 text-muted">Belum ada banner.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="tab-pane fade" id="promo" role="tabpanel">
-                <form action="{{ route('admin.content.promo.store') }}" method="POST" class="mb-4 p-3 bg-light rounded">
-                    @csrf
-                    <h6>Buat Promo Baru</h6>
-                    <div class="row g-2">
-                        <div class="col-md-4">
-                            <input type="text" name="title" class="form-control" placeholder="Nama Promo" required>
+        <div class="tab-pane fade" id="promo-pane" role="tabpanel" aria-labelledby="promo-tab">
+            <div class="row g-3">
+                <div class="col-lg-5">
+                    <div class="card h-100">
+                        <div class="card-header d-flex align-items-center gap-2">
+                            <i class="bi bi-plus-square"></i>
+                            <span class="fw-semibold">Tambah Promo</span>
                         </div>
-                        <div class="col-md-3">
-                            <input type="date" name="start_date" class="form-control" required>
-                        </div>
-                        <div class="col-md-3">
-                            <input type="date" name="end_date" class="form-control" required>
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-success w-100">Simpan</button>
-                        </div>
-                        <div class="col-12 mt-2">
-                            <textarea name="description" class="form-control" placeholder="Deskripsi Promo" rows="2"></textarea>
+                        <div class="card-body">
+                            <form method="post" action="{{ route('admin.content.promo.store') }}">
+                                @csrf
+                                <div class="mb-3">
+                                    <label class="form-label">Judul</label>
+                                    <input name="title" class="form-control" placeholder="Judul promo" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Deskripsi</label>
+                                    <textarea name="description" class="form-control" rows="3" placeholder="Detail promo"></textarea>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col">
+                                        <label class="form-label">Mulai</label>
+                                        <input type="date" name="start_date" class="form-control" required>
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label">Selesai</label>
+                                        <input type="date" name="end_date" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="active" id="promoActive">
+                                    <label class="form-check-label" for="promoActive">Aktif</label>
+                                </div>
+                                <div class="d-grid">
+                                    <button class="btn btn-dark"><i class="bi bi-save me-1"></i> Simpan Promo</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </form>
+                </div>
 
-                <table class="table table-bordered">
-                    <thead><tr><th>Promo</th><th>Periode</th><th>Status</th><th>Aksi</th></tr></thead>
-                    <tbody>
-                        @foreach($promos as $promo)
-                        <tr>
-                            <td>{{ $promo->title }}</td>
-                            <td>{{ $promo->start_date->format('d M') }} - {{ $promo->end_date->format('d M Y') }}</td>
-                            <td>
-                                <span class="badge {{ $promo->active ? 'bg-success' : 'bg-secondary' }}">
-                                    {{ $promo->active ? 'Aktif' : 'Non-aktif' }}
-                                </span>
-                            </td>
-                            <td>
-                                <form action="{{ route('admin.content.promo.delete', $promo->id) }}" method="POST">
-                                    @csrf @method('DELETE')
-                                    <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                                </form>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="tab-pane fade" id="blog" role="tabpanel">
-                <form action="{{ route('admin.content.blog.store') }}" method="POST" enctype="multipart/form-data" class="mb-4 p-3 bg-light rounded">
-                    @csrf
-                    <h6>Tulis Artikel Baru</h6>
-                    <div class="mb-2">
-                        <input type="text" name="title" class="form-control" placeholder="Judul Artikel" required>
-                    </div>
-                    <div class="mb-2">
-                        <textarea name="content" class="form-control" rows="3" placeholder="Isi artikel..." required></textarea>
-                    </div>
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <input type="file" name="cover" class="form-control" accept="image/*">
+                <div class="col-lg-7">
+                    <div class="card h-100">
+                        <div class="card-header fw-semibold">Daftar Promo</div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm align-middle mb-0 table-fit">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Judul</th>
+                                        <th>Periode</th>
+                                        <th>Status</th>
+                                        <th class="text-end">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($promos as $p)
+                                        <tr>
+                                            <td class="fw-semibold">{{ $p->title ?? $p['title'] }}</td>
+                                            <td>{{ ($p->start_date ?? $p['start_date']) }} s.d. {{ ($p->end_date ?? $p['end_date']) }}</td>
+                                            <td>@if(!empty($p->active ?? $p['active']))<span class="badge bg-success">Aktif</span>@else<span class="badge bg-secondary">Nonaktif</span>@endif</td>
+                                            <td class="text-end">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editPromo-{{ $p->id ?? $p['id'] }}"><i class="bi bi-pencil"></i></button>
+                                                <form class="d-inline" method="post" action="{{ route('admin.content.promo.delete', $p->id ?? $p['id']) }}">
+                                                    @csrf @method('DELETE')
+                                                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Hapus promo ini?')"><i class="bi bi-trash"></i></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        @push('modals')
+                                            <div class="modal fade" id="editPromo-{{ $p->id ?? $p['id'] }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form method="post" action="{{ route('admin.content.promo.update', $p->id ?? $p['id']) }}" class="modal-content">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Edit Promo</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Judul</label>
+                                                                <input name="title" class="form-control" value="{{ $p->title ?? $p['title'] }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Deskripsi</label>
+                                                                <textarea name="description" class="form-control" rows="3">{{ $p->description ?? $p['description'] ?? '' }}</textarea>
+                                                            </div>
+                                                            <div class="row g-2 mb-3">
+                                                                <div class="col">
+                                                                    <label class="form-label">Mulai</label>
+                                                                    <input type="date" name="start_date" class="form-control" value="{{ ($p->start_date ?? $p['start_date']) }}" required>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <label class="form-label">Selesai</label>
+                                                                    <input type="date" name="end_date" class="form-control" value="{{ ($p->end_date ?? $p['end_date']) }}" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" name="active" id="promoActive{{ $p->id ?? $p['id'] }}" {{ !empty($p->active ?? $p['active']) ? 'checked' : '' }}>
+                                                                <label class="form-check-label" for="promoActive{{ $p->id ?? $p['id'] }}">Aktif</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                                                            <button class="btn btn-dark">Simpan</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        @endpush
+                                    @empty
+                                        <tr>
+                                            <td colspan="4" class="text-center py-4 text-muted">Belum ada promo.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary w-100">Publish</button>
-                        </div>
                     </div>
-                </form>
-
-                <div class="list-group">
-                    @foreach($blogs as $blog)
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-1">{{ $blog->title }}</h6>
-                            <small class="text-muted">{{ Str::limit($blog->content, 100) }}</small>
-                        </div>
-                        <form action="{{ route('admin.content.blog.delete', $blog->id) }}" method="POST">
-                            @csrf @method('DELETE')
-                            <button class="btn btn-sm btn-outline-danger">Hapus</button>
-                        </form>
-                    </div>
-                    @endforeach
                 </div>
             </div>
+        </div>
 
+        <div class="tab-pane fade" id="blog-pane" role="tabpanel" aria-labelledby="blog-tab">
+            <div class="row g-3">
+                <div class="col-lg-5">
+                    <div class="card h-100">
+                        <div class="card-header d-flex align-items-center gap-2">
+                            <i class="bi bi-plus-square"></i>
+                            <span class="fw-semibold">Tambah Blog</span>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="{{ route('admin.content.blog.store') }}" enctype="multipart/form-data">
+                                @csrf
+                                <div class="mb-3">
+                                    <label class="form-label">Judul</label>
+                                    <input name="title" class="form-control" placeholder="Judul artikel" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cover (opsional)</label>
+                                    <input type="file" name="cover" class="form-control" accept="image/jpeg,image/png,image/webp">
+                                    <div class="form-text">Maks 2MB.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Ringkasan (opsional)</label>
+                                    <textarea name="excerpt" class="form-control" rows="2" placeholder="Ringkas artikel"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Konten</label>
+                                    <textarea name="content" class="form-control" rows="6" required placeholder="Tulis konten di sini..."></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Tanggal Publikasi (opsional)</label>
+                                    <input type="date" name="published_at" class="form-control">
+                                </div>
+                                <div class="d-grid">
+                                    <button class="btn btn-dark"><i class="bi bi-save me-1"></i> Simpan Blog</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="card h-100">
+                        <div class="card-header fw-semibold">Daftar Blog</div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Judul</th>
+                                        <th>Publikasi</th>
+                                        <th class="text-truncate">Ringkasan</th>
+                                        <th class="text-end">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($blogs as $b)
+                                        <tr>
+                                            <td class="fw-semibold">
+                                                <div>{{ $b->title }}</div>
+                                                @if($b->cover_path)
+                                                    <small class="text-muted d-block mt-1"><a href="{{ asset('storage/'.$b->cover_path) }}" target="_blank">Lihat cover</a></small>
+                                                @endif
+                                            </td>
+                                            <td>{{ $b->published_at ? $b->published_at->toDateString() : '-' }}</td>
+                                            <td class="text-truncate" style="max-width: 320px;">{{ $b->excerpt ?? '-' }}</td>
+                                            <td class="text-end">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editBlog-{{ $b->id }}"><i class="bi bi-pencil"></i></button>
+                                                <form class="d-inline" method="post" action="{{ route('admin.content.blog.delete', $b->id) }}">
+                                                    @csrf @method('DELETE')
+                                                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Hapus posting ini?')"><i class="bi bi-trash"></i></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        @push('modals')
+                                            <div class="modal fade" id="editBlog-{{ $b->id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <form method="post" action="{{ route('admin.content.blog.update', $b->id) }}" class="modal-content" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Edit Blog</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Judul</label>
+                                                                <input name="title" class="form-control" value="{{ $b->title }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Cover (opsional)</label>
+                                                                <input type="file" name="cover" class="form-control" accept="image/jpeg,image/png,image/webp">
+                                                                @if($b->cover_path)
+                                                                    <small class="text-muted d-block mt-1">Cover saat ini:</small>
+                                                                    <img class="thumb-banner mt-1" src="{{ asset('storage/'.$b->cover_path) }}" alt="">
+                                                                @endif
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Ringkasan (opsional)</label>
+                                                                <textarea name="excerpt" class="form-control" rows="2">{{ $b->excerpt ?? '' }}</textarea>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Konten</label>
+                                                                <textarea name="content" class="form-control" rows="8" required>{{ $b->content }}</textarea>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Tanggal Publikasi (opsional)</label>
+                                                                <input type="date" name="published_at" class="form-control" value="{{ $b->published_at ? $b->published_at->toDateString() : '' }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+                                                            <button class="btn btn-dark">Simpan</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        @endpush
+                                    @empty
+                                        <tr>
+                                            <td colspan="4" class="text-center py-4 text-muted">Belum ada postingan.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 @endsection
+
+@stack('modals')

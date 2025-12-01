@@ -4,20 +4,17 @@
 
 @push('styles')
     <style>
-        .metric-card .icon-wrap {
-            width: 44px;
-            height: 44px;
-        }
-
-        .metric-card .num {
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
-
-        .table-fit td,
-        .table-fit th {
-            white-space: nowrap;
-        }
+        /* Ensure metric cards and charts don't overflow */
+        .metric-card .icon-wrap { width: 44px; height: 44px; }
+        .metric-card .num { font-weight: 700; font-size: 1.5rem; }
+        .table-fit td, .table-fit th { white-space: nowrap; }
+        /* Responsive chart containers */
+        .chart-wrap { position: relative; width: 100%; }
+        .chart-wrap.canvas-sm { min-height: 240px; }
+        .chart-wrap.canvas-md { min-height: 320px; }
+        .chart-wrap canvas { width: 100% !important; height: 100% !important; }
+        /* Avoid cramped layout on small screens */
+        @media (max-width: 991.98px) { .num { font-size: 1.25rem; } }
     </style>
 @endpush
 
@@ -98,7 +95,7 @@
                     <span class="text-muted small">7 hari terakhir</span>
                 </div>
                 <div class="card-body">
-                    <canvas id="dailyRevenueChart" height="140"></canvas>
+                    <div class="chart-wrap canvas-sm"><canvas id="dailyRevenueChart"></canvas></div>
                 </div>
             </div>
         </div>
@@ -109,7 +106,7 @@
                     <span class="text-muted small">8 minggu terakhir</span>
                 </div>
                 <div class="card-body">
-                    <canvas id="weeklyRevenueChart" height="140"></canvas>
+                    <div class="chart-wrap canvas-sm"><canvas id="weeklyRevenueChart"></canvas></div>
                 </div>
             </div>
         </div>
@@ -131,7 +128,7 @@
                             </div>
                         @endforeach
                     </div>
-                    <canvas id="orderSummaryChart" height="140"></canvas>
+                    <div class="chart-wrap canvas-md"><canvas id="orderSummaryChart"></canvas></div>
                 </div>
             </div>
         </div>
@@ -161,7 +158,7 @@
                         </table>
                     </div>
                     <hr>
-                    <canvas id="topProductsChart" height="120"></canvas>
+                    <div class="chart-wrap canvas-sm"><canvas id="topProductsChart"></canvas></div>
                 </div>
             </div>
         </div>
@@ -169,7 +166,6 @@
 @endsection
 
 @push('scripts')
-    {{-- Chart.js CDN (kalau belum ada di layout admin) --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         function rupiah(x) { return new Intl.NumberFormat('id-ID').format(x); }
@@ -189,6 +185,7 @@
                 }]
             },
             options: {
+                maintainAspectRatio: false,
                 plugins: {
                     tooltip: { callbacks: { label: ctx => 'Rp ' + rupiah(ctx.parsed.y) } },
                     legend: { display: false }
@@ -212,6 +209,7 @@
                 }]
             },
             options: {
+                maintainAspectRatio: false,
                 plugins: {
                     tooltip: { callbacks: { label: ctx => 'Rp ' + rupiah(ctx.parsed.y) } },
                     legend: { display: false }
@@ -224,18 +222,23 @@
 
         // === ORDER SUMMARY (Doughnut) ===
         const orderSummaryCtx = document.getElementById('orderSummaryChart').getContext('2d');
+        const orderLabels = ['pending','proses','dikirim','selesai','dibatalkan'];
+        const orderDataMap = @json($orderSummary);
+        const orderData = orderLabels.map(k => Number(orderDataMap[k] ?? 0));
         new Chart(orderSummaryCtx, {
             type: 'doughnut',
             data: {
-                labels: @json(array_keys($orderSummary)),
+                labels: orderLabels,
                 datasets: [{
-                    data: @json(array_values($orderSummary))
+                    data: orderData,
+                    backgroundColor: ['#f59e0b','#0ea5e9','#22c55e','#10b981','#ef4444'],
+                    borderColor: '#fff',
+                    borderWidth: 2
                 }]
             },
             options: {
-                plugins: {
-                    legend: { position: 'bottom' }
-                },
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } },
                 cutout: '60%'
             }
         });
@@ -253,6 +256,7 @@
                 }]
             },
             options: {
+                maintainAspectRatio: false,
                 indexAxis: 'y',
                 plugins: { legend: { display: false } },
                 scales: { x: { ticks: { precision: 0 } } }
