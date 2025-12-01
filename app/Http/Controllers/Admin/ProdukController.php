@@ -109,7 +109,7 @@ class ProdukController extends Controller
     public function destroy($id)
     {
         $produk = Product::findOrFail($id);
-        
+
         // Hapus gambar fisik
         if ($produk->gambar && Storage::disk('public')->exists($produk->gambar)) {
             Storage::disk('public')->delete($produk->gambar);

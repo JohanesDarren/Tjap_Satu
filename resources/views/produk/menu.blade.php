@@ -113,12 +113,12 @@
                         @else
                             <img src="{{ asset('images/placeholder.jpg') }}" class="card-img-top" alt="{{ $item->nama_produk }}" style="height:200px; object-fit:cover;">
                         @endif
-                        
+
                         <div class="card-body">
                             <h5 class="card-title">{{ $item->nama_produk }}</h5>
-                            
+
                             <p class="card-text text-muted small">{{ \Illuminate\Support\Str::limit($item->deskripsi, 50) }}</p>
-                            
+
                             <p class="card-text mt-3">
                                 <span class="card-price">
                                     Rp {{ number_format($item->harga, 0, ',', '.') }}
