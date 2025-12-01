@@ -133,12 +133,19 @@
             .card-elev, .reveal { transition: none !important; }
             .track { animation: none !important; }
         }
+
+        /* Modal polish */
+        .modal-elev .modal-content{ border-radius: var(--radius-2xl); border:1px solid rgba(46,55,61,.08); box-shadow: var(--shadow); overflow:hidden; }
+        .modal-header-gradient{ background: linear-gradient(135deg, #2E373D, #55351D); color:#fff; }
+        .price-chip{ background: rgba(255,255,255,.18); color:#fff; border:1px solid rgba(255,255,255,.35); border-radius:999px; padding:.25rem .6rem; font-weight:700; }
+        .badge-soft{ background: rgba(50,91,86,.12); color: var(--teal); border-radius:999px; padding:.25rem .5rem; font-size:.85rem; font-weight:600; }
+        .modal-footer-soft{ background:#f7f3e6; }
     </style>
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    @extends('layouts.app')
+    @include('components.header')
 
     <!-- HERO -->
     <header class="hero">
@@ -163,18 +170,51 @@
     <!-- STRIP -->
     <section class="strip" aria-label="Our Beans">
         <div class="track" id="track">
-            @php $drinks = ['Gn. Puntang', 'Temanggung', 'Timor Leste', 'Flores Bajawa', 'Toraja Sapan', 'Gunung Halu', 'Kerinci', 'Bali Kintamani']; @endphp
-            @for ($dup = 0; $dup < 2; $dup++)
-                @foreach ($drinks as $drink)
-                    <div class="chip">
-                        <img src="{{ asset('images/biji.JPG') }}" alt="Biji kopi - {{ $drink }}" loading="lazy">
-                        <div class="meta">
-                            <span class="name">{{ $drink }}</span>
-                            <span class="price">IDR {{ 20 + (int) (crc32($drink) % 18) }}k</span>
+            @if(isset($stripProducts) && $stripProducts->count())
+                @for ($dup = 0; $dup < 2; $dup++)
+                    @foreach ($stripProducts as $p)
+                        @php
+                            $img = $p->gambar ?? null;
+                            $imgUrl = null;
+                            if ($img) {
+                                if (preg_match('/^https?:\/\//', $img)) {
+                                    $imgUrl = $img;
+                                } elseif (\Illuminate\Support\Str::startsWith($img, 'storage/')) {
+                                    $imgUrl = asset($img);
+                                } elseif (\Illuminate\Support\Str::startsWith($img, 'products/')) {
+                                    $imgUrl = asset('storage/' . ltrim($img, '/'));
+                                } elseif (\Illuminate\Support\Str::startsWith($img, 'uploads/')) {
+                                    $imgUrl = asset($img);
+                                } elseif (\Illuminate\Support\Str::startsWith($img, '/')) {
+                                    $imgUrl = asset(ltrim($img, '/'));
+                                } else {
+                                    $imgUrl = asset('uploads/' . ltrim($img, '/'));
+                                }
+                            } else {
+                                $imgUrl = asset('images/biji.JPG');
+                            }
+                        @endphp
+                        <div class="chip">
+                            <img src="{{ $imgUrl }}" alt="Biji kopi - {{ $p->nama_produk }}" loading="lazy">
+                            <div class="meta">
+                                <span class="name">{{ $p->nama_produk }}</span>
+                            </div>
                         </div>
-                    </div>
-                @endforeach
-            @endfor
+                    @endforeach
+                @endfor
+            @else
+                @php $drinks = ['Gn. Puntang', 'Temanggung', 'Timor Leste', 'Flores Bajawa', 'Toraja Sapan', 'Gunung Halu', 'Kerinci', 'Bali Kintamani']; @endphp
+                @for ($dup = 0; $dup < 2; $dup++)
+                    @foreach ($drinks as $drink)
+                        <div class="chip">
+                            <img src="{{ asset('images/biji.JPG') }}" alt="Biji kopi - {{ $drink }}" loading="lazy">
+                            <div class="meta">
+                                <span class="name">{{ $drink }}</span>
+                            </div>
+                        </div>
+                    @endforeach
+                @endfor
+            @endif
         </div>
     </section>
 
@@ -196,10 +236,10 @@
                         cerita—antara barista, petani, dan Anda.</p>
                 </div>
                 <div class="col-lg-6 reveal">
-                    <video autoplay muted loop playsinline class="rounded-2xl w-100 shadow object-fit-cover alt="Biji kopi pilihan" loading="lazy" style="margin-top:1.5rem;">
+                    <video autoplay muted loop playsinline class="rounded-2xl w-100 shadow object-fit-cover" style="margin-top:1.5rem;">
                         <source src="{{ asset('videos/heroes.mp4') }}" type="video/mp4">
                         Browser kamu tidak mendukung video HTML5.
-                      </video>
+                    </video>
                 </div>
             </div>
         </div>
@@ -213,65 +253,109 @@
                 <p class="text-secondary mb-0">Daftar menu.</p>
             </div>
 
-            <div class="row g-4">
-                @for ($i = 1; $i <= 6; $i++)
-                    @php
-                        $title = "Signature Beans #{$i}";
-                        $price = 80 + $i * 3;
-                        $desc = "Origin single, roast medium, tasting notes: caramel, cocoa, hint of citrus. Cocok untuk espresso & manual brew.";
-                      @endphp
+            @if(isset($products) && $products->count())
+                <div class="row g-4">
+                    @foreach ($products as $product)
+                        @php
+                            $title = $product->nama_produk;
+                            $price = (int) $product->harga;
+                            $desc  = $product->deskripsi ?? 'Belum ada deskripsi.';
+                            $pid   = $product->id_product;
+                            $img   = $product->gambar ?? null;
+                            $jenis = $product->jenis_proses ?? null;
+                            $imgUrl = null;
+                            if ($img) {
+                                if (preg_match('/^https?:\/\//', $img)) {
+                                    $imgUrl = $img;
+                                } elseif (\Illuminate\Support\Str::startsWith($img, 'storage/')) {
+                                    $imgUrl = asset($img);
+                                } elseif (\Illuminate\Support\Str::startsWith($img, 'products/')) {
+                                    $imgUrl = asset('storage/' . ltrim($img, '/'));
+                                } elseif (\Illuminate\Support\Str::startsWith($img, 'uploads/')) {
+                                    $imgUrl = asset($img);
+                                } elseif (\Illuminate\Support\Str::startsWith($img, '/')) {
+                                    $imgUrl = asset(ltrim($img, '/'));
+                                } else {
+                                    $imgUrl = asset('uploads/' . ltrim($img, '/'));
+                                }
+                            } else {
+                                $imgUrl = asset('images/biji.JPG');
+                            }
+                        @endphp
 
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <div class="card-elev product-card position-relative">
-                            <img src="{{ asset('images/biji.JPG') }}" class="w-100 product-img" alt="Produk {{ $i }}" loading="lazy">
-                            <div class="p-3 p-md-4">
-                                <h5 class="mb-1">{{ $title }}</h5>
-                                <p class="text-secondary">{{ $desc }}</p>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card-elev product-card position-relative">
+                                <img src="{{ $imgUrl }}" class="w-100 product-img" alt="{{ $title }}" loading="lazy">
+                                <div class="p-3 p-md-4">
+                                    <h5 class="mb-1">{{ $title }}</h5>
+                                    <p class="text-secondary">{{ $desc }}</p>
 
-                                <div class="d-flex justify-content-between align-items-center mt-2">
-                                    <span class="fw-semibold price-label">IDR {{ $price }}k</span>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <span class="fw-semibold price-label">IDR {{ number_format($price, 0, ',', '.') }}</span>
 
-                                    <!-- Tombol Detail: tooltip + buka modal (fade animasi Bootstrap) -->
-                                    <button class="btn btn-sm btn-outline-dark rounded-pill" data-bs-toggle="modal"
-                                        data-bs-target="#productModal{{ $i }}" aria-label="Lihat detail {{ $title }}">Detail</button>
+                                        <button class="btn btn-sm btn-outline-dark rounded-pill" data-bs-toggle="modal"
+                                            data-bs-target="#productModal{{ $pid }}" aria-label="Lihat detail {{ $title }}">Detail</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- MODAL QUICK VIEW (fade = animasi Bootstrap) -->
-                    <div class="modal fade" id="productModal{{ $i }}" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-lg">
-                            <div class="modal-content border-0 shadow rounded-4">
-                                <div class="modal-header bg-dark text-white rounded-top-4">
-                                    <h5 class="modal-title">{{ $title }}</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body p-0">
-                                    <div class="row g-0">
-                                        <div class="col-md-6">
-                                            <img src="{{ asset('images/biji.JPG') }}"
-                                                class="w-100 h-100 object-fit-cover rounded-start-4" alt="{{ $title }}" loading="lazy">
+                        <!-- MODAL QUICK VIEW -->
+                        <div class="modal modal-elev fade" id="productModal{{ $pid }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header modal-header-gradient">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <h5 class="modal-title mb-0">{{ $title }}</h5>
+                                            <span class="price-chip">IDR {{ number_format($price, 0, ',', '.') }}</span>
                                         </div>
-                                        <div class="col-md-6 p-4">
-                                            <p class="text-secondary mb-3">{{ $desc }}</p>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span class="h5 mb-0">IDR {{ $price }}k</span>
-                                                <button class="btn btn-rust btn-pill">Tambah ke Keranjang</button>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body p-0">
+                                        <div class="row g-0">
+                                            <div class="col-lg-6">
+                                                <img src="{{ $imgUrl }}" class="w-100 h-100 object-fit-cover" alt="{{ $title }}" loading="lazy">
+                                            </div>
+                                            <div class="col-lg-6 p-4 p-lg-5">
+                                                @if($jenis)
+                                                    <div class="mb-3">
+                                                        <span class="badge-soft">Jenis Proses: {{ $jenis }}</span>
+                                                    </div>
+                                                @endif
+                                                <p class="text-secondary mb-3">{{ $desc }}</p>
+                                                <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+                                                    @auth('customer')
+                                                    <form action="{{ route('cart.add', $pid) }}" method="POST" class="m-0 d-flex align-items-center gap-2 flex-wrap">
+                                                        @csrf
+                                                        <div class="input-group qty-group" style="width: 140px;">
+                                                            <button class="btn btn-outline-secondary btn-qty" type="button" data-qty="minus" aria-label="Kurangi jumlah">−</button>
+                                                            <input type="number" name="jumlah" class="form-control text-center" value="1" min="1" inputmode="numeric" pattern="[0-9]*" aria-label="Jumlah">
+                                                            <button class="btn btn-outline-secondary btn-qty" type="button" data-qty="plus" aria-label="Tambah jumlah">+</button>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-rust btn-pill">Tambah ke Keranjang</button>
+                                                    </form>
+                                                    @else
+                                                    <button type="button" class="btn btn-rust btn-pill" data-bs-toggle="modal" data-bs-target="#loginModal">Masuk untuk menambah</button>
+                                                    @endauth
+                                                    <a href="{{ route('produk.show', $pid) }}" class="btn btn-outline-dark btn-pill">Lihat halaman produk</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="modal-footer bg-light rounded-bottom-4">
-                                    <button type="button" class="btn btn-outline-secondary btn-pill"
-                                        data-bs-dismiss="modal">Tutup</button>
+                                    <div class="modal-footer modal-footer-soft">
+                                        <button type="button" class="btn btn-outline-secondary btn-pill" data-bs-dismiss="modal">Tutup</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @endfor
-            </div>
+                    @endforeach
+                </div>
+                <div class="text-center mt-4">
+                    <a href="{{ route('produk.menu') }}" class="btn btn-outline-dark btn-pill">Lihat Semua Menu</a>
+                </div>
+            @else
+                <div class="text-center text-secondary">Belum ada produk untuk ditampilkan.</div>
+            @endif
         </div>
     </section>
 
@@ -306,8 +390,6 @@
         </div>
     </section>
 
-    <!-- AUTH CTA (Login / Register) -->
-    <!-- diganti menjadi FORM REGISTRASI INLINE -->
     @guest('customer')
     <section id="register" class="section bg-sand">
       <div class="container">
@@ -372,6 +454,8 @@
       @include('components.login-modal')
     @endguest
 
+    @include('components.footer')
+
     <!-- GSAP -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
@@ -408,6 +492,21 @@
                 const isPwd = input.type === 'password';
                 input.type = isPwd ? 'text' : 'password';
                 btn.textContent = isPwd ? '🙈' : '👁️';
+            });
+        });
+
+        // Qty plus/minus controls in modal
+        document.querySelectorAll('.btn-qty').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const input = btn.closest('.qty-group')?.querySelector('input[name="jumlah"]');
+                if (!input) return;
+                let val = parseInt(input.value, 10);
+                if (isNaN(val) || val < 1) val = 1;
+                if (btn.dataset.qty === 'minus') val = Math.max(1, val - 1);
+                else val = val + 1;
+                input.value = val;
+                // trigger change event if needed by other listeners
+                input.dispatchEvent(new Event('change', { bubbles: true }));
             });
         });
     </script>

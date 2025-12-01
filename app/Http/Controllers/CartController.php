@@ -13,7 +13,7 @@ class CartController extends Controller
     public function index()
     {
         $customer = Auth::guard('customer')->user();
-        
+
 
         $cart = Cart::where('id_cust', $customer->id_cust)->first();
 
@@ -33,29 +33,27 @@ class CartController extends Controller
         return view('cart.cart', compact('cartItems', 'total'));
     }
 
-    // Logic Tambah ke Keranjang (Dipanggil dari Menu)
     public function addToCart(Request $request, $id_product)
     {
         $customer = Auth::guard('customer')->user();
 
-        // 1. Cek / Buat Keranjang Utama
+        $qty = (int) $request->input('jumlah', 1);
+        if ($qty < 1) { $qty = 1; }
+
         $cart = Cart::firstOrCreate(['id_cust' => $customer->id_cust]);
 
-        // 2. Cek apakah produk sudah ada di keranjang?
         $existingItem = CartItem::where('id_cart', $cart->id_cart)
                                 ->where('id_product', $id_product)
                                 ->first();
 
         if ($existingItem) {
-            // Jika ada, tambah jumlahnya
-            $existingItem->jumlah += 1;
+            $existingItem->jumlah += $qty;
             $existingItem->save();
         } else {
-            // Jika belum, buat baru
             CartItem::create([
                 'id_cart' => $cart->id_cart,
                 'id_product' => $id_product,
-                'jumlah' => 1,
+                'jumlah' => $qty,
                 'catatan' => null
             ]);
         }
@@ -63,14 +61,12 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Produk masuk keranjang!');
     }
 
-    // Logic Hapus Item
     public function deleteItem($id_item)
     {
         CartItem::destroy($id_item);
         return redirect()->back()->with('success', 'Item dihapus.');
     }
 
-    // Logic Tambah/Kurang Qty di Halaman Cart
     public function updateQuantity($id_item, $action)
     {
         $item = CartItem::findOrFail($id_item);
