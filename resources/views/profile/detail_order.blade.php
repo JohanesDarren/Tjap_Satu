@@ -66,16 +66,16 @@
                 </p>
             </div>
             @php
-                // Ubah status jadi huruf kecil semua agar 'Selesai' terbaca sama dengan 'selesai'
+        
                 $status = strtolower($order->status_pesanan);
 
                 // Cek kondisi
                 if ($status == 'selesai') {
-                    $badgeClass = 'bg-success text-white'; // Hijau Solid (Lebih Jelas)
+                    $badgeClass = 'bg-success text-white';
                 } elseif ($status == 'dibatalkan') {
-                    $badgeClass = 'bg-danger text-white'; // Merah (Opsional)
+                    $badgeClass = 'bg-danger text-white';
                 } else {
-                    $badgeClass = 'bg-warning text-dark'; // Kuning (Pending/Proses)
+                    $badgeClass = 'bg-warning text-dark';
                 }
             @endphp
             <span
@@ -101,9 +101,7 @@
                                 <tr>
                                     <td class="ps-4 py-3">
                                         <div class="d-flex align-items-center">
-                                            <!-- Gambar Produk -->
                                             @if($detail->product->foto ?? false)
-                                                <!-- Pastikan path 'uploads/' sesuai dengan Controller profil kamu -->
                                                 <img src="{{ asset('uploads/' . $detail->product->foto) }}"
                                                     class="product-img me-3 border" alt="Produk">
                                             @else

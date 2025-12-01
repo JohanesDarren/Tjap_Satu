@@ -65,29 +65,21 @@ class ProfileController extends Controller
 
     public function deletePhoto()
     {
-        // UBAH DISINI: Jangan pakai Customer::first() lagi.
-        // Pakai Auth::guard('customer')->user() untuk mengambil user yang sedang login saat ini.
         $customer = Auth::guard('customer')->user();
 
-        // Cek apakah user benar-benar ditemukan (jaga-jaga session habis)
         if (! $customer) {
             return redirect('/login')->withErrors(['msg' => 'Sesi habis, silakan login kembali.']);
         }
 
-        // Cek apakah kolom foto ada isinya?
         if (! empty($customer->foto)) {
-
-            // Hapus file fisik
             try {
                 $path = public_path('uploads/'.$customer->foto);
                 if (File::exists($path)) {
                     File::delete($path);
                 }
             } catch (\Exception $e) {
-                // Abaikan error file
             }
 
-            // Set kolom foto jadi NULL dan Simpan
             $customer->foto = null;
             $customer->save();
 
@@ -133,7 +125,7 @@ class ProfileController extends Controller
             return back()->withErrors(['current_password' => 'Password lama salah!']);
         }
 
-        $customer->password = $request->password; // akan di-hash via cast
+        $customer->password = $request->password;
         $customer->save();
 
         return back()->with('success', 'Password berhasil diubah!');

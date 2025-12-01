@@ -14,20 +14,17 @@ class CartController extends Controller
     {
         $customer = Auth::guard('customer')->user();
         
-        // 1. Ambil Keranjang milik user login
+
         $cart = Cart::where('id_cust', $customer->id_cust)->first();
 
-        // 2. Jika belum punya keranjang, kita kirim array kosong
         if (!$cart) {
             return view('cart.cart', ['cartItems' => [], 'total' => 0]);
         }
 
-        // 3. Ambil Item Keranjang + Data Produknya (Eager Loading)
         $cartItems = CartItem::with('product')
                         ->where('id_cart', $cart->id_cart)
                         ->get();
 
-        // 4. Hitung Total Harga
         $total = 0;
         foreach($cartItems as $item) {
             $total += ($item->product->harga * $item->jumlah);
@@ -82,7 +79,6 @@ class CartController extends Controller
             $item->jumlah += 1;
         } elseif ($action == 'minus') {
             $item->jumlah -= 1;
-            // Jika jumlah jadi 0, hapus item
             if ($item->jumlah < 1) {
                 $item->delete();
                 return redirect()->back();

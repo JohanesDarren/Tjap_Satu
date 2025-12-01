@@ -67,9 +67,10 @@
                 Perubahan</button>
         </div>
 
-        </form> <form id="form-delete-photo" action="{{ route('profile.photo.delete') }}" method="POST" style="display: none;">
-            @csrf
-            @method('DELETE')
-        </form>
+    </form>
+    <form id="form-delete-photo" action="{{ route('profile.photo.delete') }}" method="POST" style="display: none;">
+        @csrf
+        @method('DELETE')
+    </form>
     </form>
 </div>

@@ -16,17 +16,14 @@
                         <div class="d-flex align-items-center gap-2 mb-1">
                             <h4 class="fw-bold fs-6 text-secondary mb-0">Order #{{ $order->id_order }}</h4>
                             @php
-                                // Ubah status jadi huruf kecil semua agar 'Selesai' terbaca sama dengan 'selesai'
                                 $status = strtolower($order->status_pesanan);
-
-                                // Cek kondisi
-                                if ($status == 'selesai') {
-                                    $badgeClass = 'bg-success text-white'; // Hijau Solid (Lebih Jelas)
-                                } elseif ($status == 'dibatalkan') {
-                                    $badgeClass = 'bg-danger text-white'; // Merah (Opsional)
-                                } else {
-                                    $badgeClass = 'bg-warning text-dark'; // Kuning (Pending/Proses)
-                                }
+                                    if ($status == 'selesai') {
+                                        $badgeClass = 'bg-success text-white'; // Hijau Solid (Lebih Jelas)
+                                    } elseif ($status == 'dibatalkan') {
+                                        $badgeClass = 'bg-danger text-white'; // Merah (Opsional)
+                                    } else {
+                                        $badgeClass = 'bg-warning text-dark'; // Kuning (Pending/Proses)
+                                    }
                             @endphp
                             <span class="badge {{ $badgeClass }} text-uppercase" style="font-size: 10px;">
                                 {{ $order->status_pesanan }}

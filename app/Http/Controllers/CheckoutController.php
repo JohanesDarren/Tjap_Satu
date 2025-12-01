@@ -52,15 +52,15 @@ class CheckoutController extends Controller
     {
         $customer = Auth::guard('customer')->user();
 
-        // 1. Validasi Input
+        // Validasi Input
         $request->validate([
-            'items' => 'required|array',          // ID item dari keranjang
+            'items' => 'required|array',
             'shipping_type' => 'required|in:delivery,pickup',
             'payment_method' => 'required|in:qris,transfer,cod',
             'note' => 'nullable|string|max:255',
         ]);
 
-        // 2. Ambil Data Item Keranjang (Validasi lagi biar aman)
+        // Ambil Data Item Keranjang (Validasi lagi biar aman)
         $cartItems = CartItem::with('product')
                         ->whereIn('id_item', $request->items)
                         ->whereHas('cart', function($q) use ($customer) {
@@ -72,7 +72,7 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Pesanan tidak valid.');
         }
 
-        // 3. Hitung Ulang Total (Jangan percaya input dari view/JS)
+        // Hitung Ulang Total
         $subtotal = 0;
         foreach ($cartItems as $item) {
             $subtotal += ($item->product->harga * $item->jumlah);
@@ -83,23 +83,20 @@ class CheckoutController extends Controller
         $biayaLayanan = 2000;
         $totalHarga = $subtotal + $ongkir + $biayaLayanan;
 
-        // 4. MULAI TRANSAKSI DATABASE
+        // MULAI TRANSAKSI DATABASE
         try {
             DB::transaction(function () use ($customer, $cartItems, $totalHarga, $request) {
                 
-                // A. Buat Data ORDER
+                // Buat Data ORDER
                 $order = Order::create([
                     'id_cust' => $customer->id_cust,
                     'tanggal_order' => Carbon::now(),
                     'total_harga' => $totalHarga,
-                    'tipe_pesanan' => $request->shipping_type, // 'delivery' atau 'pickup'
-                    'status_pesanan' => 'proses', // Status awal
-                    // 'id_kurir' => null, (Biarkan null dulu sampai admin assign kurir)
-                    // Jika kamu sudah tambah kolom 'catatan' di tabel order, buka komen ini:
-                    // 'catatan' => $request->note, 
+                    'tipe_pesanan' => $request->shipping_type,
+                    'status_pesanan' => 'proses',
                 ]);
 
-                // B. Buat Data DETAIL ORDER & Kurangi Stok (Opsional)
+                // Buat Data DETAIL ORDER & Kurangi Stok (Opsional)
                 foreach ($cartItems as $item) {
                     DetailOrder::create([
                         'id_order' => $order->id_order,
@@ -109,7 +106,7 @@ class CheckoutController extends Controller
                     ]);
                 }
 
-                // C. Buat Data PAYMENT
+                // Buat Data PAYMENT
                 Payment::create([
                     'id_order' => $order->id_order,
                     'metode_bayar' => $request->payment_method,
@@ -117,7 +114,7 @@ class CheckoutController extends Controller
                     'status_bayar' => ($request->payment_method == 'cod') ? 'belum_lunas' : 'menunggu_konfirmasi',
                 ]);
 
-                // D. Hapus Item dari KERANJANG (Karena sudah dibeli)
+                // Hapus Item dari KERANJANG
                 CartItem::whereIn('id_item', $request->items)->delete();
                 
                 // (Opsional) Simpan ID Order ke session untuk halaman sukses
