@@ -286,28 +286,28 @@ classDiagram
     }
 
     %% ==================== MODEL RELATIONSHIPS ====================
-    Customer "1" --o "0..*" Order : has many
-    Customer "1" --o "0..*" Cart : has many
+    Customer "1" -- "0..n" Order : has
+    Customer "1" -- "0..n" Cart : has
     
-    Order "0..*" o-- "1" Customer : belongs to
-    Order "0..*" o-- "0..1" Kurir : belongs to
-    Order "1" --o "0..*" DetailOrder : has many
-    Order "1" --o "0..1" Payment : has one
+    Order "n" -- "1" Customer : belongs to
+    Order "n" -- "0..1" Kurir : belongs to
+    Order "1" -- "1..n" DetailOrder : has
+    Order "1" -- "1" Payment : has
     
-    DetailOrder "0..*" o-- "1" Order : belongs to
-    DetailOrder "0..*" o-- "1" Product : belongs to
+    DetailOrder "n" -- "1" Order : belongs to
+    DetailOrder "n" -- "1" Product : belongs to
     
-    Product "1" --o "0..*" DetailOrder : has many
+    Product "1" -- "0..n" DetailOrder : has
     
-    Payment "0..1" o-- "1" Order : belongs to
+    Payment "1" -- "1" Order : belongs to
     
-    Kurir "1" --o "0..*" Order : has many
+    Kurir "1" -- "0..n" Order : has
     
-    Cart "0..*" o-- "1" Customer : belongs to
-    Cart "1" --o "0..*" CartItem : has many
+    Cart "n" -- "1" Customer : belongs to
+    Cart "1" -- "0..n" CartItem : has
     
-    CartItem "0..*" o-- "1" Cart : belongs to
-    CartItem "0..*" o-- "1" Product : belongs to
+    CartItem "n" -- "1" Cart : belongs to
+    CartItem "n" -- "1" Product : belongs to
 
     %% ==================== CONTROLLERS ====================
     class LandingController {
@@ -413,72 +413,72 @@ classDiagram
     }
 
     %% ==================== CONTROLLER -> VIEW RELATIONSHIPS ====================
-    LandingController ..> LandingPage : renders
-    AuthFlowController ..> LandingPage : renders
-    AboutController ..> AboutPage : renders
-    ProdukController ..> MenuPage : renders
-    ProdukController ..> ProductDetailPage : renders
-    CartController ..> CartPage : renders
-    CheckoutController ..> CheckoutPage : renders
-    CheckoutController ..> CheckoutSuccessPage : renders
-    ProfileController ..> ProfilePage : renders
-    ProfileController ..> OrderDetailPage : renders
-    AdminAuthController ..> LandingPage : renders
-    AdminDashboardController ..> AdminDashboardPage : renders
-    AdminProdukController ..> AdminProductPage : renders
-    AdminPesananController ..> AdminOrderPage : renders
-    AdminCustomerController ..> AdminCustomerPage : renders
-    AdminContentController ..> AdminContentPage : renders
-    AdminReportController ..> AdminReportPage : renders
+    LandingController "1" -- "1" LandingPage : renders
+    AuthFlowController "1" -- "1" LandingPage : renders
+    AboutController "1" -- "1" AboutPage : renders
+    ProdukController "1" -- "1" MenuPage : renders
+    ProdukController "1" -- "1" ProductDetailPage : renders
+    CartController "1" -- "1" CartPage : renders
+    CheckoutController "1" -- "1" CheckoutPage : renders
+    CheckoutController "1" -- "1" CheckoutSuccessPage : renders
+    ProfileController "1" -- "1" ProfilePage : renders
+    ProfileController "1" -- "1" OrderDetailPage : renders
+    AdminAuthController "1" -- "1" LandingPage : renders
+    AdminDashboardController "1" -- "1" AdminDashboardPage : renders
+    AdminProdukController "1" -- "1" AdminProductPage : renders
+    AdminPesananController "1" -- "1" AdminOrderPage : renders
+    AdminCustomerController "1" -- "1" AdminCustomerPage : renders
+    AdminContentController "1" -- "1" AdminContentPage : renders
+    AdminReportController "1" -- "1" AdminReportPage : renders
 
     %% ==================== CONTROLLER - MODEL DEPENDENCIES ====================
-    LandingController ..> Product : uses
-    LandingController ..> Banner : uses
-    LandingController ..> Promo : uses
-    LandingController ..> Blog : uses
+    LandingController "1" -- "n" Product : uses
+    LandingController "1" -- "n" Banner : uses
+    LandingController "1" -- "n" Promo : uses
+    LandingController "1" -- "n" Blog : uses
 
-    AboutController ..> Blog : uses
+    AboutController "1" -- "n" Blog : uses
 
-    ProdukController ..> Product : uses
+    ProdukController "1" -- "n" Product : uses
 
-    CartController ..> Cart : uses
-    CartController ..> CartItem : uses
-    CartController ..> Product : uses
+    CartController "1" -- "n" Cart : uses
+    CartController "1" -- "n" CartItem : uses
+    CartController "1" -- "n" Product : uses
 
-    CheckoutController ..> Cart : uses
-    CheckoutController ..> CartItem : uses
-    CheckoutController ..> Order : uses
-    CheckoutController ..> DetailOrder : uses
-    CheckoutController ..> Payment : uses
-    CheckoutController ..> Kurir : uses
+    CheckoutController "1" -- "n" Cart : uses
+    CheckoutController "1" -- "n" CartItem : uses
+    CheckoutController "1" -- "n" Order : uses
+    CheckoutController "1" -- "n" DetailOrder : uses
+    CheckoutController "1" -- "n" Payment : uses
+    CheckoutController "1" -- "n" Kurir : uses
 
-    ProfileController ..> Customer : uses
-    ProfileController ..> Order : uses
+    ProfileController "1" -- "n" Customer : uses
+    ProfileController "1" -- "n" Order : uses
 
-    AuthFlowController ..> Customer : uses
+    AuthFlowController "1" -- "n" Customer : uses
 
-    AdminAuthController ..> Customer : uses
+    AdminAuthController "1" -- "n" Customer : uses
 
-    AdminDashboardController ..> Order : uses
-    AdminDashboardController ..> Product : uses
-    AdminDashboardController ..> Customer : uses
-    AdminDashboardController ..> DetailOrder : uses
+    AdminDashboardController "1" -- "n" Order : uses
+    AdminDashboardController "1" -- "n" Product : uses
+    AdminDashboardController "1" -- "n" Customer : uses
+    AdminDashboardController "1" -- "n" DetailOrder : uses
 
-    AdminProdukController ..> Product : uses
+    AdminProdukController "1" -- "n" Product : uses
 
-    AdminPesananController ..> Order : uses
-    AdminPesananController ..> DetailOrder : uses
-    AdminPesananController ..> Kurir : uses
+    AdminPesananController "1" -- "n" Order : uses
+    AdminPesananController "1" -- "n" DetailOrder : uses
+    AdminPesananController "1" -- "n" Kurir : uses
 
-    AdminCustomerController ..> Customer : uses
-    AdminCustomerController ..> Order : uses
+    AdminCustomerController "1" -- "n" Customer : uses
+    AdminCustomerController "1" -- "n" Order : uses
 
-    AdminContentController ..> Banner : uses
-    AdminContentController ..> Promo : uses
-    AdminContentController ..> Blog : uses
+    AdminContentController "1" -- "n" Banner : uses
+    AdminContentController "1" -- "n" Promo : uses
+    AdminContentController "1" -- "n" Blog : uses
 
-    AdminReportController ..> Order : uses
-    AdminReportController ..> DetailOrder : uses
+    AdminReportController "1" -- "n" Order : uses
+    AdminReportController "1" -- "n" DetailOrder : uses
 ```
 
 ## Legenda Simbol
@@ -490,9 +490,17 @@ classDiagram
 | `nama : type` | Format atribut (nama diikuti tipe) |
 | `nama(param: type) : void` | Format method dengan parameter |
 | `──────` | Garis pemisah atribut dan method |
-| `--o` | Aggregation (has many/has one) |
-| `o--` | Aggregation terbalik (belongs to) |
-| `..>` | Dependency (uses/renders) |
+| `--` | Association/Relationship |
+
+## Notasi Relasi
+
+| Notasi | Arti |
+|--------|------|
+| `1` | Satu (one) |
+| `0..1` | Nol atau satu (zero or one) |
+| `0..n` | Nol atau banyak (zero or many) |
+| `1..n` | Satu atau banyak (one or many) |
+| `n` | Banyak (many) |
 
 ## Tipe Data
 
@@ -571,20 +579,20 @@ classDiagram
 
 ## Keterangan Relasi Model
 
-| Model | Relasi | Target | Tipe |
-|-------|--------|--------|------|
-| Customer | orders() | Order | hasMany |
-| Customer | carts() | Cart | hasMany |
-| Product | detailOrders() | DetailOrder | hasMany |
-| Order | customer() | Customer | belongsTo |
-| Order | kurir() | Kurir | belongsTo |
-| Order | detailOrders() | DetailOrder | hasMany |
-| Order | payment() | Payment | hasOne |
-| DetailOrder | order() | Order | belongsTo |
-| DetailOrder | product() | Product | belongsTo |
-| Payment | order() | Order | belongsTo |
-| Kurir | orders() | Order | hasMany |
-| Cart | customer() | Customer | belongsTo |
-| Cart | items() | CartItem | hasMany |
-| CartItem | cart() | Cart | belongsTo |
-| CartItem | product() | Product | belongsTo |
+| Model | Relasi | Target | Kardinalitas |
+|-------|--------|--------|--------------|
+| Customer | has | Order | 1 : 0..n |
+| Customer | has | Cart | 1 : 0..n |
+| Order | belongs to | Customer | n : 1 |
+| Order | belongs to | Kurir | n : 0..1 |
+| Order | has | DetailOrder | 1 : 1..n |
+| Order | has | Payment | 1 : 1 |
+| DetailOrder | belongs to | Order | n : 1 |
+| DetailOrder | belongs to | Product | n : 1 |
+| Product | has | DetailOrder | 1 : 0..n |
+| Payment | belongs to | Order | 1 : 1 |
+| Kurir | has | Order | 1 : 0..n |
+| Cart | belongs to | Customer | n : 1 |
+| Cart | has | CartItem | 1 : 0..n |
+| CartItem | belongs to | Cart | n : 1 |
+| CartItem | belongs to | Product | n : 1 |
