@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
+use App\Models\Promo;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -18,7 +19,7 @@ class CartController extends Controller
         $cart = Cart::where('id_cust', $customer->id_cust)->first();
 
         if (!$cart) {
-            return view('cart.cart', ['cartItems' => [], 'total' => 0]);
+            return view('cart.cart', ['cartItems' => [], 'total' => 0, 'appliedPromo' => null, 'discount' => 0, 'availablePromos' => collect()]);
         }
 
         $cartItems = CartItem::with('product')
@@ -30,7 +31,84 @@ class CartController extends Controller
             $total += ($item->product->harga * $item->jumlah);
         }
 
-        return view('cart.cart', compact('cartItems', 'total'));
+        // Ambil semua promo aktif
+        $availablePromos = Promo::where('active', true)
+                                ->where('start_date', '<=', now())
+                                ->where('end_date', '>=', now())
+                                ->orderBy('discount_value', 'desc')
+                                ->get();
+
+        // Ambil promo dari session jika ada
+        $appliedPromo = null;
+        $discount = 0;
+        
+        if (session()->has('applied_promo')) {
+            $promoCode = session('applied_promo');
+            $promo = Promo::where('code', $promoCode)->first();
+            
+            if ($promo && $promo->isValid($total)) {
+                $appliedPromo = $promo;
+                $discount = $promo->calculateDiscount($total);
+            } else {
+                // Hapus promo dari session jika tidak valid
+                session()->forget('applied_promo');
+            }
+        }
+
+        return view('cart.cart', compact('cartItems', 'total', 'appliedPromo', 'discount', 'availablePromos'));
+    }
+
+    // Validasi dan terapkan promo
+    public function applyPromo(Request $request)
+    {
+        $request->validate([
+            'promo_code' => 'required|string'
+        ]);
+
+        $customer = Auth::guard('customer')->user();
+        $cart = Cart::where('id_cust', $customer->id_cust)->first();
+
+        if (!$cart) {
+            return redirect()->back()->with('promo_error', 'Keranjang kosong');
+        }
+
+        // Hitung total
+        $cartItems = CartItem::with('product')
+                        ->where('id_cart', $cart->id_cart)
+                        ->get();
+        $total = 0;
+        foreach($cartItems as $item) {
+            $total += ($item->product->harga * $item->jumlah);
+        }
+
+        // Cari promo
+        $promo = Promo::where('code', strtoupper($request->promo_code))->first();
+
+        if (!$promo) {
+            return redirect()->back()->with('promo_error', 'Kode promo tidak ditemukan');
+        }
+
+        if (!$promo->isValid($total)) {
+            if (!$promo->active) {
+                return redirect()->back()->with('promo_error', 'Kode promo tidak aktif');
+            } elseif ($total < $promo->min_purchase) {
+                return redirect()->back()->with('promo_error', 'Minimal pembelian Rp ' . number_format($promo->min_purchase, 0, ',', '.'));
+            } else {
+                return redirect()->back()->with('promo_error', 'Kode promo sudah kadaluarsa');
+            }
+        }
+
+        // Simpan promo ke session
+        session(['applied_promo' => $promo->code]);
+
+        return redirect()->back()->with('promo_success', 'Promo berhasil diterapkan!');
+    }
+
+    // Hapus promo
+    public function removePromo()
+    {
+        session()->forget('applied_promo');
+        return redirect()->back()->with('success', 'Promo dihapus');
     }
 
     public function addToCart(Request $request, $id_product)

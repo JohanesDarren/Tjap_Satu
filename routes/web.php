@@ -103,6 +103,8 @@ Route::middleware(['auth:customer', 'customer_non_admin'])->group(function () {
         Route::post('add/{id_product}', [CartController::class, 'addToCart'])->name('add');
         Route::delete('remove/{id_item}', [CartController::class, 'deleteItem'])->name('remove');
         Route::get('update/{id_item}/{action}', [CartController::class, 'updateQuantity'])->name('update');
+        Route::post('apply-promo', [CartController::class, 'applyPromo'])->name('apply-promo');
+        Route::post('remove-promo', [CartController::class, 'removePromo'])->name('remove-promo');
     });
 
     Route::post('/logout', [ProfileController::class, 'logout'])->name('logout');
