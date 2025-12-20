@@ -107,12 +107,13 @@
                                 @endforeach
                             </div>
 
-                            <div>
-                                <label for="note" class="form-label small fw-bold text-secondary">Catatan untuk Penjual
-                                    (Opsional)</label>
-                                <textarea name="note" id="note" rows="1"
+                            <div class="mt-3">
+                                <label for="note" class="form-label small fw-bold text-secondary">
+                                    <i class="bi bi-pencil-square me-1"></i>Catatan untuk Penjual (Opsional)
+                                </label>
+                                <textarea name="note" id="note" rows="3"
                                     class="form-control bg-light border-secondary-subtle"
-                                    placeholder="Catatan untuk Penjual (Opsional)"></textarea>
+                                    placeholder="Contoh: Gula sedikit, es banyak, atau permintaan khusus lainnya..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -171,6 +172,16 @@
                                     <span class="text-secondary">Total Harga Barang</span>
                                     <span class="fw-medium">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                                 </div>
+                                
+                                @if($appliedPromo)
+                                    <div class="d-flex justify-content-between mb-2 small">
+                                        <span class="text-success">
+                                            <i class="bi bi-tag-fill me-1"></i>Diskon ({{ $appliedPromo->code }})
+                                        </span>
+                                        <span class="fw-medium text-success">- Rp {{ number_format($discount, 0, ',', '.') }}</span>
+                                    </div>
+                                @endif
+                                
                                 <div class="d-flex justify-content-between mb-2 small">
                                     <span class="text-secondary">Ongkos Kirim</span>
                                     <span class="fw-medium" id="ongkir-display">Rp
@@ -206,8 +217,13 @@
     <div class="fixed-bottom-bar d-lg-none d-flex align-items-center justify-content-between">
         <div>
             <span class="small text-muted d-block" style="font-size: 11px;">Total Tagihan</span>
-            <span class="fw-bold fs-5 text-custom-green" id="mobile-total-display">Rp
-                {{ number_format($totalBayar, 0, ',', '.') }}</span>
+            <div class="d-flex align-items-center gap-2">
+                <span class="fw-bold fs-5 text-custom-green" id="mobile-total-display">Rp
+                    {{ number_format($totalBayar, 0, ',', '.') }}</span>
+                @if($appliedPromo)
+                    <span class="badge bg-success small">{{ $appliedPromo->code }}</span>
+                @endif
+            </div>
         </div>
         <button type="button" onclick="document.getElementById('paymentForm').submit();"
             class="btn btn-custom-green px-5 py-2 fw-bold rounded-3">
@@ -219,6 +235,7 @@
 
     <script>
         const subtotal = {{ $subtotal }};
+        const discount = {{ $discount ?? 0 }};
         const biayaLayanan = {{ $biayaLayanan }};
         let ongkir = {{ $ongkir }};
 
@@ -254,7 +271,7 @@
                 document.getElementById('ongkir-display').classList.remove('text-success');
             }
 
-            let totalBaru = subtotal + ongkir + biayaLayanan;
+            let totalBaru = subtotal - discount + ongkir + biayaLayanan;
             document.getElementById('total-display').innerText = formatRupiah(totalBaru);
             document.getElementById('mobile-total-display').innerText = formatRupiah(totalBaru);
         }

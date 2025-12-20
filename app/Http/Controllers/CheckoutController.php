@@ -7,6 +7,7 @@ use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\DetailOrder;
 use App\Models\Payment;
+use App\Models\Promo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -38,11 +39,28 @@ class CheckoutController extends Controller
             $subtotal += ($item->product->harga * $item->jumlah);
         }
 
+        // Ambil promo dari session jika ada
+        $appliedPromo = null;
+        $discount = 0;
+        
+        if (session()->has('applied_promo')) {
+            $promoCode = session('applied_promo');
+            $promo = Promo::where('code', $promoCode)->first();
+            
+            if ($promo && $promo->isValid($subtotal)) {
+                $appliedPromo = $promo;
+                $discount = $promo->calculateDiscount($subtotal);
+            } else {
+                // Hapus promo dari session jika tidak valid
+                session()->forget('applied_promo');
+            }
+        }
+
         $ongkir = 10000;
         $biayaLayanan = 2000;
-        $totalBayar = $subtotal + $ongkir + $biayaLayanan;
+        $totalBayar = $subtotal - $discount + $ongkir + $biayaLayanan;
 
-        return view('checkout.checkout', compact('customer', 'checkoutItems', 'subtotal', 'ongkir', 'biayaLayanan', 'totalBayar'));
+        return view('checkout.checkout', compact('customer', 'checkoutItems', 'subtotal', 'ongkir', 'biayaLayanan', 'totalBayar', 'appliedPromo', 'discount'));
     }
 
     public function process(Request $request)
@@ -72,12 +90,24 @@ class CheckoutController extends Controller
             $subtotal += ($item->product->harga * $item->jumlah);
         }
 
+        // Ambil dan hitung diskon promo
+        $discount = 0;
+        $promoCode = null;
+        if (session()->has('applied_promo')) {
+            $promoCode = session('applied_promo');
+            $promo = Promo::where('code', $promoCode)->first();
+            
+            if ($promo && $promo->isValid($subtotal)) {
+                $discount = $promo->calculateDiscount($subtotal);
+            }
+        }
+
         $ongkir = ($request->shipping_type == 'delivery') ? 10000 : 0;
         $biayaLayanan = 2000;
-        $totalHarga = $subtotal + $ongkir + $biayaLayanan;
+        $totalHarga = $subtotal - $discount + $ongkir + $biayaLayanan;
 
         try {
-            DB::transaction(function () use ($customer, $cartItems, $totalHarga, $request) {
+            DB::transaction(function () use ($customer, $cartItems, $totalHarga, $request, $promoCode, $discount, $subtotal, $ongkir, $biayaLayanan) {
                 
                 $order = Order::create([
                     'id_cust' => $customer->id_cust,
@@ -85,7 +115,18 @@ class CheckoutController extends Controller
                     'total_harga' => $totalHarga,
                     'tipe_pesanan' => $request->shipping_type,
                     'status_pesanan' => 'proses',
+                    'catatan' => $request->note,
+                    'subtotal_produk' => $subtotal,
+                    'ongkir' => $ongkir,
+                    'biaya_layanan' => $biayaLayanan,
                 ]);
+
+                // Simpan informasi promo jika ada
+                if ($promoCode) {
+                    $order->promo_code = $promoCode;
+                    $order->promo_discount = $discount;
+                    $order->save();
+                }
 
                 foreach ($cartItems as $item) {
                     DetailOrder::create([
@@ -106,6 +147,9 @@ class CheckoutController extends Controller
                 CartItem::whereIn('id_item', $request->items)->delete();
                 
                 session()->put('last_order_id', $order->id_order);
+                
+                // Hapus promo dari session setelah checkout berhasil
+                session()->forget('applied_promo');
             });
 
             return redirect()->route('checkout.success');
@@ -118,7 +162,7 @@ class CheckoutController extends Controller
     public function success()
     {
         if (!session()->has('last_order_id')) {
-            return redirect()->route('menu.index');
+            return redirect()->route('produk.menu');
         }
         
         return view('checkout.checkout_success');

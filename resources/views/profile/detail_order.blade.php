@@ -143,23 +143,58 @@
             <div class="card-body p-4">
                 <h5 class="fw-bold mb-4 fs-6">Ringkasan Pembayaran</h5>
 
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Metode Pembayaran</span>
-                    <span class="fw-medium text-uppercase">{{ $order->payment->metode_bayar ?? 'Transfer' }}</span>
+                <div class="d-flex justify-content-between mb-2 small">
+                    <span class="text-muted">Subtotal Produk</span>
+                    <span class="fw-medium">Rp {{ number_format($order->subtotal_produk ?? 0, 0, ',', '.') }}</span>
                 </div>
 
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Total Belanja</span>
-                    <span class="fw-bold">Rp {{ number_format($order->total_harga, 0, ',', '.') }}</span>
+                @if($order->promo_code)
+                    <div class="d-flex justify-content-between mb-2 small">
+                        <span class="text-success">
+                            <i class="bi bi-tag-fill me-1"></i>Diskon ({{ $order->promo_code }})
+                        </span>
+                        <span class="fw-medium text-success">- Rp {{ number_format($order->promo_discount ?? 0, 0, ',', '.') }}</span>
+                    </div>
+                @endif
+
+                <div class="d-flex justify-content-between mb-2 small">
+                    <span class="text-muted">Ongkos Kirim</span>
+                    <span class="fw-medium">
+                        @if($order->ongkir > 0)
+                            Rp {{ number_format($order->ongkir, 0, ',', '.') }}
+                        @else
+                            <span class="text-success">Gratis</span>
+                        @endif
+                    </span>
+                </div>
+
+                <div class="d-flex justify-content-between mb-3 small">
+                    <span class="text-muted">Biaya Layanan</span>
+                    <span class="fw-medium">Rp {{ number_format($order->biaya_layanan ?? 0, 0, ',', '.') }}</span>
                 </div>
 
                 <hr class="border-secondary opacity-10 my-3">
 
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center mb-3">
                     <span class="fw-bold fs-5 text-custom-green">Total Bayar</span>
                     <span class="fw-bold fs-4 text-custom-green">Rp
                         {{ number_format($order->total_harga, 0, ',', '.') }}</span>
                 </div>
+
+                <div class="d-flex justify-content-between mb-2 small">
+                    <span class="text-muted">Metode Pembayaran</span>
+                    <span class="fw-medium text-uppercase">{{ $order->payment->metode_bayar ?? 'Transfer' }}</span>
+                </div>
+
+                @if($order->catatan)
+                    <hr class="border-secondary opacity-10 my-3">
+                    <div class="mb-2">
+                        <span class="text-muted small d-block mb-2">Catatan</span>
+                        <div class="bg-light p-3 rounded-3 border">
+                            <p class="mb-0 small">{{ $order->catatan }}</p>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
 

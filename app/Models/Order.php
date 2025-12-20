@@ -8,7 +8,7 @@ class Order extends Model
 {
     protected $table = 'order';
     protected $primaryKey = 'id_order';
-    protected $fillable = ['tanggal_order', 'total_harga', 'tipe_pesanan', 'status_pesanan', 'id_cust', 'id_kurir'];
+    protected $fillable = ['tanggal_order', 'total_harga', 'tipe_pesanan', 'status_pesanan', 'id_cust', 'id_kurir', 'promo_code', 'promo_discount', 'catatan', 'subtotal_produk', 'ongkir', 'biaya_layanan'];
 
     // Relasi ke Customer
     public function customer() {
