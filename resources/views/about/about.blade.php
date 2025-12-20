@@ -3,166 +3,287 @@
 @section('title', 'Tentang TJAP SATU')
 
 @section('content')
-  @include('components.header')
+    {{-- 1. LOAD GOOGLE FONTS & CUSTOM CSS --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
 
-  {{-- CONTENT --}}
-  <main>
-    {{-- Flash message (opsional) --}}
-    @if(session('status'))
-      <div class="container pt-4">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-          {{ session('status') }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      </div>
-    @endif
+    <style>
+        :root {
+            --tjap-green: #2c3e2e;
+            --tjap-orange: #d35400;
+            --tjap-cream: #f9f7f2;
+            --tjap-gold: #c5a059;
+        }
 
-    @yield('content')
-  </main>
+        body {
+            background-color: var(--tjap-cream);
+            font-family: 'Lora', serif;
+            color: #4a4a4a;
+            overflow-x: hidden;
+        }
 
-  {{-- LOGIN MODAL (selalu tersedia di layout) --}}
-  @include('components.login-modal')
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', serif;
+        }
 
-  <!-- HERO SECTION -->
-  <section class="hero-section position-relative text-white" style="height: 100vh; overflow: hidden;">
+        /* --- UTILS --- */
+        .text-highlight { color: var(--tjap-orange); }
+        .bg-cream { background-color: var(--tjap-cream); }
+        .letter-spacing-2 { letter-spacing: 2px; }
+        .font-serif { font-family: 'Playfair Display', serif; }
 
-    <!-- Video Background -->
-    <video autoplay muted loop playsinline class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
-      <source src="{{ asset('videos/heroes.mp4') }}" type="video/mp4">
-      Browser kamu tidak mendukung video HTML5.
-    </video>
+        /* --- HERO SECTION --- */
+        .hero-title span {
+            color: var(--tjap-orange);
+            font-style: italic;
+        }
+        .animate-bounce {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
 
-    <!-- Overlay gradasi -->
-    <div class="overlay position-absolute top-0 start-0 w-100 h-100"
-      style="background: linear-gradient(to top, rgba(60, 30, 10, 0.8), rgba(0, 0, 0, 0.4)); z-index:1;">
-    </div>
+        /* --- STORY SECTION (SIMPLIFIED) --- */
+        .story-img-frame {
+            position: relative;
+        }
+        /* Kotak garis di belakang gambar */
+        .story-img-frame::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--tjap-orange); /* Garis oranye tipis */
+            border-radius: 8px;
+            z-index: 0;
+            transition: transform 0.3s ease;
+        }
+        .story-img-frame:hover::before {
+            transform: translate(5px, 5px); /* Efek gerak sedikit saat hover */
+        }
+        .story-img {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
 
-    <!-- Konten teks di atas video -->
-    <div
-      class="container position-relative h-100 d-flex flex-column justify-content-end align-items-start text-start pb-5"
-      data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000" style="z-index:2;">
-      <h1 class="display-5 fw-bold mb-3">
-        Mari Menyeduh <span>Cerita</span> di<br>
-        Seluruh <span>Bandung</span>
-      </h1>
-      <p class="fs-5">
-        Jadilah bagian dari perjalanan kopi nomor satu — TJAP SATU.
-      </p>
-    </div>
+        /* --- OWNER CARD --- */
+        .owner-card {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        .owner-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        .owner-img-wrapper {
+            height: 280px;
+            overflow: hidden;
+            background-color: var(--tjap-green);
+        }
+        .owner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .owner-card:hover .owner-img { transform: scale(1.1); }
 
-  </section>
+        /* --- INFINITE SLIDER --- */
+        .slider-track {
+            display: flex;
+            width: calc(300px * 8); /* Lebar dikurangi agar gambar lebih rapat */
+            animation: scroll 40s linear infinite;
+        }
+        .slider-img {
+            height: 350px; /* Tinggi dikurangi sedikit */
+            width: 300px; 
+            object-fit: cover;
+            filter: brightness(0.9);
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+    </style>
 
-  <!-- ABOUT CONTENT -->
-  <section class="py-5">
-    <div class="container">
-      <!-- Cerita Singkat -->
-      <div class="row align-items-center mb-5">
-        <div class="col-md-6" data-aos="fade-right" data-aos-duration="1000">
-          <h2 class="fw-bold mb-3 text-dark">Cerita Singkat <span>TJAP SATU</span></h2>
-          <p class="text-muted">
-            TJAP SATU lahir dari semangat menghadirkan cita rasa kopi terbaik di Kabupaten Bandung.
-            Berawal dari Kalle Coffee yang fokus pada distribusi biji kopi, TJAP SATU berkembang menjadi
-            sebuah kedai kopi bergaya <em>vintage Asian</em> yang menyajikan pengalaman hangat dan autentik.
-          </p>
-          <p class="text-muted">
-            Dengan suasana klasik dan nuansa oriental, TJAP SATU menjadi ruang bagi siapa pun untuk menikmati kopi,
-            berbincang santai, dan merayakan momen sederhana bersama orang terdekat.
-          </p>
-        </div>
-        <div class="col-md-5 text-center" style="margin-left: auto;" data-aos="fade-left" data-aos-duration="1000">
-          <img src="{{ asset('images/about.webp') }}" class="img-fluid rounded shadow" alt="Kopi TJAP SATU">
-        </div>
-      </div>
-    </div>
-  </section>
+    @include('components.header')
 
-  <!-- Filosofi Logo -->
-  <section class="py-5">
-    <div class="container">
-      <div class="row mt-5 align-items-center" style="margin-bottom: 80px;">
-        <div class="col-md-6 order-md-2" data-aos="fade-left" data-aos-duration="1000">
-          <h3 class="fw-bold text-dark">Filosofi Logo TJAP SATU</h3>
-          <p class="fs-5 fw-semibold" style="color:#ff5500;">
-            Simbol Semangat Nomor Satu dalam Setiap Seduhan Kopi
-          </p>
-          <p class="text-muted">
-            Logo TJAP SATU mengusung gaya retro-vintage dengan komposisi warna hijau, oranye, dan krem
-            yang terinspirasi dari toko-toko kopi klasik Asia. Angka “1” menjadi lambang tekad untuk menjadi
-            yang terbaik di Kabupaten Bandung — bukan hanya dalam rasa kopi, tetapi juga dalam pelayanan
-            dan pengalaman bagi setiap pelanggan.
-          </p>
-          <p class="text-muted">
-            Warna <span class="fw-semibold">oranye kemerahan</span> memberi kesan hangat, bahagia, dan optimis,
-            sedangkan <span class="fw-semibold">hijau tua</span> melambangkan ketenangan dan keseimbangan — seperti
-            secangkir kopi yang menenangkan pikiran di tengah kesibukan.
-          </p>
-        </div>
-        <div class="col-md-6 order-md-1 text-center" data-aos="fade-right" data-aos-duration="1000">
-          <img src="{{ asset('images/logo-tjapsatu.png') }}" class="img-fluid rounded shadow" alt="Logo TJAP SATU"
-            style="max-width: 80%;">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pemilik Bisnis -->
-  <section class="py-5">
-    <div class="container text-center">
-      <h2 class="fw-bold text-uppercase" style="color:#ff5500" data-aos="zoom-in" data-aos-duration="1000">Pemilik Bisnis
-      </h2>
-
-      <div class="row g-4 justify-content-center">
-        @foreach ($owners as $owner)
-          <div class="col-md-3 text-center" data-aos="flip-left" data-aos-delay="{{ $loop->index * 300 }}"
-            data-aos-duration="1000">
-            <div class="owner-card shadow p-3">
-              <img src="{{ asset('images/' . $owner['image']) }}" alt="{{ $owner['name'] }}" class="owner-img mb-3">
-              <h5 class="fw-bold">{{ $owner['name'] }}</h5>
-              <small class="text-muted">{{ $owner['position'] }}</small>
-              <p class="mt-2">{{ $owner['desc'] }}</p>
+    {{-- CONTENT --}}
+    <main>
+        {{-- Flash message --}}
+        @if (session('status'))
+            <div class="position-fixed top-0 start-50 translate-middle-x mt-4" style="z-index: 1050;">
+                <div class="alert alert-success alert-dismissible fade show shadow-lg" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i> {{ session('status') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             </div>
-          </div>
-        @endforeach
-      </div>
-    </div>
-  </section>
+        @endif
 
-  <!-- Asal-usul Biji Kopi -->
-  <section id="asal-usul" class="py-5 position-relative overflow-hidden">
-    <div class="container text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
-      <h2 class="fw-bold text-uppercase" style="color:#ff5500;">Asal Usul Biji Kopi</h2>
-      <p class="text-muted mt-3 px-md-5">
-        Biji kopi TJAP SATU berasal dari petani lokal di berbagai daerah nusantara. Kami memilih biji kopi terbaik
-        dari Temanggung, Gayo, dan Toraja — ditanam dengan cinta, dipanen dengan teliti, dan diproses dengan semangat
-        menjaga cita rasa otentik Indonesia.
-      </p>
-    </div>
+        @include('components.login-modal')
 
-    <div class="slider-container position-relative" style="height:400px;" data-aos="fade-up" data-aos-delay="300"
-      data-aos-duration="1200">
-      <div class="slider-track d-flex">
-        <img src="{{ asset('images/biji.JPG') }}" class="slider-img" alt="Kopi 1">
-        <img src="{{ asset('images/biji.JPG') }}" class="slider-img" alt="Kopi 2">
-        <img src="{{ asset('images/biji.JPG') }}" class="slider-img" alt="Kopi 3">
-        <img src="{{ asset('images/biji.JPG') }}" class="slider-img" alt="Kopi 4">
-        <!-- duplikasi agar animasi looping mulus -->
-        <img src="{{ asset('images/biji.JPG') }}" class="slider-img" alt="Kopi 1">
-        <img src="{{ asset('images/biji.JPG') }}" class="slider-img" alt="Kopi 2">
-        <img src="{{ asset('images/biji.JPG') }}" class="slider-img" alt="Kopi 3">
-        <img src="{{ asset('images/biji.JPG') }}" class="slider-img" alt="Kopi 4">
-      </div>
+        <section class="hero-section position-relative text-white" style="height: 100vh; overflow: hidden;">
+            <video autoplay muted loop playsinline class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover">
+                <source src="{{ asset('videos/heroes.mp4') }}" type="video/mp4">
+            </video>
+            <div class="overlay position-absolute top-0 start-0 w-100 h-100"
+                style="background: linear-gradient(to bottom, rgba(44, 62, 46, 0.4), rgba(0, 0, 0, 0.8)); z-index:1;">
+            </div>
+            <div class="container position-relative h-100 d-flex flex-column justify-content-center align-items-center text-center"
+                data-aos="fade-up" data-aos-duration="1200" style="z-index:2;">
+                <h1 class="display-3 fw-bold mb-3 hero-title" style="text-shadow: 2px 2px 15px rgba(0,0,0,0.6);">
+                    Mari Menyeduh <span>Cerita</span><br>di Seluruh <span>Bandung</span>
+                </h1>
+                <p class="fs-5 mb-5 opacity-75 fw-light">
+                    Menghidupkan kembali nostalgia lewat secangkir kopi otentik.
+                </p>
+                <a href="#about-story" class="text-white text-decoration-none animate-bounce mt-4 opacity-75">
+                    <small class="text-uppercase letter-spacing-2">Scroll Down</small><br>
+                    <i class="bi bi-arrow-down fs-4"></i>
+                </a>
+            </div>
+        </section>
 
-      <div
-        class="overlay-text position-absolute top-50 start-50 translate-middle text-white text-center px-4 py-3 rounded"
-        style="background: rgba(0, 0, 0, 0.21); max-width: 600px;" data-aos="zoom-in" data-aos-delay="500"
-        data-aos-duration="1200">
-        <h4 class="fw-bold">Dari Petani Lokal untuk Dunia</h4>
-        <p style="font-size: 0.95rem;">Kami percaya kopi terbaik datang dari tangan yang tulus dan tanah yang subur.
-          Setiap biji yang kami pilih adalah wujud kerja keras dan cinta dari petani Indonesia.</p>
-      </div>
-    </div>
-  </section>
+        <section id="about-story" class="py-5 bg-white">
+            <div class="container py-4"> <div class="row align-items-center gx-5">
+                    
+                    <div class="col-lg-5 mb-4 mb-lg-0" data-aos="fade-right" data-aos-duration="1000">
+                        <div class="story-img-frame pe-3 pb-3">
+                            <img src="{{ asset('images/about.webp') }}" alt="Interior TJAP SATU" class="story-img">
+                        </div>
+                    </div>
 
+                    <div class="col-lg-7 ps-lg-4" data-aos="fade-left" data-aos-duration="1000">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-warning text-dark rounded-pill px-3 py-2 me-3 shadow-sm">EST. 2024</span>
+                            <div style="height: 1px; width: 50px; background-color: var(--tjap-orange);"></div>
+                        </div>
 
-  @include('components.footer')
+                        <h2 class="display-6 fw-bold mb-3 text-dark">
+                            Dari Biji Kopi, <span class="fst-italic text-highlight">Menjadi Satu Hati.</span>
+                        </h2>
+
+                        <p class="text-muted lh-lg mb-3">
+                            Perjalanan kami bermula dari <strong>Kalle Coffee</strong>, sebuah dedikasi sederhana untuk mendistribusikan biji kopi terbaik. Namun, kami menyadari bahwa kopi bukan hanya tentang rasa, melainkan tentang perasaan.
+                        </p>
+                        
+                        <p class="text-muted lh-lg mb-4">
+                            Kini, TJAP SATU hadir dengan konsep <strong>Vintage Asian</strong>. Kami memadukan nostalgia kedai kopi masa lampau dengan kenyamanan modern, menciptakan ruang hangat bagi siapa pun untuk merayakan momen sederhana.
+                        </p>
+
+                        <div class="border-start border-4 border-warning ps-3">
+                            <p class="fst-italic text-secondary mb-0">"Menyeduh kenangan, satu cangkir demi satu cangkir."</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="py-5 bg-cream">
+            <div class="container">
+                <div class="row align-items-center gx-5">
+                    <div class="col-lg-5 order-lg-2" data-aos="fade-left">
+                        <h6 class="text-uppercase text-secondary letter-spacing-2 mb-2">Philosophy</h6>
+                        <h3 class="fw-bold text-dark mb-3">Makna Logo</h3>
+                        
+                        <div class="vstack gap-3 mt-4">
+                            <div class="d-flex bg-white p-3 rounded shadow-sm">
+                                <i class="bi bi-circle-fill text-warning me-3 fs-4"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Angka "1"</h6>
+                                    <small class="text-muted">Tekad menjadi yang terbaik dalam rasa & pelayanan.</small>
+                                </div>
+                            </div>
+                            <div class="d-flex bg-white p-3 rounded shadow-sm">
+                                <i class="bi bi-palette-fill text-success me-3 fs-4"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Warna Retro</h6>
+                                    <small class="text-muted">Hijau (Ketenangan) & Oranye (Kehangatan).</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-7 order-lg-1 text-center mt-4 mt-lg-0" data-aos="fade-right">
+                        <img src="{{ asset('images/logo-tjapsatu.png') }}" class="img-fluid"
+                            alt="Logo TJAP SATU" style="max-height: 350px; filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.1));">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-5 bg-white">
+            <div class="container py-4">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <h6 class="text-uppercase text-secondary letter-spacing-2">The People</h6>
+                    <h2 class="fw-bold text-highlight">Pemilik Bisnis</h2>
+                    <div class="mx-auto mt-2" style="width: 50px; height: 3px; background-color: var(--tjap-green);"></div>
+                </div>
+
+                <div class="row g-4 justify-content-center">
+                    @foreach ($owners as $owner)
+                        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="{{ $loop->index * 150 }}">
+                            <div class="owner-card h-100 text-center pb-4">
+                                <div class="owner-img-wrapper mb-3">
+                                    <img src="{{ asset('images/' . $owner['image']) }}" alt="{{ $owner['name'] }}" class="owner-img">
+                                </div>
+                                <div class="px-3">
+                                    <h5 class="fw-bold mb-1 font-serif">{{ $owner['name'] }}</h5>
+                                    <p class="small text-uppercase text-warning fw-bold mb-2">{{ $owner['position'] }}</p>
+                                    <p class="text-muted small px-2">{{ $owner['desc'] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+        <section id="asal-usul" class="position-relative bg-dark overflow-hidden">
+            <div class="container-fluid p-0">
+                <div class="row g-0">
+                    <div class="col-lg-4 d-flex align-items-center bg-dark text-white p-5 position-relative z-2">
+                        <div data-aos="fade-right" class="p-lg-2">
+                            <h3 class="fw-bold text-uppercase mb-3" style="color: var(--tjap-gold);">Asal Usul Biji Kopi</h3>
+                            <p class="text-white-50 mb-4 small lh-lg">
+                                Kurasi terbaik dari <strong>Temanggung, Gayo, dan Toraja</strong>. Diproses penuh cinta untuk menjaga cita rasa otentik.
+                            </p>
+                            <button class="btn btn-outline-warning btn-sm text-white rounded-pill px-4 py-2">Lihat Menu</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 bg-black position-relative overflow-hidden">
+                         <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to right, #212529 0%, transparent 10%); z-index: 2;"></div>
+                        <div class="slider-track">
+                            <img src="{{ asset('images/biji.JPG') }}" class="slider-img">
+                            <img src="{{ asset('images/biji.JPG') }}" class="slider-img">
+                            <img src="{{ asset('images/biji.JPG') }}" class="slider-img">
+                            <img src="{{ asset('images/biji.JPG') }}" class="slider-img">
+                            <img src="{{ asset('images/biji.JPG') }}" class="slider-img">
+                            <img src="{{ asset('images/biji.JPG') }}" class="slider-img">
+                            <img src="{{ asset('images/biji.JPG') }}" class="slider-img">
+                            <img src="{{ asset('images/biji.JPG') }}" class="slider-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        @include('components.footer')
+    </main>
 @endsection
