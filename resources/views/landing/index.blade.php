@@ -63,7 +63,7 @@
 
         /* --- TICKER STRIP --- */
         .ticker-wrap { width: 100%; background: var(--color-primary); color: var(--bg-body); padding: 1rem 0; overflow: hidden; white-space: nowrap; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .ticker { display: inline-block; animation: marquee 60s linear infinite; } /* Diperlambat sedikit agar terbaca */
+        .ticker { display: inline-block; animation: marquee 60s linear infinite; }
         .ticker-item { display: inline-block; padding: 0 2rem; font-family: var(--font-display); font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; }
         .ticker-item::after { content: "✦"; margin-left: 2rem; color: var(--color-accent); }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
@@ -105,7 +105,7 @@
         <div class="hero-content">
             <div class="separator bg-white mb-4"></div>
             <p class="hero-subtitle">Est. 2024 • Artisan Roastery</p>
-            <h1 class="hero-title">Experience <br> <span class="fst-italic" style="font-family: var(--font-script); color: #fff; font-weight: 400;">The Art</span> of Coffee</h1>
+            <h1 class="hero-title">Experience <br> <span class="fst-italic" style="font-family: var(--font-script); color: #AF461F; font-weight: 400;">The Art</span> of Coffee</h1>
             <div class="d-flex justify-content-center gap-3 mt-5">
                 <a href="#menu" class="btn btn-pro text-white border-white">Explore Menu</a>
             </div>
@@ -116,11 +116,10 @@
         </div>
     </header>
 
-    {{-- TICKER (DINAMIS DARI DATABASE) --}}
+    {{-- TICKER --}}
     <div class="ticker-wrap">
         <div class="ticker">
             @if(isset($stripProducts) && count($stripProducts) > 0)
-                {{-- Loop 4x agar teks cukup panjang untuk animasi marquee --}}
                 @for($i=0; $i<4; $i++)
                     @foreach($stripProducts as $item)
                         <div class="ticker-item">{{ $item->nama_produk }}</div>
@@ -133,6 +132,7 @@
         </div>
     </div>
 
+    {{-- ABOUT SECTION --}}
     <section id="about" class="section-padding position-relative overflow-hidden" style="background: linear-gradient(to bottom, var(--bg-body), #f0ece6);">
         <div style="position: absolute; top: -20%; right: -10%; width: 400px; height: 400px; background: var(--color-accent); opacity: 0.03; border-radius: 50%; filter: blur(100px); z-index: 0;"></div>
 
@@ -141,12 +141,8 @@
                 <div class="col-lg-6 mb-5 mb-lg-0">
                     <div class="img-frame reveal-img shadow-lg position-relative rounded-5 overflow-hidden">
                         <img src="{{ asset('images/biji.JPG') }}" alt="Coffee Beans" class="w-100" style="min-height: 500px; object-fit: cover; filter: grayscale(10%) contrast(1.1) brightness(0.9);">
-
                         <div class="position-absolute bottom-0 start-0 w-100 p-4"
-                             style="background: rgba(44, 54, 57, 0.6); /* Warna Primary Transparan Gelap */
-                                    backdrop-filter: blur(5px); /* Efek Blur Kuat */
-                                    -webkit-backdrop-filter: blur(5px); /* Safari Support */
-                                    border-top: 1px solid rgba(255,255,255,0.1);">
+                                style="background: rgba(44, 54, 57, 0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-top: 1px solid rgba(255,255,255,0.1);">
                                 <div>
                                     <p class="mb-3 fst-italic text-white fw-light lh-base" style="font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.5px;">
                                         "Setiap biji adalah warisan; menceritakan kisah tanah kelahirannya dengan jujur dalam setiap tegukan."
@@ -159,15 +155,13 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-lg-5 offset-lg-1 ps-lg-5">
                     <span class="text-uppercase text-accent small ls-2 mb-3 d-block fw-bold reveal">Tentang Kami</span>
-                    <h2 class="display-5 mb-4 reveal" style="color: var(--color-primary);">Kami percaya kopi adalah <span class="fst-italic font-script text-accent" style="font-weight: 400; font-size: 3rem;">ritual</span>, bukan sekadar rutinitas.</h2>
+                    <h2 class="display-5 mb-4 reveal" style="color: var(--color-primary);">Kami percaya kopi adalah <span class="fst-italic font-script" style="font-weight: 400; font-size: 3rem; color: #AF461F;">ritual</span>, bukan sekadar rutinitas.</h2>
                     <p class="text-muted mb-5 reveal lead" style="line-height: 1.9; font-size: 1.05rem;">
                         Di Coffee House, kami mendedikasikan diri untuk mengurasi biji kopi terbaik dari dataran tinggi Nusantara.
                         Dipanggang dalam <i>small batches</i> dengan presisi tinggi untuk menjaga karakter unik dan kekayaan rasa setiap daerah.
                     </p>
-
                     <div class="d-flex gap-5 pt-2 reveal align-items-center">
                         <div class="d-flex align-items-center gap-3">
                             <div class="rounded-circle bg-accent-subtle p-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: rgba(162, 123, 92, 0.1);">
@@ -200,11 +194,10 @@
     {{-- MENU SECTION --}}
     <section id="menu" class="section-padding bg-white" style="border-radius: 60px 60px 0 0;">
         <div class="container">
-            <div class="text-center mb-5 pb-4">
-                <span style="font-family: var(--font-script); font-size: 2.5rem; color: var(--text-muted);">Our Selection</span>
+            <div class="text-center mb-5 pb-4 reveal">
+                <span style="font-family: var(--font-script); font-size: 2.5rem; color: #AF461F;">Our Selection</span>
                 <h2 class="display-4 mt-2">Seasonal Menu</h2>
             </div>
-
             @if(isset($products) && $products->count())
                 <div class="row g-5">
                     @foreach ($products as $product)
@@ -216,7 +209,6 @@
                                 if(!file_exists(public_path('uploads/'.ltrim($img, '/')))) $imgUrl = asset($img);
                             }
                         @endphp
-
                         <div class="col-md-6 col-lg-4">
                             <div class="product-card text-center">
                                 <div class="product-img-box">
@@ -237,7 +229,6 @@
                                 </div>
                             </div>
                         </div>
-
                         {{-- MODAL PRODUK --}}
                         <div class="modal fade modal-pro" id="productModal{{ $product->id_product }}" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -251,7 +242,6 @@
                                             <h3 class="mb-2">{{ $product->nama_produk }}</h3>
                                             <p class="fs-4 mb-4 fw-bold" style="color: var(--color-accent);">IDR {{ number_format($product->harga, 0, ',', '.') }}</p>
                                             <p class="text-muted mb-5">{{ $product->deskripsi ?? 'Deskripsi produk belum tersedia.' }}</p>
-
                                             @auth('customer')
                                                 <form action="{{ route('cart.add', $product->id_product) }}" method="POST">
                                                     @csrf
@@ -321,83 +311,89 @@
         </div>
     </section>
 
-    {{-- REGISTER SECTION (FULL FIELD) --}}
+    {{-- REGISTER SECTION (FIXED FORM) --}}
     @guest('customer')
     <section id="register" class="section-padding position-relative" style="background-color: var(--color-primary); color: #fff; padding-bottom: 12rem; margin-bottom: -3rem; z-index: 1;">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-8 text-center">
+                <div class="col-lg-8 text-center reveal">
                     <span style="font-family: var(--font-script); color: var(--color-accent); font-size: 2rem;">Membership</span>
                     <h2 class="display-5 mb-5 mt-2">Bergabung Bersama Kami</h2>
                     <p class="text-white-50 mb-5 mx-auto" style="max-width: 500px;">Dapatkan akses eksklusif dan kemudahan pemesanan.</p>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-8 reveal">
                     <form action="{{ route('register.submit') }}" method="POST" class="form-clean">
                         @csrf
-                        <div class="row g-4">
-                            <style>
-                                /* Fix UI: Paksa text jadi putih dan background transparan */
-                                .form-dark input {
-                                    border-bottom-color: rgba(255,255,255,0.3) !important;
-                                    color: #fff !important;
-                                    background: transparent !important;
-                                }
-                                .form-dark input:focus {
-                                    border-bottom-color: var(--color-accent) !important;
-                                    box-shadow: none !important;
-                                    outline: none !important;
-                                }
-                                .form-dark label {
-                                    color: rgba(255,255,255,0.7) !important;
-                                    font-size: 0.8rem;
-                                    letter-spacing: 1px;
-                                    text-transform: uppercase;
-                                }
-                                .form-dark input:-webkit-autofill,
-                                .form-dark input:-webkit-autofill:hover,
-                                .form-dark input:-webkit-autofill:focus {
-                                    -webkit-text-fill-color: #fff !important;
-                                    -webkit-box-shadow: 0 0 0px 1000px var(--color-primary) inset !important;
-                                    transition: background-color 5000s ease-in-out 0s;
-                                }
-                            </style>
+                        {{-- STYLE FIX: Autofill browser & Input Colors --}}
+                        <style>
+                            .form-dark input {
+                                border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+                                background: transparent !important;
+                                color: #fff !important;
+                                border-radius: 0;
+                                padding: 0.8rem 0;
+                            }
+                            .form-dark input:focus {
+                                border-bottom-color: var(--color-accent) !important;
+                                box-shadow: none !important;
+                                outline: none !important;
+                            }
+                            .form-dark label {
+                                color: rgba(255,255,255,0.6) !important;
+                                font-size: 0.8rem;
+                                text-transform: uppercase;
+                                letter-spacing: 1px;
+                                margin-bottom: 0;
+                            }
+                            /* Paksa background autofill jadi gelap */
+                            .form-dark input:-webkit-autofill,
+                            .form-dark input:-webkit-autofill:hover,
+                            .form-dark input:-webkit-autofill:focus {
+                                -webkit-text-fill-color: #fff !important;
+                                -webkit-box-shadow: 0 0 0px 1000px var(--color-primary) inset !important;
+                                transition: background-color 5000s ease-in-out 0s;
+                            }
+                        </style>
 
+                        <div class="row g-4">
                             <div class="col-md-6 form-dark">
-                                <label>Nama Lengkap</label>
-                                <input type="text" name="nama_lengkap" class="w-100" required value="{{ old('nama_lengkap') }}">
+                                <label for="reg_nama">Nama Lengkap</label>
+                                <input type="text" id="reg_nama" name="nama_lengkap" class="w-100 border-0" required value="{{ old('nama_lengkap') }}">
                                 @error('nama_lengkap') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
 
                             <div class="col-md-6 form-dark">
-                                <label>No. Telepon</label>
-                                <input type="tel" name="no_telp" class="w-100" required value="{{ old('no_telp') }}"
+                                <label for="reg_telp">No. Telepon</label>
+                                <input type="tel" id="reg_telp" name="no_telp" class="w-100 border-0" required value="{{ old('no_telp') }}"
                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                 @error('no_telp') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
 
-                            <div class="col-12 form-dark">
-                                <label>Alamat Lengkap</label>
-                                <input type="text" name="alamat" class="w-100" required value="{{ old('alamat') }}">
-                                @error('alamat') <small class="text-danger">{{ $message }}</small> @enderror
-                            </div>
-
-                            <div class="col-12 form-dark">
-                                <label>Email</label>
-                                <input type="email" name="email" class="w-100" required value="{{ old('email') }}">
+                            <div class="col-md-6 form-dark">
+                                <label for="reg_email">Email Address</label>
+                                <input type="email" id="reg_email" name="email" class="w-100 border-0" required value="{{ old('email') }}">
                                 @error('email') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
 
-                            <div class="col-12 form-dark position-relative">
-                                <label>Password</label>
-                                <input type="password" name="password" id="reg_password" class="w-100" required>
-                                <span onclick="toggleRegPassword()" style="position: absolute; right: 0; bottom: 10px; cursor: pointer; color: rgba(255,255,255,0.6);">
-                                    <i class="bi bi-eye" id="icon_reg"></i>
-                                </span>
+                            <div class="col-md-6 form-dark position-relative">
+                                <label for="reg_password">Password</label>
+                                <div class="position-relative">
+                                    <input type="password" id="reg_password" name="password" class="w-100 border-0" required style="padding-right: 2rem;">
+                                    <span onclick="toggleRegPassword()" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); cursor: pointer; color: rgba(255,255,255,0.6); z-index: 10;">
+                                        <i class="bi bi-eye" id="icon_reg"></i>
+                                    </span>
+                                </div>
                                 @error('password') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
 
+                            <div class="col-12 form-dark">
+                                <label for="reg_alamat">Alamat Lengkap</label>
+                                <input type="text" id="reg_alamat" name="alamat" class="w-100 border-0" required value="{{ old('alamat') }}" placeholder="Jalan, No. Rumah, Kota...">
+                                @error('alamat') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+
                             <div class="col-12 text-center mt-5">
-                                <button type="submit" class="btn btn-accent px-5 py-3">Buat Akun</button>
+                                <button type="submit" class="btn btn-accent px-5 py-3">Buat Akun Member</button>
                             </div>
                         </div>
                     </form>
@@ -452,7 +448,7 @@
         });
 
         // Product Card Stagger
-        gsap.utils.toArray('h2, .product-card').forEach(el => {
+        gsap.utils.toArray('.product-card').forEach(el => {
             gsap.from(el, {
                 y: 30, opacity: 0, duration: 0.8, ease: 'power3.out',
                 scrollTrigger: { trigger: el, start: 'top 85%' }
@@ -462,26 +458,21 @@
         // --- ANIMASI SCRAMBLE NUMBER ---
         function playScrambleText(element) {
             const finalValue = parseInt(element.getAttribute('data-final'));
-            const duration = 1500; // Durasi total animasi (1.5 detik)
+            const duration = 1500;
             let startTime = null;
-
             function update(currentTime) {
                 if (!startTime) startTime = currentTime;
                 const progress = currentTime - startTime;
-
                 if (progress < duration) {
-                    // Tampilkan angka acak 0-99
                     element.innerText = Math.floor(Math.random() * 99);
                     requestAnimationFrame(update);
                 } else {
-                    // Selesai, set ke angka final
                     element.innerText = finalValue;
                 }
             }
             requestAnimationFrame(update);
         }
 
-        // Trigger Scramble saat masuk viewport
         ScrollTrigger.create({
             trigger: "#about",
             start: "top 75%",
@@ -493,7 +484,7 @@
             }
         });
 
-        // Auto Show Login Modal (jika ada request dari controller)
+        // Auto Show Login Modal
         document.addEventListener('DOMContentLoaded', () => {
             const usp = new URLSearchParams(location.search);
             if (usp.get('login') === '1') {
