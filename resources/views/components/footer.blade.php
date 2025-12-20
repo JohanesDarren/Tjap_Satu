@@ -1,5 +1,5 @@
 <footer class="position-relative text-white mt-5">
-    <div class="footer-bg pt-5 pb-4" style="border-radius: 40px 40px 0 0;">
+    <div class="footer-bg pt-5 pb-4">
         <div class="container position-relative" style="z-index: 5;">
             <div class="row g-5 justify-content-between">
 

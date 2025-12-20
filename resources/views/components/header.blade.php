@@ -15,7 +15,7 @@
       </button>
 
       <div class="collapse navbar-collapse justify-content-end" id="navbarMain">
-        <ul class="navbar-nav align-items-lg-center ms-auto gap-lg-4 p-3 p-lg-0 mt-3 mt-lg-0 rounded-4 mobile-nav-bg">
+        <ul class="navbar-nav align-items-lg-center ms-auto gap-lg-4 p-3 p-lg-0 mt-3 mt-lg-0 mobile-nav-bg">
           <li class="nav-item"><a class="nav-link menu-link @if(request()->routeIs('home')) active @endif" href="{{ route('home') }}">Beranda</a></li>
           <li class="nav-item"><a class="nav-link menu-link @if(request()->routeIs('tentang')) active @endif" href="{{ route('tentang') }}">Tentang</a></li>
           <li class="nav-item"><a class="nav-link menu-link @if(request()->routeIs('produk.menu')) active @endif" href="{{ route('produk.menu') }}">Menu</a></li>
@@ -74,7 +74,7 @@
           --coffee-accent: #AF461F; /* Rust Orange */
           --coffee-gold: #D4C5A9;
           --coffee-glass: rgba(31, 27, 26, 0.9);
-          --radius-nav: 24px; /* Radius untuk navbar scrolled & mobile menu */
+          /* Variabel --radius-nav DIHILANGKAN */
       }
 
       /* ====== NAVBAR BASE ====== */
@@ -84,7 +84,7 @@
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
-      /* Navbar Scrolled State - Rounded Bottom */
+      /* Navbar Scrolled State - BORDER RADIUS DIHILANGKAN */
       .custom-navbar.scrolled {
         background-color: var(--coffee-glass) !important;
         backdrop-filter: blur(16px);
@@ -92,9 +92,7 @@
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         padding-top: 0.8rem !important;
         padding-bottom: 0.8rem !important;
-        /* Tambahkan radius di bawah agar terlihat seperti floating card */
-        border-bottom-left-radius: var(--radius-nav);
-        border-bottom-right-radius: var(--radius-nav);
+        /* Properti border-bottom-left-radius & border-bottom-right-radius telah dihapus */
         margin-top: 0;
       }
 
@@ -126,7 +124,6 @@
         width: 0; height: 2px;
         background: var(--coffee-accent);
         transition: all 0.3s ease; transform: translateX(-50%);
-        border-radius: 2px;
       }
       .menu-link:hover::after, .menu-link.active::after { width: 80%; }
 
@@ -186,6 +183,8 @@
           -webkit-backdrop-filter: blur(15px);
           box-shadow: 0 15px 40px rgba(0,0,0,0.4);
           border: 1px solid rgba(255,255,255,0.08);
+          /* BORDER RADIUS DIHILANGKAN UNTUK MOBILE MENU */
+          border-radius: 0;
         }
         .menu-link { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .menu-link::after { display: none; }
