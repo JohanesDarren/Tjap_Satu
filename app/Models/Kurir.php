@@ -9,7 +9,13 @@ class Kurir extends Model
     protected $table = 'kurir';
     protected $primaryKey = 'id_kurir';
     protected $fillable = ['nama_kurir', 'plat_nomor', 'no_telp'];
-    
+
+    // Accessor for nama attribute
+    public function getNamaAttribute()
+    {
+        return $this->nama_kurir;
+    }
+
     public function orders() {
         return $this->hasMany(Order::class, 'id_kurir');
     }
