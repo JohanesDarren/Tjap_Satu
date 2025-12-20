@@ -55,9 +55,7 @@ class ProfileController extends Controller
         $customer->nama_lengkap = $a->nama_lengkap;
         $customer->email = $a->email;
         $customer->no_telp = $a->no_telp;
-        if ($a->filled('alamat')) {
-            $customer->alamat = $a->alamat;
-        }
+        $customer->alamat = $a->alamat;
         $customer->save();
 
         return redirect('/profile')->with('success', 'Data diri berhasil diperbarui');
@@ -101,6 +99,32 @@ class ProfileController extends Controller
             ->firstOrFail();
 
         return view('profile.detail_order', compact('order'));
+    }
+
+    public function cancelOrder($id)
+    {
+        $auth = Auth::guard('customer');
+        if (! $auth->check()) {
+            return redirect()->route('home', ['login' => 1]);
+        }
+
+        $customer = $auth->user();
+        
+        // Cari order berdasarkan ID dan pastikan milik customer yang login
+        $order = Order::where('id_order', $id)
+            ->where('id_cust', $customer->id_cust)
+            ->firstOrFail();
+
+        // Cek apakah status pesanan adalah "Proses"
+        if (strtolower($order->status_pesanan) !== 'proses') {
+            return back()->withErrors(['error' => 'Hanya pesanan dengan status "Proses" yang dapat dibatalkan.']);
+        }
+
+        // Update status pesanan menjadi "Dibatalkan"
+        $order->status_pesanan = 'Dibatalkan';
+        $order->save();
+
+        return back()->with('success', 'Pesanan berhasil dibatalkan.');
     }
 
     public function updatePassword(Request $request)

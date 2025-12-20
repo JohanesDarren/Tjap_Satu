@@ -34,10 +34,22 @@
                     </div>
                 </div>
 
-                <div class="mt-3 mt-md-0 text-md-end">
-                    <p class="fw-bold text-dark mb-0">Rp {{ number_format($order->total_harga, 0, ',', '.') }}</p>
-                    <a href="{{ route('profile.order.detail', $order->id_order) }}"
-                        class="small text-primary text-decoration-none">Lihat Detail</a>
+                <div class="mt-3 mt-md-0 text-md-end d-flex flex-column">
+                    <p class="fw-bold text-dark mb-1">Rp {{ number_format($order->total_harga, 0, ',', '.') }}</p>
+                    <div class="d-flex flex-column gap-1">
+                        <a href="{{ route('profile.order.detail', $order->id_order) }}"
+                            class="small text-primary text-decoration-none">Lihat Detail</a>
+                        @if(strtolower($order->status_pesanan) === 'proses')
+                            <form action="{{ route('profile.order.cancel', $order->id_order) }}" method="POST" 
+                                onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size: 12px;">
+                                    <i class="bi bi-x-circle"></i> Batalkan
+                                </button>
+                            </form>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

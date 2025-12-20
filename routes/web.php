@@ -86,6 +86,7 @@ Route::middleware(['auth:customer'])->group(function () {
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::get('/profile/order/{id}', [ProfileController::class, 'detailOrder'])->name('profile.order.detail');
+    Route::put('/profile/order/{id}/cancel', [ProfileController::class, 'cancelOrder'])->name('profile.order.cancel');
     Route::delete('/profile/photo', [ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
 });
 
