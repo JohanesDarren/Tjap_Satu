@@ -5,8 +5,9 @@
         <span class="brand-text">TOKOKOPITJAP1</span>
       </a>
 
-      <button id="navbarToggler" class="navbar-toggler border-0 shadow-none p-2" type="button" aria-controls="navbarMain"
-        aria-expanded="false" aria-label="Toggle navigation">
+      <button id="navbarToggler" class="navbar-toggler border-0 shadow-none p-2" type="button"
+        data-bs-toggle="collapse" data-bs-target="#navbarMain"
+        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
         <div class="burger-icon">
           <span></span>
           <span></span>
@@ -73,8 +74,8 @@
           --coffee-dark: #1F1B1A;
           --coffee-accent: #AF461F; /* Rust Orange */
           --coffee-gold: #D4C5A9;
-          --coffee-glass: rgba(31, 27, 26, 0.9);
-          /* Variabel --radius-nav DIHILANGKAN */
+          /* UPDATED: Opasitas dikurangi jadi 0.75 agar efek blur terlihat (Glassmorphism) */
+          --coffee-glass: rgba(31, 27, 26, 0.75);
       }
 
       /* ====== NAVBAR BASE ====== */
@@ -84,15 +85,16 @@
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
-      /* Navbar Scrolled State - BORDER RADIUS DIHILANGKAN */
+      /* Navbar Scrolled State - BLUR EFFECT ADDED HERE */
       .custom-navbar.scrolled {
         background-color: var(--coffee-glass) !important;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        /* Efek Blur Kaca */
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         padding-top: 0.8rem !important;
         padding-bottom: 0.8rem !important;
-        /* Properti border-bottom-left-radius & border-bottom-right-radius telah dihapus */
         margin-top: 0;
       }
 
@@ -178,12 +180,13 @@
       /* Mobile Menu */
       @media (max-width: 991.98px) {
         .mobile-nav-bg {
-          background: rgba(31, 27, 26, 0.95);
-          backdrop-filter: blur(15px);
-          -webkit-backdrop-filter: blur(15px);
+          /* UPDATED: Lebih transparan (0.85) agar blur di belakang terlihat */
+          background: rgba(31, 27, 26, 0.85);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+
           box-shadow: 0 15px 40px rgba(0,0,0,0.4);
           border: 1px solid rgba(255,255,255,0.08);
-          /* BORDER RADIUS DIHILANGKAN UNTUK MOBILE MENU */
           border-radius: 0;
         }
         .menu-link { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -202,14 +205,24 @@
         window.addEventListener('scroll', onScroll);
         onScroll();
 
-        // Close menu on click outside
+        // Mobile Menu Logic
         const collapseEl = document.getElementById('navbarMain');
         const toggler = document.getElementById('navbarToggler');
+
         document.addEventListener('click', (e) => {
           if (!nav.contains(e.target) && collapseEl.classList.contains('show')) {
              new bootstrap.Collapse(collapseEl).hide();
              toggler.setAttribute('aria-expanded', 'false');
           }
+        });
+
+        collapseEl.querySelectorAll('.nav-link').forEach(link => {
+          link.addEventListener('click', () => {
+              if (window.innerWidth < 992 && collapseEl.classList.contains('show')) {
+                  new bootstrap.Collapse(collapseEl).hide();
+                  toggler.setAttribute('aria-expanded', 'false');
+              }
+          });
         });
       })();
     </script>

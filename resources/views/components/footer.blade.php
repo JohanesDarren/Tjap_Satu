@@ -59,7 +59,7 @@
         </div>
 
         <div class="contact-image-wrapper">
-             <img src="{{ asset('images/Contactus.png') }}" alt="Coffee Art" class="img-fluid contact-img">
+             <img src="{{ asset('images/Contactus.png') }}" alt="Contact Us" class="img-fluid contact-img">
         </div>
     </div>
 
@@ -73,10 +73,9 @@
 
         .footer-bg {
             background-color: var(--bg-footer);
-            /* border-top: 4px solid var(--accent); Opsional jika ingin border atas berwarna */
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.05); /* Sedikit bayangan di atas */
+            overflow: hidden; /* Mencegah gambar keluar dari area footer */
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.05);
         }
 
         .font-serif { font-family: 'Playfair Display', serif; }
@@ -117,15 +116,34 @@
             color: #fff; padding-left: 6px;
         }
 
-        /* Image Decor */
+        /* --- Image Decor (UPDATED) --- */
         .contact-image-wrapper {
-            position: absolute; bottom: -40px; right: -20px;
-            width: 350px; opacity: 0.3; pointer-events: none;
-            mix-blend-mode: soft-light; z-index: 1;
+            position: absolute;
+            bottom: 0;           /* Tempel ke bawah */
+            right: 0;            /* Tempel ke kanan */
+            width: 300px;        /* Ukuran diperjelas */
+            opacity: 1;          /* Opacity 100% agar muncul jelas */
+            pointer-events: none; /* Agar tidak menghalangi klik link di atasnya */
+            z-index: 1;          /* Di belakang teks container (z-index container: 5) */
+        }
+
+        .contact-img {
+            display: block;
+            width: 100%;
+            height: auto;
+            /* Opsional: Jika ingin sedikit efek gradasi bawah agar menyatu */
+            -webkit-mask-image: linear-gradient(to top, black 80%, transparent 100%);
+            mask-image: linear-gradient(to top, black 80%, transparent 100%);
         }
 
         @media (max-width: 992px) {
-            .contact-image-wrapper { width: 250px; opacity: 0.15; }
+            /* Di layar HP/Tablet, buat lebih kecil dan transparan agar tulisan terbaca */
+            .contact-image-wrapper {
+                width: 200px;
+                opacity: 0.15;
+                right: -20px;
+                bottom: -20px;
+            }
         }
     </style>
 </footer>
