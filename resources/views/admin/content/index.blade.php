@@ -83,6 +83,7 @@
     </ul>
 
     <div class="tab-content">
+        {{-- ===================== TAB BANNER (TIDAK BERUBAH) ===================== --}}
         <div class="tab-pane fade show active" id="banner-pane" role="tabpanel" aria-labelledby="banner-tab">
             <div class="row g-3">
                 <div class="col-lg-5">
@@ -192,8 +193,10 @@
             </div>
         </div>
 
+        {{-- ===================== TAB PROMO (DIUPDATE) ===================== --}}
         <div class="tab-pane fade" id="promo-pane" role="tabpanel" aria-labelledby="promo-tab">
             <div class="row g-3">
+                {{-- Form Tambah Promo --}}
                 <div class="col-lg-5">
                     <div class="card h-100">
                         <div class="card-header d-flex align-items-center gap-2">
@@ -204,12 +207,48 @@
                             <form method="post" action="{{ route('admin.content.promo.store') }}">
                                 @csrf
                                 <div class="mb-3">
-                                    <label class="form-label">Judul</label>
-                                    <input name="title" class="form-control" placeholder="Judul promo" required>
+                                    <label class="form-label">Judul Promo</label>
+                                    <input name="title" class="form-control" placeholder="Contoh: Diskon Kemerdekaan" required>
                                 </div>
+
+                                {{-- Added: Kode Voucher --}}
+                                <div class="mb-3">
+                                    <label class="form-label">Kode Voucher</label>
+                                    <input name="code" class="form-control text-uppercase" placeholder="Contoh: MERDEKA45" required>
+                                    <div class="form-text">Harus unik, huruf & angka tanpa spasi.</div>
+                                </div>
+
+                                {{-- Added: Tipe & Nilai Diskon --}}
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label">Tipe Diskon</label>
+                                        <select name="discount_type" class="form-select" required>
+                                            <option value="percentage">Persentase (%)</option>
+                                            <option value="fixed">Nominal (Rp)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Nilai Diskon</label>
+                                        <input type="number" name="discount_value" class="form-control" placeholder="10 atau 15000" required>
+                                    </div>
+                                </div>
+
+                                {{-- Added: Syarat & Ketentuan Diskon --}}
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label">Min. Belanja</label>
+                                        <input type="number" name="min_purchase" class="form-control" placeholder="0" value="0">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Maks. Diskon</label>
+                                        <input type="number" name="max_discount" class="form-control" placeholder="Opsional">
+                                        <div class="form-text" style="font-size: 10px; line-height: 1.2;">Kosongkan jika tidak ada batas</div>
+                                    </div>
+                                </div>
+
                                 <div class="mb-3">
                                     <label class="form-label">Deskripsi</label>
-                                    <textarea name="description" class="form-control" rows="3" placeholder="Detail promo"></textarea>
+                                    <textarea name="description" class="form-control" rows="2" placeholder="Detail promo"></textarea>
                                 </div>
                                 <div class="row g-2 mb-3">
                                     <div class="col">
@@ -222,8 +261,8 @@
                                     </div>
                                 </div>
                                 <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" name="active" id="promoActive">
-                                    <label class="form-check-label" for="promoActive">Aktif</label>
+                                    <input class="form-check-input" type="checkbox" name="active" id="promoActive" checked>
+                                    <label class="form-check-label" for="promoActive">Aktifkan Segera</label>
                                 </div>
                                 <div class="d-grid">
                                     <button class="btn btn-dark"><i class="bi bi-save me-1"></i> Simpan Promo</button>
@@ -233,6 +272,7 @@
                     </div>
                 </div>
 
+                {{-- Tabel Daftar Promo --}}
                 <div class="col-lg-7">
                     <div class="card h-100">
                         <div class="card-header fw-semibold">Daftar Promo</div>
@@ -240,7 +280,8 @@
                             <table class="table table-hover table-sm align-middle mb-0 table-fit">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Judul</th>
+                                        <th>Kode / Judul</th>
+                                        <th>Diskon</th>
                                         <th>Periode</th>
                                         <th>Status</th>
                                         <th class="text-end">Aksi</th>
@@ -249,53 +290,116 @@
                                 <tbody>
                                     @forelse($promos as $p)
                                         <tr>
-                                            <td class="fw-semibold">{{ $p->title ?? $p['title'] }}</td>
-                                            <td>{{ ($p->start_date ?? $p['start_date']) }} s.d. {{ ($p->end_date ?? $p['end_date']) }}</td>
-                                            <td>@if(!empty($p->active ?? $p['active']))<span class="badge bg-success">Aktif</span>@else<span class="badge bg-secondary">Nonaktif</span>@endif</td>
+                                            <td>
+                                                <div class="fw-bold text-primary">{{ $p->code }}</div>
+                                                <div class="small text-muted text-truncate" style="max-width: 150px;">{{ $p->title }}</div>
+                                            </td>
+                                            <td>
+                                                @if($p->discount_type == 'percentage')
+                                                    <span class="badge bg-info text-dark">{{ (int)$p->discount_value }}%</span>
+                                                    @if($p->max_discount)
+                                                        <div style="font-size: 10px;">Max: {{ number_format($p->max_discount,0,',','.') }}</div>
+                                                    @endif
+                                                @else
+                                                    <span class="badge bg-warning text-dark">{{ number_format($p->discount_value,0,',','.') }}</span>
+                                                @endif
+
+                                                @if($p->min_purchase > 0)
+                                                    <div class="text-muted" style="font-size: 10px;">Min: {{ number_format($p->min_purchase,0,',','.') }}</div>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <div style="font-size: 12px;">
+                                                    {{ \Carbon\Carbon::parse($p->start_date)->format('d/m/y') }} <br>
+                                                    s.d. {{ \Carbon\Carbon::parse($p->end_date)->format('d/m/y') }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @if($p->active)
+                                                    <span class="badge bg-success">Aktif</span>
+                                                @else
+                                                    <span class="badge bg-secondary">Nonaktif</span>
+                                                @endif
+                                            </td>
                                             <td class="text-end">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editPromo-{{ $p->id ?? $p['id'] }}"><i class="bi bi-pencil"></i></button>
-                                                <form class="d-inline" method="post" action="{{ route('admin.content.promo.delete', $p->id ?? $p['id']) }}">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editPromo-{{ $p->id }}">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <form class="d-inline" method="post" action="{{ route('admin.content.promo.delete', $p->id) }}">
                                                     @csrf @method('DELETE')
                                                     <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Hapus promo ini?')"><i class="bi bi-trash"></i></button>
                                                 </form>
                                             </td>
                                         </tr>
+
+                                        {{-- MODAL EDIT PROMO (DIUPDATE) --}}
                                         @push('modals')
-                                            <div class="modal fade" id="editPromo-{{ $p->id ?? $p['id'] }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal fade" id="editPromo-{{ $p->id }}" tabindex="-1" aria-hidden="true">
                                                 <div class="modal-dialog">
-                                                    <form method="post" action="{{ route('admin.content.promo.update', $p->id ?? $p['id']) }}" class="modal-content">
+                                                    <form method="post" action="{{ route('admin.content.promo.update', $p->id) }}" class="modal-content">
                                                         @csrf
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title">Edit Promo</h5>
+                                                            <h5 class="modal-title">Edit Promo: {{ $p->code }}</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <label class="form-label">Judul</label>
-                                                                <input name="title" class="form-control" value="{{ $p->title ?? $p['title'] }}" required>
+                                                                <label class="form-label">Judul Promo</label>
+                                                                <input name="title" class="form-control" value="{{ $p->title }}" required>
                                                             </div>
+
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Kode Voucher</label>
+                                                                <input name="code" class="form-control text-uppercase" value="{{ $p->code }}" required>
+                                                            </div>
+
+                                                            <div class="row g-2 mb-3">
+                                                                <div class="col-6">
+                                                                    <label class="form-label">Tipe Diskon</label>
+                                                                    <select name="discount_type" class="form-select" required>
+                                                                        <option value="percentage" {{ $p->discount_type == 'percentage' ? 'selected' : '' }}>Persentase (%)</option>
+                                                                        <option value="fixed" {{ $p->discount_type == 'fixed' ? 'selected' : '' }}>Nominal (Rp)</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <label class="form-label">Nilai Diskon</label>
+                                                                    <input type="number" name="discount_value" class="form-control" value="{{ (int)$p->discount_value }}" required>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row g-2 mb-3">
+                                                                <div class="col-6">
+                                                                    <label class="form-label">Min. Belanja</label>
+                                                                    <input type="number" name="min_purchase" class="form-control" value="{{ (int)$p->min_purchase }}">
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <label class="form-label">Maks. Diskon</label>
+                                                                    <input type="number" name="max_discount" class="form-control" value="{{ $p->max_discount ? (int)$p->max_discount : '' }}" placeholder="Unlimited">
+                                                                </div>
+                                                            </div>
+
                                                             <div class="mb-3">
                                                                 <label class="form-label">Deskripsi</label>
-                                                                <textarea name="description" class="form-control" rows="3">{{ $p->description ?? $p['description'] ?? '' }}</textarea>
+                                                                <textarea name="description" class="form-control" rows="3">{{ $p->description }}</textarea>
                                                             </div>
                                                             <div class="row g-2 mb-3">
                                                                 <div class="col">
                                                                     <label class="form-label">Mulai</label>
-                                                                    <input type="date" name="start_date" class="form-control" value="{{ ($p->start_date ?? $p['start_date']) }}" required>
+                                                                    <input type="date" name="start_date" class="form-control" value="{{ \Carbon\Carbon::parse($p->start_date)->format('Y-m-d') }}" required>
                                                                 </div>
                                                                 <div class="col">
                                                                     <label class="form-label">Selesai</label>
-                                                                    <input type="date" name="end_date" class="form-control" value="{{ ($p->end_date ?? $p['end_date']) }}" required>
+                                                                    <input type="date" name="end_date" class="form-control" value="{{ \Carbon\Carbon::parse($p->end_date)->format('Y-m-d') }}" required>
                                                                 </div>
                                                             </div>
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" name="active" id="promoActive{{ $p->id ?? $p['id'] }}" {{ !empty($p->active ?? $p['active']) ? 'checked' : '' }}>
-                                                                <label class="form-check-label" for="promoActive{{ $p->id ?? $p['id'] }}">Aktif</label>
+                                                                <input class="form-check-input" type="checkbox" name="active" id="promoActive{{ $p->id }}" {{ $p->active ? 'checked' : '' }}>
+                                                                <label class="form-check-label" for="promoActive{{ $p->id }}">Aktif</label>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                                                            <button class="btn btn-dark">Simpan</button>
+                                                            <button class="btn btn-dark">Simpan Perubahan</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -303,7 +407,7 @@
                                         @endpush
                                     @empty
                                         <tr>
-                                            <td colspan="4" class="text-center py-4 text-muted">Belum ada promo.</td>
+                                            <td colspan="5" class="text-center py-4 text-muted">Belum ada promo.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -314,6 +418,7 @@
             </div>
         </div>
 
+        {{-- ===================== TAB BLOG (TIDAK BERUBAH) ===================== --}}
         <div class="tab-pane fade" id="blog-pane" role="tabpanel" aria-labelledby="blog-tab">
             <div class="row g-3">
                 <div class="col-lg-5">

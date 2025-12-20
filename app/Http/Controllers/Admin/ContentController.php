@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule; // Tambahkan ini untuk validasi unique
 use App\Models\Banner;
 use App\Models\Promo;
 use App\Models\Blog;
@@ -20,7 +21,7 @@ class ContentController extends Controller
         ]);
     }
 
-    /* ===================== BANNER ===================== */
+    /* ===================== BANNER (Tidak Berubah) ===================== */
     public function storeBanner(Request $r)
     {
         $data = $r->validate([
@@ -61,31 +62,53 @@ class ContentController extends Controller
         return back()->with('ok', 'Banner dihapus.');
     }
 
-    /* ===================== PROMO ===================== */
+    /* ===================== PROMO (DIUPDATE) ===================== */
     public function storePromo(Request $r)
     {
+        // Validasi input sesuai kolom database
         $data = $r->validate([
-            'title' => 'required|string|max:120',
-            'description' => 'nullable|string|max:500',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'active' => 'nullable',
+            'title'          => 'required|string|max:120',
+            'code'           => 'required|string|max:20|unique:promos,code|alpha_num', // Kode harus unik
+            'discount_type'  => 'required|in:percentage,fixed',
+            'discount_value' => 'required|numeric|min:0',
+            'min_purchase'   => 'nullable|numeric|min:0',
+            'max_discount'   => 'nullable|numeric|min:0',
+            'description'    => 'nullable|string|max:500',
+            'start_date'     => 'required|date',
+            'end_date'       => 'required|date|after_or_equal:start_date',
+            'active'         => 'nullable',
         ]);
+
+        // Set default 0 jika null
+        $data['min_purchase'] = $data['min_purchase'] ?? 0;
         $data['active'] = $r->has('active');
+
         Promo::create($data);
         return back()->with('ok', 'Promo ditambahkan.');
     }
 
     public function updatePromo(Request $r, Promo $promo)
     {
+        // Validasi input update (pengecekan unique code mengecualikan ID promo ini)
         $data = $r->validate([
-            'title' => 'required|string|max:120',
-            'description' => 'nullable|string|max:500',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'active' => 'nullable',
+            'title'          => 'required|string|max:120',
+            'code'           => ['required', 'string', 'max:20', 'alpha_num', Rule::unique('promos', 'code')->ignore($promo->id)],
+            'discount_type'  => 'required|in:percentage,fixed',
+            'discount_value' => 'required|numeric|min:0',
+            'min_purchase'   => 'nullable|numeric|min:0',
+            'max_discount'   => 'nullable|numeric|min:0',
+            'description'    => 'nullable|string|max:500',
+            'start_date'     => 'required|date',
+            'end_date'       => 'required|date|after_or_equal:start_date',
+            'active'         => 'nullable',
         ]);
+
         $promo->fill($data);
+        // Pastikan min_purchase default 0 jika dikosongkan
+        $promo->min_purchase = $data['min_purchase'] ?? 0;
+        // Max discount boleh null
+        $promo->max_discount = $data['max_discount'] ?? null;
+
         $promo->active = $r->has('active');
         $promo->save();
         return back()->with('ok', 'Promo diperbarui.');
@@ -97,7 +120,7 @@ class ContentController extends Controller
         return back()->with('ok', 'Promo dihapus.');
     }
 
-    /* ===================== BLOG ===================== */
+    /* ===================== BLOG (Tidak Berubah) ===================== */
     public function storeBlog(Request $r)
     {
         $data = $r->validate([
