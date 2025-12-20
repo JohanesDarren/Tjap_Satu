@@ -3,387 +3,410 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Beranda</title>
+    <title>Coffee House | Specialty Roasters</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Pinyon+Script&display=swap" rel="stylesheet">
+
     <style>
-        :root { --bg:#F3E3C2; --coffee:#55351D; --ink:#2E373D; --rust:#AF461F; --teal:#325B56; --surface:#fff; --shadow:0 20px 50px rgba(46,55,61,.18); --radius-xl:24px; --radius-2xl:1.6rem; }
-        * { scroll-behavior: smooth; }
-        body { background:var(--bg); color:var(--ink); font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif; overflow-x:hidden; }
-        h1{ font-family:"Playfair Display",serif; color:var(--surface); letter-spacing:.02em; }
-        h2,h3,h4 { font-family:"Playfair Display",serif; color:var(--coffee); letter-spacing:.02em; }
-        .hero { position:relative; min-height:100vh; overflow:hidden; isolation:isolate; }
-        .hero video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:contrast(1.06) saturate(1.05) brightness(.95); }
-        .hero::after { content:""; position:absolute; inset:0; z-index:1; background:linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,.25) 60%, rgba(0,0,0,0) 100%); }
-        .hero-content { position:relative; z-index:2; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; padding:9rem 1rem 11rem; text-align:center; color:#fff; text-shadow:0 2px 20px rgba(0,0,0,.5); }
-        .kicker { text-transform:uppercase; letter-spacing:.28em; font-weight:600; opacity:.9; }
-        .btn-pill { border-radius:999px; padding:.9rem 1.2rem; font-weight:600; letter-spacing:.02em; box-shadow:0 10px 24px rgba(175,70,31,.25); }
-        .btn-rust { background:var(--rust); color:#fff; border:none; }
-        .btn-rust:hover { filter:brightness(.95) saturate(1.03); }
-        .btn-ghost { border:1px solid rgba(255,255,255,.6); color:#fff; background:rgba(255,255,255,.08); }
-        .btn-ghost:hover { background:rgba(255,255,255,.16); }
-        .scroll-cue { position:absolute; bottom:1.25rem; left:50%; transform:translateX(-50%); color:#fff; opacity:.85; font-size:.95rem; }
-        .divider-bottom { line-height:0; }
-        .divider-bottom svg { display:block; width:100%; height:70px; }
-        .strip { --gap:26px; --h:190px; --w:260px; --speed:28s; position:relative; overflow:hidden; padding-block:26px; background:linear-gradient(180deg,#f8edd0,var(--bg)); mask-image:linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); border-top:1px solid rgba(46,55,61,.06); border-bottom:1px solid rgba(46,55,61,.06); }
-        .track { display:flex; gap:var(--gap); width:max-content; will-change:transform; animation:marquee var(--speed) linear infinite; }
-        @keyframes marquee { to { transform: translateX(calc(-50% - var(--gap))); } }
-        .chip { width:var(--w); height:var(--h); flex:0 0 auto; border-radius:18px; overflow:hidden; background:var(--surface); box-shadow:var(--shadow); border:1px solid rgba(46,55,61,.06); }
-        .chip img { width:100%; height:60%; object-fit:cover; display:block; }
-        .chip .meta { padding:.75rem .9rem; display:flex; align-items:center; justify-content:space-between; }
-        .chip .name { color:var(--coffee); font-weight:700; }
-        .chip .price { background:var(--teal); color:#fff; padding:.25rem .6rem; border-radius:999px; font-size:.85rem; }
-        section.section { padding:84px 0; scroll-margin-top: 84px; }
-        .lead-muted { color:#5a676c; opacity:.9; }
-        .rounded-2xl { border-radius:var(--radius-2xl); }
-        .card-elev { background:var(--surface); border:none; border-radius:var(--radius-xl); box-shadow:var(--shadow); transform:translateY(38px); opacity:0; transition:transform .45s ease, box-shadow .28s ease, filter .28s ease; border:1px solid rgba(46,55,61,.06); }
-        .card-elev:hover { transform:translateY(-6px); box-shadow:0 28px 70px rgba(0,0,0,.24); filter:saturate(1.04) contrast(1.02); }
-        .card-elev img { height:230px; object-fit:cover; }
-        .card-elev .btn-outline-dark { transition:transform .2s ease, box-shadow .2s ease; }
-        .card-elev .btn-outline-dark:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,.16); }
-        .map-preview { position:relative; height:380px; border-radius:var(--radius-2xl); background:radial-gradient(120px 120px at 20% 30%, rgba(50,91,86,.20), transparent 60%), radial-gradient(160px 120px at 70% 60%, rgba(175,70,31,.16), transparent 60%), linear-gradient(180deg, #f7ead0, var(--bg)); box-shadow:var(--shadow); border:1px solid rgba(46,55,61,.08); overflow:hidden; }
-        .map-pin { position:absolute; inset:0; display:grid; place-items:center; }
-        .map-pin svg { width:82px; height:82px; filter:drop-shadow(0 10px 20px rgba(0,0,0,.25)); }
-        .map-hint { position:absolute; bottom:14px; right:16px; background:#fff; color:var(--ink); padding:.45rem .75rem; border-radius:999px; font-size:.9rem; box-shadow:var(--shadow); }
-        .reveal { opacity:0; transform:translateY(30px); }
-        .title-underline { position:relative; display:inline-block; }
-        .title-underline::after { content:""; position:absolute; left:6px; right:-6px; bottom:-8px; height:8px; border-radius:999px; background:linear-gradient(90deg, var(--rust), var(--teal)); opacity:.25; }
-        .text-teal { color:var(--teal); }
-        .bg-sand { background:var(--bg); }
-        .text-rust { color:var(--rust); }
-        .testimonial { background:var(--surface); border-radius:var(--radius-xl); box-shadow:var(--shadow); padding:1.25rem; border:1px solid rgba(46,55,61,.06); }
-        .avatar { width:48px; height:48px; border-radius:50%; object-fit:cover; }
-        footer { background:linear-gradient(180deg, var(--bg), #e8d8b4); border-top:1px solid rgba(46,55,61,.08); }
+        :root {
+            /* === GLOBAL THEME VARIABLES === */
+            --bg-body: #F9F7F2;
+            --color-primary: #2C3639; /* Dark Charcoal */
+            --color-accent: #A27B5C; /* Roasted Bean/Bronze */
+            --text-main: #2C3639;
+            --text-muted: #6b7280;
 
-        /* Glass Register Card */
-        .glass-card{
-            position:relative;
-            background:linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,.14));
-            border:1px solid rgba(255,255,255,.35);
-            box-shadow:0 18px 60px rgba(46,55,61,.22);
-            border-radius:24px;
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            overflow:hidden;
-        }
-        .glass-card::before{
-            content:""; position:absolute; inset:0; pointer-events:none;
-            background: radial-gradient(280px 140px at -10% -20%, rgba(175,70,31,.18), transparent 60%),
-                        radial-gradient(320px 180px at 110% 120%, rgba(50,91,86,.16), transparent 60%);
-        }
-        .glass-title{ color:var(--coffee); letter-spacing:.02em; }
+            --font-display: 'Cinzel', serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-script: 'Pinyon Script', cursive;
 
-        .glass-input{
-            background: rgba(255,255,255,.65);
-            border:1px solid rgba(46,55,61,.22);
-            border-radius:14px; padding: .9rem 1rem; height:auto;
-            transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
-        }
-        .glass-input:focus{
-            background: rgba(255,255,255,.85);
-            border-color: rgba(175,70,31,.6);
-            box-shadow: 0 0 0 .15rem rgba(175,70,31,.25);
-        }
-        .input-label{ font-weight:600; color:#3a454b; }
-        .helper-text{ color:#6b767b; font-size:.9rem; }
-
-        .btn-gradient{
-            background: linear-gradient(135deg, var(--rust), #c96931);
-            color:#fff; border:none; border-radius:999px;
-            padding:.9rem 1.2rem; font-weight:700; letter-spacing:.02em;
-            box-shadow:0 14px 30px rgba(175,70,31,.28);
-        }
-        .btn-gradient:hover{ filter:brightness(.98) saturate(1.04); }
-        .link-rust{ color:var(--rust); }
-        .link-rust:hover{ color:#c96931; }
-
-        .pw-wrap{ position:relative; }
-        .pw-toggle{
-            position:absolute; right:.6rem; top:50%; transform:translateY(-50%);
-            border:none; background:transparent; padding:.35rem; color:#6b767b;
+            --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
         }
 
-        /* ===== Menu Card Hover Enhancements ===== */
-        .product-card { overflow: hidden; border-radius: var(--radius-xl); }
-        .product-card .product-img { transition: transform .7s cubic-bezier(.2,.75,.2,1), filter .5s ease; will-change: transform; }
-        .product-card:hover .product-img { transform: scale(1.06); filter: saturate(1.04) contrast(1.02); }
-        .product-card::after{ content:""; position:absolute; inset:auto auto 0 0; width:65%; height:40%; pointer-events:none; background:radial-gradient(240px 120px at 0% 100%, rgba(175,70,31,.18), transparent 60%); opacity:.0; transition:opacity .45s ease; }
-        .product-card:hover::after{ opacity:1; }
-        .product-card:hover{ box-shadow:0 28px 70px rgba(46,55,61,.24); }
-        .product-card .btn-outline-dark{ transition: transform .2s ease, box-shadow .2s ease, background .25s ease, color .25s ease, border-color .25s ease; }
-        .product-card:hover .btn-outline-dark{ background: var(--rust); color:#fff; border-color: var(--rust); transform: translateY(-2px); box-shadow:0 8px 18px rgba(175,70,31,.35); }
-        .product-card .price-label{ background: rgba(50,91,86,.12); color: var(--ink); padding:.25rem .6rem; border-radius:999px; font-weight:700; transition: transform .25s ease, background .25s ease; }
-        .product-card:hover .price-label{ background: rgba(50,91,86,.18); transform: translateY(-1px); }
-
-        /* Keyboard focus styles */
-        .product-card:focus-within { outline: 2px solid rgba(175,70,31,.55); outline-offset: 3px; }
-        .product-card .btn-outline-dark:focus-visible { box-shadow: 0 0 0 .18rem rgba(175,70,31,.35); }
-
-        /* Respect reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-            .product-card .product-img { transition: none; }
-            .product-card:hover .product-img { transform: none; filter: none; }
-            .card-elev, .reveal { transition: none !important; }
-            .track { animation: none !important; }
+        /* --- GLOBAL RESET & HIDE SCROLLBAR --- */
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
         }
 
-        /* Modal polish */
-        .modal-elev .modal-content{ border-radius: var(--radius-2xl); border:1px solid rgba(46,55,61,.08); box-shadow: var(--shadow); overflow:hidden; }
-        .modal-header-gradient{ background: linear-gradient(135deg, #2E373D, #55351D); color:#fff; }
-        .price-chip{ background: rgba(255,255,255,.18); color:#fff; border:1px solid rgba(255,255,255,.35); border-radius:999px; padding:.25rem .6rem; font-weight:700; }
-        .badge-soft{ background: rgba(50,91,86,.12); color: var(--teal); border-radius:999px; padding:.25rem .5rem; font-size:.85rem; font-weight:600; }
-        .modal-footer-soft{ background:#f7f3e6; }
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        h1, h2, h3, h4, h5 { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em; }
+        .font-script { font-family: var(--font-script); color: var(--color-accent); font-size: 2.5rem; }
+
+        /* --- BUTTONS --- */
+        .btn-pro {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--text-main);
+            padding: 12px 32px;
+            border-radius: 50px; /* Rounded Pill */
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            transition: all 0.4s var(--ease-out);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-pro:hover {
+            background: var(--text-main);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn-accent {
+            background-color: var(--color-accent);
+            border-color: var(--color-accent);
+            color: #fff;
+            padding: 12px 32px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .btn-accent:hover {
+            background-color: #8a664b;
+            border-color: #8a664b;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(162, 123, 92, 0.3);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-section {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            overflow: hidden;
+            margin-top: -80px;
+            padding-top: 80px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-bg video {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: brightness(0.6) contrast(1.1);
+            transform: scale(1.1);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            opacity: 0; transform: translateY(30px);
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+
+        /* --- TICKER STRIP --- */
+        .ticker-wrap {
+            width: 100%;
+            background: var(--color-primary);
+            color: var(--bg-body);
+            padding: 1rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .ticker { display: inline-block; animation: marquee 40s linear infinite; }
+        .ticker-item {
+            display: inline-block; padding: 0 2rem;
+            font-family: var(--font-display); font-size: 0.9rem;
+            letter-spacing: 0.1em; text-transform: uppercase;
+        }
+        .ticker-item::after { content: "✦"; margin-left: 2rem; color: var(--color-accent); }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* --- SECTIONS --- */
+        .section-padding { padding: 8rem 0; }
+
+        .img-frame { position: relative; overflow: hidden; border-radius: 24px; }
+        .img-frame img { transition: transform 1.5s var(--ease-out); border-radius: 24px; }
+        .img-frame:hover img { transform: scale(1.05); }
+
+        /* Product Card Pro */
+        .product-card {
+            border: none; background: transparent;
+            margin-bottom: 3rem;
+            transition: transform 0.3s ease;
+        }
+        .product-img-box {
+            position: relative; background: #e5e5e5;
+            aspect-ratio: 4/5; overflow: hidden;
+            margin-bottom: 1.5rem;
+            border-radius: 24px; /* Radius untuk gambar produk */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .product-img-box img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.6s var(--ease-out);
+        }
+        .product-card:hover .product-img-box img { transform: scale(1.08); }
+
+        .product-overlay {
+            position: absolute; inset: 0;
+            background: rgba(44, 54, 57, 0.4);
+            opacity: 0; transition: opacity 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .product-card:hover .product-overlay { opacity: 1; }
+
+        .product-meta h5 { font-size: 1.25rem; margin-bottom: 0.25rem; }
+        .product-meta .price { color: var(--color-accent); font-weight: 600; font-family: var(--font-body); }
+
+        /* --- FORM STYLES --- */
+        .form-clean input {
+            background: transparent; border: none;
+            border-bottom: 1px solid rgba(0,0,0,0.2);
+            border-radius: 0; color: var(--text-main); padding: 1rem 0;
+            transition: border-color 0.3s;
+        }
+        .form-clean input:focus {
+            background: transparent; border-bottom-color: var(--color-accent);
+            box-shadow: none; color: var(--text-main);
+            outline: none;
+        }
+        .form-clean label {
+            font-size: 0.75rem; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--text-muted);
+            margin-top: 1rem;
+        }
+
+        /* Modal Polish with Radius */
+        .modal-pro .modal-content { border-radius: 32px; border: none; background-color: var(--bg-body); overflow: hidden; }
+        .modal-pro .btn-close { position: absolute; top: 1.5rem; right: 1.5rem; z-index: 10; }
+
+        .separator { width: 1px; height: 60px; background: var(--color-accent); margin: 0 auto 2rem; }
+        .text-accent { color: var(--color-accent) !important; }
     </style>
 </head>
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    @include('components.header')
+    <div style="position: relative; z-index: 1030;">
+        @include('components.header')
+    </div>
 
-    <!-- HERO -->
-    <header class="hero">
-        <video src="{{ asset('videos/buatkopi.mp4') }}" autoplay muted playsinline loop></video>
-        <div class="hero-content container">
-            <span class="kicker">Roasted • Crafted • Shared</span>
-            <h1 class="display-3 fw-bold mt-2">Coffee House</h1>
-            <p class="fs-5 mb-4">Perpaduan rasa yang jujur, dari tangan roaster ke cangkir Anda.</p>
-            <div class="d-flex gap-2">
-                <a href="#menu" class="btn btn-rust btn-pill">Lihat Menu</a>
-                <a href="#about" class="btn btn-ghost btn-pill">Tentang Kami</a>
-            </div>
-            <small class="scroll-cue">Scroll untuk melihat</small>
+    <header class="hero-section">
+        <div class="hero-bg">
+            <video src="{{ asset('videos/buatkopi.mp4') }}" autoplay muted loop playsinline></video>
+            <div style="position: absolute; inset:0; background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6));"></div>
         </div>
-        <div class="divider-bottom" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 70" preserveAspectRatio="none">
-                <path fill="#F3E3C2" d="M0,64 C240,8 420,8 720,48 C1020,88 1200,36 1440,8 L1440,140 L0,140 Z"></path>
-            </svg>
+
+        <div class="hero-content">
+            <div class="separator bg-white mb-4"></div>
+            <p class="hero-subtitle">Est. 2024 • Artisan Roastery</p>
+            <h1 class="hero-title">Experience <br> <span class="fst-italic" style="font-family: var(--font-script); color: #fff; font-weight: 400;">The Art</span> of Coffee</h1>
+            <div class="d-flex justify-content-center gap-3 mt-5">
+                <a href="#menu" class="btn btn-pro text-white border-white">Explore Menu</a>
+            </div>
+        </div>
+
+        <div style="position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); text-align: center;">
+            <p class="small text-white text-uppercase ls-2 mb-2" style="font-size: 0.7rem;">Scroll</p>
+            <div style="width: 1px; height: 40px; background: rgba(255,255,255,0.5); margin: 0 auto;"></div>
         </div>
     </header>
 
-    <!-- STRIP -->
-    <section class="strip" aria-label="Our Beans">
-        <div class="track" id="track">
-            @if(isset($stripProducts) && $stripProducts->count())
-                @for ($dup = 0; $dup < 2; $dup++)
-                    @foreach ($stripProducts as $p)
-                        @php
-                            $img = $p->gambar ?? null;
-                            $imgUrl = null;
-                            if ($img) {
-                                if (preg_match('/^https?:\/\//', $img)) {
-                                    $imgUrl = $img;
-                                } elseif (\Illuminate\Support\Str::startsWith($img, 'storage/')) {
-                                    $imgUrl = asset($img);
-                                } elseif (\Illuminate\Support\Str::startsWith($img, 'products/')) {
-                                    $imgUrl = asset('storage/' . ltrim($img, '/'));
-                                } elseif (\Illuminate\Support\Str::startsWith($img, 'uploads/')) {
-                                    $imgUrl = asset($img);
-                                } elseif (\Illuminate\Support\Str::startsWith($img, '/')) {
-                                    $imgUrl = asset(ltrim($img, '/'));
-                                } else {
-                                    $imgUrl = asset('uploads/' . ltrim($img, '/'));
-                                }
-                            } else {
-                                $imgUrl = asset('images/biji.JPG');
-                            }
-                        @endphp
-                        <div class="chip">
-                            <img src="{{ $imgUrl }}" alt="Biji kopi - {{ $p->nama_produk }}" loading="lazy">
-                            <div class="meta">
-                                <span class="name">{{ $p->nama_produk }}</span>
-                            </div>
-                        </div>
-                    @endforeach
-                @endfor
-            @else
-                @php $drinks = ['Gn. Puntang', 'Temanggung', 'Timor Leste', 'Flores Bajawa', 'Toraja Sapan', 'Gunung Halu', 'Kerinci', 'Bali Kintamani']; @endphp
-                @for ($dup = 0; $dup < 2; $dup++)
-                    @foreach ($drinks as $drink)
-                        <div class="chip">
-                            <img src="{{ asset('images/biji.JPG') }}" alt="Biji kopi - {{ $drink }}" loading="lazy">
-                            <div class="meta">
-                                <span class="name">{{ $drink }}</span>
-                            </div>
-                        </div>
-                    @endforeach
-                @endfor
-            @endif
+    <div class="ticker-wrap">
+        <div class="ticker">
+            @php $origins = ['Gayo Highland', 'Toraja Sapan', 'Bali Kintamani', 'Flores Bajawa', 'Papua Wamena', 'Java Preanger', 'Lintong Ni Huta']; @endphp
+            @for($i=0; $i<4; $i++)
+                @foreach($origins as $origin)
+                <div class="ticker-item">Single Origin: {{ $origin }}</div>
+                @endforeach
+            @endfor
         </div>
-    </section>
+    </div>
 
-    <!-- ABOUT -->
-    <section id="about" class="section">
+    <section id="about" class="section-padding">
         <div class="container">
-            <div class="row g-5 align-items-center">
-                <div class="col-lg-6 reveal">
-                    <h2 class="fw-bold mb-3 title-underline">Tentang Kami</h2>
-                    <p class="lead lead-muted">
-                        Kami memilih biji terbaik, memanggangnya dengan presisi, lalu menyeduhnya dengan penuh
-                        perhatian.
-                        Semua untuk menghadirkan rasa yang konsisten dari <span class="text-teal">single origin</span>
-                        hingga
-                        <span class="text-rust">signature blend</span>.
-                    </p>
-                    <p class="text-secondary mb-0">Terinspirasi komunitas, kami percaya setiap cangkir mampu
-                        menyambungkan
-                        cerita—antara barista, petani, dan Anda.</p>
+            <div class="row gx-lg-5 align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="img-frame reveal-img shadow-lg">
+                        <img src="{{ asset('images/biji.JPG') }}" alt="Coffee Beans" class="w-100" style="min-height: 500px; object-fit: cover; filter: grayscale(20%);">
+                        <div class="bg-white p-4 position-absolute bottom-0 end-0 m-4 shadow-sm d-none d-md-block" style="max-width: 250px; border-radius: 16px;">
+                            <p class="mb-0 text-dark" style="font-family: var(--font-display);">"Setiap biji menceritakan kisah tanah tempatnya tumbuh."</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-6 reveal">
-                    <video autoplay muted loop playsinline class="rounded-2xl w-100 shadow object-fit-cover" style="margin-top:1.5rem;">
-                        <source src="{{ asset('videos/heroes.mp4') }}" type="video/mp4">
-                        Browser kamu tidak mendukung video HTML5.
-                    </video>
+                <div class="col-lg-5 offset-lg-1">
+                    <span class="text-uppercase text-muted small ls-2 mb-3 d-block" style="letter-spacing: 2px;">Tentang Kami</span>
+                    <h2 class="display-5 mb-4">Kami percaya kopi adalah <span class="fst-italic" style="font-family: var(--font-script); color: var(--color-accent);">ritual</span>, bukan sekadar rutinitas.</h2>
+                    <p class="text-secondary mb-4" style="line-height: 1.8;">
+                        Di Coffee House, kami mendedikasikan diri untuk mencari biji kopi terbaik dari seluruh nusantara.
+                        Dipanggang dalam *small batches* untuk menjaga karakter unik setiap daerah.
+                    </p>
+                    <div class="d-flex gap-4 pt-3">
+                        <div><h3 class="h2 mb-0">10+</h3><small class="text-uppercase text-muted">Origins</small></div>
+                        <div><h3 class="h2 mb-0">100%</h3><small class="text-uppercase text-muted">Arabica</small></div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- MENU / PRODUCTS -->
-    <section id="menu" class="section bg-sand">
+    <section id="menu" class="section-padding bg-white" style="border-radius: 60px 60px 0 0;">
         <div class="container">
-            <div class="text-center mb-5 reveal">
-                <h2 class="fw-bold title-underline">Menu</h2>
-                <p class="text-secondary mb-0">Daftar menu.</p>
+            <div class="text-center mb-5 pb-4">
+                <span style="font-family: var(--font-script); font-size: 2.5rem; color: var(--text-muted);">Our Selection</span>
+                <h2 class="display-4 mt-2">Seasonal Menu</h2>
             </div>
 
             @if(isset($products) && $products->count())
-                <div class="row g-4">
+                <div class="row g-5">
                     @foreach ($products as $product)
                         @php
-                            $title = $product->nama_produk;
-                            $price = (int) $product->harga;
-                            $desc  = $product->deskripsi ?? 'Belum ada deskripsi.';
-                            $pid   = $product->id_product;
-                            $img   = $product->gambar ?? null;
-                            $jenis = $product->jenis_proses ?? null;
-                            $imgUrl = null;
-                            if ($img) {
-                                if (preg_match('/^https?:\/\//', $img)) {
-                                    $imgUrl = $img;
-                                } elseif (\Illuminate\Support\Str::startsWith($img, 'storage/')) {
-                                    $imgUrl = asset($img);
-                                } elseif (\Illuminate\Support\Str::startsWith($img, 'products/')) {
-                                    $imgUrl = asset('storage/' . ltrim($img, '/'));
-                                } elseif (\Illuminate\Support\Str::startsWith($img, 'uploads/')) {
-                                    $imgUrl = asset($img);
-                                } elseif (\Illuminate\Support\Str::startsWith($img, '/')) {
-                                    $imgUrl = asset(ltrim($img, '/'));
-                                } else {
-                                    $imgUrl = asset('uploads/' . ltrim($img, '/'));
-                                }
-                            } else {
-                                $imgUrl = asset('images/biji.JPG');
+                            $img = $product->gambar ?? null;
+                            $imgUrl = $img ? (preg_match('/^https?:\/\//', $img) ? $img : asset('storage/' . ltrim($img, '/'))) : asset('images/biji.JPG');
+                            if($img && !preg_match('/^https?:\/\//', $img) && !file_exists(public_path('storage/'.ltrim($img, '/')))) {
+                                $imgUrl = asset('uploads/' . ltrim($img, '/'));
+                                if(!file_exists(public_path('uploads/'.ltrim($img, '/')))) $imgUrl = asset($img);
                             }
                         @endphp
 
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <div class="card-elev product-card position-relative">
-                                <img src="{{ $imgUrl }}" class="w-100 product-img" alt="{{ $title }}" loading="lazy">
-                                <div class="p-3 p-md-4">
-                                    <h5 class="mb-1">{{ $title }}</h5>
-                                    <p class="text-secondary">{{ $desc }}</p>
-
-                                    <div class="d-flex justify-content-between align-items-center mt-2">
-                                        <span class="fw-semibold price-label">IDR {{ number_format($price, 0, ',', '.') }}</span>
-
-                                        <button class="btn btn-sm btn-outline-dark rounded-pill" data-bs-toggle="modal"
-                                            data-bs-target="#productModal{{ $pid }}" aria-label="Lihat detail {{ $title }}">Detail</button>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="product-card text-center">
+                                <div class="product-img-box">
+                                    <img src="{{ $imgUrl }}" alt="{{ $product->nama_produk }}">
+                                    <div class="product-overlay">
+                                        <button class="btn btn-pro text-white border-white btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#productModal{{ $product->id_product }}">
+                                            Quick View
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="product-meta">
+                                    <h5 style="font-family: var(--font-display);">{{ $product->nama_produk }}</h5>
+                                    <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
+                                        <span class="price">IDR {{ number_format($product->harga, 0, ',', '.') }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- MODAL QUICK VIEW -->
-                        <div class="modal modal-elev fade" id="productModal{{ $pid }}" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal fade modal-pro" id="productModal{{ $product->id_product }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content">
-                                    <div class="modal-header modal-header-gradient">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <h5 class="modal-title mb-0">{{ $title }}</h5>
-                                            <span class="price-chip">IDR {{ number_format($price, 0, ',', '.') }}</span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <div class="row g-0">
+                                        <div class="col-md-6">
+                                            <img src="{{ $imgUrl }}" class="w-100 h-100 object-fit-cover" style="min-height: 400px;" alt="">
                                         </div>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body p-0">
-                                        <div class="row g-0">
-                                            <div class="col-lg-6">
-                                                <img src="{{ $imgUrl }}" class="w-100 h-100 object-fit-cover" alt="{{ $title }}" loading="lazy">
-                                            </div>
-                                            <div class="col-lg-6 p-4 p-lg-5">
-                                                @if($jenis)
-                                                    <div class="mb-3">
-                                                        <span class="badge-soft">Jenis Proses: {{ $jenis }}</span>
+                                        <div class="col-md-6 p-5 d-flex flex-column justify-content-center">
+                                            <h3 class="mb-2">{{ $product->nama_produk }}</h3>
+                                            <p class="fs-4 mb-4 fw-bold" style="color: var(--color-accent);">IDR {{ number_format($product->harga, 0, ',', '.') }}</p>
+                                            <p class="text-muted mb-5">{{ $product->deskripsi ?? 'Deskripsi produk belum tersedia.' }}</p>
+
+                                            @auth('customer')
+                                                <form action="{{ route('cart.add', $product->id_product) }}" method="POST">
+                                                    @csrf
+                                                    <div class="d-flex gap-3">
+                                                        <input type="number" name="jumlah" value="1" min="1" class="form-control rounded-pill text-center" style="width: 80px; border-color: var(--color-primary);">
+                                                        <button type="submit" class="btn btn-pro w-100" style="background: var(--color-primary); color: #fff;">Add to Cart</button>
                                                     </div>
-                                                @endif
-                                                <p class="text-secondary mb-3">{{ $desc }}</p>
-                                                <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
-                                                    @auth('customer')
-                                                    <form action="{{ route('cart.add', $pid) }}" method="POST" class="m-0 d-flex align-items-center gap-2 flex-wrap">
-                                                        @csrf
-                                                        <div class="input-group qty-group" style="width: 140px;">
-                                                            <button class="btn btn-outline-secondary btn-qty" type="button" data-qty="minus" aria-label="Kurangi jumlah">−</button>
-                                                            <input type="number" name="jumlah" class="form-control text-center" value="1" min="1" inputmode="numeric" pattern="[0-9]*" aria-label="Jumlah">
-                                                            <button class="btn btn-outline-secondary btn-qty" type="button" data-qty="plus" aria-label="Tambah jumlah">+</button>
-                                                        </div>
-                                                        <button type="submit" class="btn btn-rust btn-pill">Tambah ke Keranjang</button>
-                                                    </form>
-                                                    @else
-                                                    <button type="button" class="btn btn-rust btn-pill" data-bs-toggle="modal" data-bs-target="#loginModal">Masuk untuk menambah</button>
-                                                    @endauth
-                                                    <a href="{{ route('produk.show', $pid) }}" class="btn btn-outline-dark btn-pill">Lihat halaman produk</a>
-                                                </div>
-                                            </div>
+                                                </form>
+                                            @else
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" class="btn btn-pro w-100" style="background: var(--color-primary); color: #fff;">Login to Order</a>
+                                            @endauth
                                         </div>
-                                    </div>
-                                    <div class="modal-footer modal-footer-soft">
-                                        <button type="button" class="btn btn-outline-secondary btn-pill" data-bs-dismiss="modal">Tutup</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
-                <div class="text-center mt-4">
-                    <a href="{{ route('produk.menu') }}" class="btn btn-outline-dark btn-pill">Lihat Semua Menu</a>
+                <div class="text-center mt-5">
+                    <a href="{{ route('produk.menu') }}" class="btn btn-pro">View Full Menu</a>
                 </div>
             @else
-                <div class="text-center text-secondary">Belum ada produk untuk ditampilkan.</div>
+                <p class="text-center text-muted">Menu sedang disiapkan.</p>
             @endif
         </div>
     </section>
 
-    <!-- MAP / LOKASI -->
-    <section id="location" class="section">
+    <section id="location" class="section-padding">
         <div class="container">
-            <div class="row g-4 align-items-center">
-                <div class="col-lg-6 reveal">
-                    <h2 class="fw-bold mb-3 title-underline">Lokasi / Maps</h2>
-                    <p class="lead lead-muted mb-4">Klik tombol di bawah untuk membuka lokasi kami di Google Maps.</p>
-                    <a href="https://maps.app.goo.gl/6JfGLKPEv9M2azMA8?g_st=aw" target="_blank" rel="noopener"
-                        class="btn btn-rust btn-pill px-4 py-2">Buka di Google Maps</a>
-                    <p class="text-secondary mt-3 mb-0" style="font-size:.95rem">
-                        *Tautan akan membuka aplikasi/website Google Maps.
+            <div class="row align-items-center g-5">
+                <div class="col-lg-5 reveal">
+                    <span class="text-uppercase text-muted small ls-2 mb-3 d-block" style="letter-spacing: 2px;">Kunjungi Kami</span>
+                    <h2 class="display-5 mb-4">Lokasi & Jam Buka</h2>
+                    <p class="text-secondary mb-4" style="line-height: 1.8;">
+                        Rasakan suasana yang tenang ditemani aroma kopi segar. Kami buka setiap hari untuk menemani produktivitas maupun waktu santai Anda.
                     </p>
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-3 d-flex gap-3 align-items-center">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle border border-secondary p-2" style="width: 40px; height: 40px;">
+                                <i class="bi bi-geo-alt-fill text-accent"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Alamat</h6>
+                                <p class="text-muted small mb-0">Jl. Kopi Nikmat No. 123, Bandung, Jawa Barat</p>
+                            </div>
+                        </li>
+                        <li class="d-flex gap-3 align-items-center">
+                            <div class="d-flex align-items-center justify-content-center rounded-circle border border-secondary p-2" style="width: 40px; height: 40px;">
+                                <i class="bi bi-clock-fill text-accent"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Jam Operasional</h6>
+                                <p class="text-muted small mb-0">Senin - Minggu: 08.00 - 22.00 WIB</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <a href="https://maps.google.com" target="_blank" class="btn btn-pro">Buka di Maps</a>
                 </div>
-
-                <div class="col-lg-6 reveal">
-                    <div class="map-preview position-relative">
-                        <div class="map-pin">
-                            <svg viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path fill="#AF461F"
-                                    d="M172.3 501.7C26.6 291.3 0 269.5 0 192 0 86 86 0 192 0s192 86 192 192c0 77.5-26.6 99.3-172.3 309.7a24 24 0 0 1-39.4 0zM192 272a80 80 0 1 0 0-160 80 80 0 1 0 0 160z" />
-                            </svg>
-                        </div>
-                        <a href="https://maps.app.goo.gl/6JfGLKPEv9M2azMA8?g_st=aw" target="_blank" rel="noopener"
-                            class="stretched-link" aria-label="Buka lokasi di Google Maps"></a>
-                        <span class="map-hint">Klik untuk membuka Maps</span>
+                <div class="col-lg-7 reveal">
+                    <div class="shadow-lg position-relative" style="border-radius: 32px; overflow: hidden; border: 4px solid #fff;">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.56347862!2d107.573117!3d-6.9034443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a1f93d3e815b2!2sBandung%2C%20Bandung%20City%2C%20West%20Java!5e0!3m2!1sen!2sid!4v1646647970000!5m2!1sen!2sid"
+                        width="100%" height="450" style="border:0; filter: grayscale(100%) invert(92%) contrast(83%);" allowfullscreen="" loading="lazy"></iframe>
                     </div>
                 </div>
             </div>
@@ -391,90 +414,67 @@
     </section>
 
     @guest('customer')
-    <section id="register" class="section bg-sand">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-7 col-xl-6">
-            <div class="glass-card p-4 p-md-5">
-              <div class="text-center mb-4">
-                <h2 class="fw-bold glass-title title-underline mb-2">Buat Akun</h2>
-                <p class="text-secondary mb-0">Isi data berikut untuk mendaftar. Kolom yang diperlukan: nama lengkap, alamat, email, nomor telepon, dan kata sandi.</p>
-              </div>
-
-              <form action="{{ route('register.submit') }}" method="POST" class="reveal" novalidate>
-                @csrf
-                <div class="mb-3">
-                  <label class="input-label" for="reg_nama">Nama Lengkap</label>
-                  <input id="reg_nama" type="text" name="nama_lengkap" class="form-control glass-input @error('nama_lengkap') is-invalid @enderror" placeholder="Nama lengkap kamu" autocomplete="name" value="{{ old('nama_lengkap') }}" required>
-                  @error('nama_lengkap')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    <section class="section-padding position-relative" style="background-color: var(--color-primary); color: #fff; padding-bottom: 12rem; z-index: 1;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <span style="font-family: var(--font-script); color: var(--color-accent); font-size: 2rem;">Membership</span>
+                    <h2 class="display-5 mb-5 mt-2">Bergabung Bersama Kami</h2>
+                    <p class="text-white-50 mb-5 mx-auto" style="max-width: 500px;">Dapatkan akses eksklusif dan kemudahan pemesanan.</p>
                 </div>
-
-                <div class="mb-3">
-                  <label class="input-label" for="reg_alamat">Alamat</label>
-                  <input id="reg_alamat" type="text" name="alamat" class="form-control glass-input @error('alamat') is-invalid @enderror" placeholder="Alamat lengkap" autocomplete="street-address" value="{{ old('alamat') }}">
-                  @error('alamat')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                <div class="col-lg-6">
+                    <form action="{{ route('register.submit') }}" method="POST" class="form-clean">
+                        @csrf
+                        <div class="row g-4">
+                            <style>
+                                .form-dark input { border-bottom-color: rgba(255,255,255,0.2); color: #fff; }
+                                .form-dark input:focus { border-bottom-color: var(--color-accent); }
+                                .form-dark label { color: rgba(255,255,255,0.6); }
+                            </style>
+                            <div class="col-md-6 form-dark"><label>Nama Lengkap</label><input type="text" name="nama_lengkap" class="w-100" required></div>
+                            <div class="col-md-6 form-dark"><label>No. Telepon</label><input type="tel" name="no_telp" class="w-100" required></div>
+                            <div class="col-12 form-dark"><label>Email</label><input type="email" name="email" class="w-100" required></div>
+                            <div class="col-12 form-dark"><label>Password</label><input type="password" name="password" class="w-100" required></div>
+                            <div class="col-12 text-center mt-5">
+                                <button type="submit" class="btn btn-accent px-5 py-3">Buat Akun</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="text-center mt-4">
+                        <small class="text-white-50">Sudah punya akun? <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" class="text-white text-decoration-underline">Masuk disini</a></small>
+                    </div>
                 </div>
-
-                <div class="mb-3">
-                  <label class="input-label" for="reg_email">Email</label>
-                  <input id="reg_email" type="email" name="email" class="form-control glass-input @error('email') is-invalid @enderror" placeholder="nama@email.com" autocomplete="email" value="{{ old('email') }}" required>
-                  @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                </div>
-
-                <div class="mb-3">
-                  <label class="input-label" for="reg_telp">Nomor Telepon</label>
-                  <input id="reg_telp" type="tel" name="no_telp" class="form-control glass-input @error('no_telp') is-invalid @enderror" placeholder="08xxxxxxxxxx" autocomplete="tel" pattern="[0-9 +]+" value="{{ old('no_telp') }}" required>
-                  @error('no_telp')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                </div>
-
-                <div class="mb-1 pw-wrap">
-                  <label class="input-label" for="reg_password">Kata Sandi</label>
-                  <input id="reg_password" type="password" name="password" class="form-control glass-input @error('password') is-invalid @enderror" placeholder="Minimal 8 karakter" minlength="8" autocomplete="new-password" required>
-                  <button type="button" class="pw-toggle" aria-label="Tampilkan/sembunyikan sandi" data-toggle-password="#reg_password">👁️</button>
-                  @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                </div>
-                <div class="helper-text mb-3"><small>Minimal 8 karakter. Simpan sandi Anda dengan aman.</small></div>
-
-                <button type="submit" class="btn btn-gradient w-100">Daftar</button>
-              </form>
-
-              <div class="text-center mt-3">
-                <small class="text-muted">Sudah punya akun?
-                  <button type="button" class="btn btn-link p-0 link-rust fw-semibold text-decoration-none" data-bs-toggle="modal" data-bs-target="#loginModal">Masuk di sini</button>
-                </small>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
     </section>
-    @endguest
-
-    @guest('customer')
-      @include('components.login-modal')
     @endguest
 
     @include('components.footer')
 
-    <!-- GSAP -->
+    @guest('customer')
+        @include('components.login-modal')
+    @endguest
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
     <script>
-        // Inisialisasi Tooltip Bootstrap agar atribut data-bs-toggle="tooltip" berfungsi
-        const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
-
         gsap.registerPlugin(ScrollTrigger);
-        gsap.from('.kicker', { y: 20, opacity: 0, duration: .8, ease: 'power2.out' });
-        gsap.from('.hero h1', { y: 24, opacity: 0, duration: .9, delay: .1, ease: 'power3.out' });
-        gsap.from('.hero p', { y: 26, opacity: 0, duration: .9, delay: .18, ease: 'power3.out' });
-        gsap.from('.hero .btn', { y: 18, opacity: 0, duration: .7, delay: .28, stagger: .08, ease: 'power2.out' });
-        gsap.to('.hero video', { scale: 1.06, transformOrigin: 'center', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
-        gsap.utils.toArray('.reveal').forEach((el) => { gsap.to(el, { y: 0, opacity: 1, duration: .9, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' } }); });
-        gsap.utils.toArray('.card-elev').forEach((card) => { gsap.to(card, { y: 0, opacity: 1, duration: .75, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 90%', toggleActions: 'play none none reverse' } }); });
-        const track = document.getElementById('track');
-        if (track) { track.addEventListener('mouseenter', () => track.style.animationPlayState = 'paused'); track.addEventListener('mouseleave', () => track.style.animationPlayState = 'running'); }
-
+        gsap.to('.hero-title', { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', delay: 0.2 });
+        gsap.from('.hero-subtitle', { y: 20, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.5 });
+        gsap.utils.toArray('.reveal-img, .reveal').forEach(container => {
+            gsap.fromTo(container,
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: container, start: "top 85%" } }
+            );
+        });
+        gsap.utils.toArray('h2, .product-card').forEach(el => {
+            gsap.from(el, {
+                y: 30, opacity: 0, duration: 0.8, ease: 'power3.out',
+                scrollTrigger: { trigger: el, start: 'top 85%' }
+            });
+        });
         document.addEventListener('DOMContentLoaded', () => {
             const usp = new URLSearchParams(location.search);
             if (usp.get('login') === '1') {
@@ -482,44 +482,6 @@
                 if (modalEl) new bootstrap.Modal(modalEl).show();
             }
         });
-
-        // Toggle show/hide password (fixed)
-        document.querySelectorAll('[data-toggle-password]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const sel = btn.getAttribute('data-toggle-password');
-                const input = document.querySelector(sel);
-                if (!input) return;
-                const isPwd = input.type === 'password';
-                input.type = isPwd ? 'text' : 'password';
-                btn.textContent = isPwd ? '🙈' : '👁️';
-            });
-        });
-
-        // Qty plus/minus controls in modal
-        document.querySelectorAll('.btn-qty').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const input = btn.closest('.qty-group')?.querySelector('input[name="jumlah"]');
-                if (!input) return;
-                let val = parseInt(input.value, 10);
-                if (isNaN(val) || val < 1) val = 1;
-                if (btn.dataset.qty === 'minus') val = Math.max(1, val - 1);
-                else val = val + 1;
-                input.value = val;
-                // trigger change event if needed by other listeners
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-            });
-        });
     </script>
-
-    @if($errors->any() && !session('show_login'))
-      <script>
-        document.addEventListener('DOMContentLoaded', function(){
-          const sec = document.getElementById('register');
-          if (sec && typeof sec.scrollIntoView === 'function') {
-            sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        });
-      </script>
-    @endif
 </body>
 </html>
