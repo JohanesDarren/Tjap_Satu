@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             PaymentSeeder::class,
             CartSeeder::class,
             PromoSeeder::class,
+            BannerSeeder::class,
         ]);
     }
 }
