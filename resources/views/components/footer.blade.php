@@ -1,99 +1,131 @@
-<footer class="text-white position-relative footer-gradient">
-    <div class="container position-relative" style="z-index: 2;">
-        <div class="row g-4 align-items-start m-3">
-            <!-- Kolom 1: Logo & Deskripsi -->
-            <div class="col-md-5">
-                <h3 class="fw-bold text-uppercase text-brand">TOKOKOPITJAP1</h3>
-                <p class="mt-3 footer-desc">
-                    TokoKopiTjap1 hadir sebagai gerakan untuk mengenalkan dan mengangkat potensi biji kopi lokal Nusantara. Kami percaya bahwa setiap biji kopi memiliki cerita — tentang tanah tempat ia tumbuh, tentang tangan yang merawatnya, dan tentang semangat masyarakat yang menjaganya. Melalui kolaborasi dengan petani dan pelaku usaha kecil, kami berkomitmen menghadirkan biji kopi berkualitas dengan prinsip keberlanjutan dan nilai kemanusiaan. Dari ladang hingga ke tangan penikmatnya, kami ingin menjaga cita rasa dan makna di setiap prosesnya.
-                    Inilah semangat kami dalam
-                    <span class="text-brand">#KopiRakyatNusantara</span> — merayakan kerja keras, rasa, dan kebanggaan atas hasil bumi sendiri.
-                </p>
+<footer class="position-relative text-white mt-5">
+    <div class="footer-bg pt-5 pb-4">
+        <div class="container position-relative" style="z-index: 5;">
+            <div class="row g-5 justify-content-between">
 
-                <!-- Kontak -->
-                <ul class="list-unstyled mt-4 footer-contacts">
-                    <li class="mb-2">
-                        <i class="bi bi-telephone-fill text-warning me-2"></i> 0878-2169-9178
-                    </li>
-                    <li class="mb-2">
-                        <i class="bi bi-envelope-fill text-warning me-2"></i>
-                        <a href="mailto:tokokopitjap1@gmail.com" class="text-decoration-none link-light">tokokopitjap1@gmail.com</a>
-                    </li>
-                    <li class="mb-2">
-                        <i class="bi bi-instagram text-warning me-2"></i>
-                        <a href="https://www.instagram.com/kopitjapsatu/" target="_blank" rel="noopener noreferrer" class="text-decoration-none link-light">
-                            @kopitjapsatu
+                <div class="col-lg-5 col-md-12">
+                    <div class="mb-4">
+                        <h3 class="font-serif fw-bold ls-1 mb-2 text-white">TOKOKOPITJAP1</h3>
+                        <div class="divider-line rounded-pill"></div>
+                    </div>
+
+                    <p class="footer-desc text-white-50 mb-4 pe-lg-5" style="line-height: 1.7; text-align: justify;">
+                        TokoKopiTjap1 hadir sebagai gerakan untuk mengenalkan potensi biji kopi lokal Nusantara.
+                        Kami percaya setiap biji memiliki cerita—tentang tanah, petani, dan semangat keberlanjutan.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-3 mt-4">
+                        <a href="https://instagram.com/kopitjapsatu" target="_blank" class="social-pill rounded-pill">
+                            <i class="bi bi-instagram"></i> <span>@kopitjapsatu</span>
                         </a>
-                    </li>
-                    <li>
-                        <i class="bi bi-geo-alt-fill text-warning me-2"></i>
-                        Jl. lorem ipsum, Bandung
-                    </li>
-                </ul>
+                        <a href="mailto:tokokopitjap1@gmail.com" class="social-pill rounded-pill">
+                            <i class="bi bi-envelope"></i> <span>Email</span>
+                        </a>
+                        <a href="https://wa.me/6287821699178" target="_blank" class="social-pill rounded-pill">
+                            <i class="bi bi-whatsapp"></i> <span>WhatsApp</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-6">
+                    <h6 class="text-uppercase fw-bold text-accent ls-2 mb-4 fs-7">Menu</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="{{ route('home') }}#menu">Seasonal Menu</a></li>
+                        <li><a href="#">Biji Kopi</a></li>
+                        <li><a href="#">Merchandise</a></li>
+                        <li><a href="#">Langganan</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-6">
+                    <h6 class="text-uppercase fw-bold text-accent ls-2 mb-4 fs-7">Informasi</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="{{ route('home') }}#about">Tentang Kami</a></li>
+                        <li><a href="{{ route('home') }}#location">Lokasi Kedai</a></li>
+                        <li><a href="{{ route('profile.index') }}">Akun Member</a></li>
+                        <li><span class="text-white-50">Bandung, Jawa Barat</span></li>
+                    </ul>
+                </div>
             </div>
 
-            <!-- Kolom 2: Order -->
-            <div class="col-md-2">
-                <h6 class="fw-bold mb-3 fs-5 text-uppercase text-accent">Order</h6>
-                <ul class="list-unstyled footer-links fs-6">
-                    <li><a href="{{ route('home') }}#menu" class="link-fade"><i class="bi bi-cup-hot me-2 text-warning"></i>Lihat Menu</a></li>
-                    <li><a href="#" class="link-fade"><i class="bi bi-shop me-2 text-warning"></i>Ambil Ditempat</a></li>
-                    <li><a href="#" class="link-fade"><i class="bi bi-bicycle me-2 text-warning"></i>GoFood</a></li>
-                    <li><a href="#" class="link-fade"><i class="bi bi-bag-check me-2 text-warning"></i>GrabFood</a></li>
-                </ul>
-            </div>
-
-            <!-- Kolom 3: Info TJAP1 -->
-            <div class="col-md-3 ">
-                <h6 class="fw-bold mb-3 fs-5 text-uppercase text-accent">Info TJAP1</h6>
-                <ul class="list-unstyled footer-links fs-6">
-                    <li><a class="link-fade" href="{{ route('home') }}#about"><i class="bi bi-info-circle me-2 text-warning"></i>Tentang Kami</a></li>
-                    <li><a class="link-fade" href="{{ route('home') }}#location"><i class="bi bi-geo-alt me-2 text-warning"></i>Lokasi</a></li>
-                    <li><a class="link-fade" href="{{ route('home') }}#contact"><i class="bi bi-chat-dots me-2 text-warning"></i>Hubungi Kami!</a></li>
-                    <li><a class="link-fade" href="{{ route('profile.index') }}"><i class="bi bi-person-circle me-2 text-warning"></i>Profile</a></li>
-                </ul>
+            <div class="border-top border-secondary border-opacity-25 mt-5 pt-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <small class="text-white-50 mb-2 mb-md-0">
+                    &copy; {{ date('Y') }} <span class="text-white fw-semibold">Toko Kopi Tjap 1</span>. All rights reserved.
+                </small>
+                <small class="text-white-50">
+                    Crafted with <i class="bi bi-heart-fill text-accent mx-1" style="font-size: 0.7rem;"></i> in Bandung.
+                </small>
             </div>
         </div>
 
-        <hr class="border-secondary my-4">
-
-        <div class="text-center small text-secondary">
-            © {{ date('Y') }} | <span class="text-brand">Toko Kopi Tjap 1</span>
+        <div class="contact-image-wrapper">
+             <img src="{{ asset('images/Contactus.png') }}" alt="Coffee Art" class="img-fluid contact-img">
         </div>
     </div>
 
-    <!-- Gambar Contact Us di pojok kanan bawah -->
-    <img src="{{ asset('images/Contactus.png') }}"
-         alt="Contact Us"
-         class="contact-image">
-
-    <!-- Style -->
     <style>
-        footer { font-family: 'Poppins', sans-serif; overflow: hidden; position: relative; color: #f5f5f5; }
-        .footer-gradient {
-            /* Ganti warna footer ke nuansa cokelat kopi */
-            background: linear-gradient(180deg, #3b2415 0%, #27170f 55%, #1b100a 100%) !important;
-            backdrop-filter: blur(4px) saturate(1.05);
-            border-top: 1px solid rgba(255, 255, 255, .06);
+        /* ====== FOOTER STYLES ====== */
+        footer {
+            --bg-footer: #151110;
+            --accent: #AF461F;
+            --text-mute: #9CA3AF;
         }
 
-        .text-brand { color: #ff7a2a !important; }
-        .text-accent { color: #ffb266 !important; }
-        .footer-desc { color: #e7e1dc; font-size: .95rem; }
-        .footer-contacts { color: #ddd2cb; font-size: .95rem; }
-        footer .text-secondary { color: rgba(255,255,255,.75) !important; }
+        .footer-bg {
+            background-color: var(--bg-footer);
+            /* border-top: 4px solid var(--accent); Opsional jika ingin border atas berwarna */
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.05); /* Sedikit bayangan di atas */
+        }
+
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .text-accent { color: var(--accent) !important; }
+        .ls-1 { letter-spacing: 1px; }
+        .ls-2 { letter-spacing: 2px; }
+        .fs-7 { font-size: 0.75rem; }
+
+        .divider-line {
+            width: 40px; height: 3px;
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        /* Social Pills */
+        .social-pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff; text-decoration: none;
+            font-size: 0.85rem; transition: all 0.3s ease;
+            background: rgba(255,255,255,0.03);
+        }
+        .social-pill:hover {
+            background: var(--accent); border-color: var(--accent);
+            color: #fff; transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(175, 70, 31, 0.3);
+        }
 
         /* Links */
-        .footer-links li { margin-bottom: 8px; letter-spacing: .3px; }
-        .footer-links li a { color: #f1f1f1; text-decoration: none; display: inline-flex; align-items: center; gap: .45rem; transition: color .25s ease, transform .25s ease; }
-        .footer-links li a:hover { color: #ffb266; transform: translateX(3px); }
-        .link-light { color: #f1f1f1; }
-        .link-light:hover { color: #ffb266 !important; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links li a {
+            color: var(--text-mute); text-decoration: none;
+            font-size: 0.95rem; transition: all 0.2s ease;
+            display: inline-block;
+        }
+        .footer-links li a:hover {
+            color: #fff; padding-left: 6px;
+        }
 
-        .contact-image { position: absolute; bottom: 0; right: 0; width: 380px; opacity: .95; z-index: 1; pointer-events: none; transition: transform .4s ease, opacity .4s ease; }
-        .contact-image:hover { transform: scale(1.05); opacity: 1; }
+        /* Image Decor */
+        .contact-image-wrapper {
+            position: absolute; bottom: -40px; right: -20px;
+            width: 350px; opacity: 0.3; pointer-events: none;
+            mix-blend-mode: soft-light; z-index: 1;
+        }
 
-        @media (max-width: 992px) { .contact-image { width: 300px; opacity: .9; } }
-        @media (max-width: 768px) { .contact-image { width: 220px; opacity: .85; right: 10px; bottom: 0; } }
+        @media (max-width: 992px) {
+            .contact-image-wrapper { width: 250px; opacity: 0.15; }
+        }
     </style>
 </footer>
