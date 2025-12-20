@@ -40,15 +40,15 @@ class AuthFlowController extends Controller
     public function submitRegister(Request $request)
     {
         $request->merge(['email' => strtolower(trim((string) $request->input('email')))]);
+
+        // Hapus validasi 'alamat' agar register lebih ringkas
         $validated = $request->validate([
             'nama_lengkap' => ['required','string','min:3'],
-            'alamat' => ['required','string','max:255'],
             'email' => ['required','string','email:rfc,dns','max:254', Rule::unique('customer','email')],
             'no_telp' => ['required','string','max:30', Rule::unique('customer','no_telp')],
             'password' => ['required','string','min:8'],
         ], [
             'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
-            'alamat.required' => 'Alamat wajib diisi.',
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
             'email.unique' => 'Email sudah terdaftar.',
@@ -58,16 +58,17 @@ class AuthFlowController extends Controller
             'password.min' => 'Kata sandi minimal 8 karakter.',
         ]);
 
-        // Simpan (password otomatis di-hash via casts)
+        // Simpan Customer
+        // Kita isi 'alamat' dengan default '-'
         $customer = Customer::create([
             'nama_lengkap' => $validated['nama_lengkap'],
-            'alamat' => $validated['alamat'],
+            'alamat' => '-',
             'email' => $validated['email'],
             'no_telp' => $validated['no_telp'],
-            'password' => $validated['password'],
+            'password' => $validated['password'], // Password otomatis di-hash oleh Model (Casts)
         ]);
 
-        // Login otomatis
+        // Login otomatis setelah register
         Auth::guard('customer')->login($customer);
         $request->session()->regenerate();
 

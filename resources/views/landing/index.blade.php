@@ -414,7 +414,7 @@
     </section>
 
     @guest('customer')
-    <section class="section-padding position-relative" style="background-color: var(--color-primary); color: #fff; padding-bottom: 12rem; z-index: 1;">
+    <section id="register" class="section-padding position-relative" style="background-color: var(--color-primary); color: #fff; padding-bottom: 12rem; margin-bottom: -3rem; z-index: 1;">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8 text-center">
@@ -427,14 +427,66 @@
                         @csrf
                         <div class="row g-4">
                             <style>
-                                .form-dark input { border-bottom-color: rgba(255,255,255,0.2); color: #fff; }
-                                .form-dark input:focus { border-bottom-color: var(--color-accent); }
-                                .form-dark label { color: rgba(255,255,255,0.6); }
+                                /* Fix UI: Paksa text jadi putih dan background transparan */
+                                .form-dark input {
+                                    border-bottom-color: rgba(255,255,255,0.3) !important;
+                                    color: #fff !important;
+                                    background: transparent !important;
+                                }
+                                .form-dark input:focus {
+                                    border-bottom-color: var(--color-accent) !important;
+                                    box-shadow: none !important;
+                                    outline: none !important;
+                                }
+                                .form-dark label {
+                                    color: rgba(255,255,255,0.7) !important;
+                                    font-size: 0.8rem;
+                                    letter-spacing: 1px;
+                                    text-transform: uppercase;
+                                }
+                                .form-dark input:-webkit-autofill,
+                                .form-dark input:-webkit-autofill:hover,
+                                .form-dark input:-webkit-autofill:focus {
+                                    -webkit-text-fill-color: #fff !important;
+                                    -webkit-box-shadow: 0 0 0px 1000px var(--color-primary) inset !important;
+                                    transition: background-color 5000s ease-in-out 0s;
+                                }
                             </style>
-                            <div class="col-md-6 form-dark"><label>Nama Lengkap</label><input type="text" name="nama_lengkap" class="w-100" required></div>
-                            <div class="col-md-6 form-dark"><label>No. Telepon</label><input type="tel" name="no_telp" class="w-100" required></div>
-                            <div class="col-12 form-dark"><label>Email</label><input type="email" name="email" class="w-100" required></div>
-                            <div class="col-12 form-dark"><label>Password</label><input type="password" name="password" class="w-100" required></div>
+
+                            <div class="col-md-6 form-dark">
+                                <label>Nama Lengkap</label>
+                                <input type="text" name="nama_lengkap" class="w-100" required value="{{ old('nama_lengkap') }}">
+                                @error('nama_lengkap') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+
+                            <div class="col-md-6 form-dark">
+                                <label>No. Telepon</label>
+                                <input type="tel" name="no_telp" class="w-100" required value="{{ old('no_telp') }}"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                @error('no_telp') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+
+                            <div class="col-12 form-dark">
+                                <label>Alamat Lengkap</label>
+                                <input type="text" name="alamat" class="w-100" required value="{{ old('alamat') }}">
+                                @error('alamat') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+
+                            <div class="col-12 form-dark">
+                                <label>Email</label>
+                                <input type="email" name="email" class="w-100" required value="{{ old('email') }}">
+                                @error('email') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+
+                            <div class="col-12 form-dark position-relative">
+                                <label>Password</label>
+                                <input type="password" name="password" id="reg_password" class="w-100" required>
+                                <span onclick="toggleRegPassword()" style="position: absolute; right: 0; bottom: 10px; cursor: pointer; color: rgba(255,255,255,0.6);">
+                                    <i class="bi bi-eye" id="icon_reg"></i>
+                                </span>
+                                @error('password') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+
                             <div class="col-12 text-center mt-5">
                                 <button type="submit" class="btn btn-accent px-5 py-3">Buat Akun</button>
                             </div>
@@ -446,6 +498,21 @@
                 </div>
             </div>
         </div>
+        <script>
+            function toggleRegPassword() {
+                var x = document.getElementById("reg_password");
+                var icon = document.getElementById("icon_reg");
+                if (x.type === "password") {
+                    x.type = "text";
+                    icon.classList.remove("bi-eye");
+                    icon.classList.add("bi-eye-slash");
+                } else {
+                    x.type = "password";
+                    icon.classList.remove("bi-eye-slash");
+                    icon.classList.add("bi-eye");
+                }
+            }
+        </script>
     </section>
     @endguest
 
