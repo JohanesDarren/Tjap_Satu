@@ -19,21 +19,21 @@ class BannerSeeder extends Seeder
         $banners = [
             [
                 'title' => 'Promo - Diskon 25%',
-                'image_path' => 'images/biji.JPG',
+                'image_path' => 'uploads/banners/biji.JPG',
                 'link_url' => '/promos/ramadan-sale',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'title' => 'Kopi Arabica Premium',
-                'image_path' => 'images/heroes.JPG',
+                'image_path' => 'uploads/banners/heroes.JPG',
                 'link_url' => '/products?jenis=arabica',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'title' => 'New Arrival - Robusta Toraja',
-                'image_path' => 'images/about.webp',
+                'image_path' => 'uploads/banners/about.webp',
                 'link_url' => '/products/robusta-toraja',
                 'created_at' => now(),
                 'updated_at' => now(),
