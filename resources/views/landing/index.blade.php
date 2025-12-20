@@ -242,7 +242,7 @@
         <div class="hero-content">
             <div class="separator bg-white mb-4"></div>
             <p class="hero-subtitle">Est. 2024 • Artisan Roastery</p>
-            <h1 class="hero-title">Experience <br> <span class="fst-italic" style="font-family: var(--font-script); color: #fff; font-weight: 400;">The Art</span> of Coffee</h1>
+            <h1 class="hero-title">Experience <br> <span class="fst-italic" style="font-family: var(--font-script); color: #AF461F; font-weight: 400;">The Art</span> of Coffee</h1>
             <div class="d-flex justify-content-center gap-3 mt-5">
                 <a href="#menu" class="btn btn-pro text-white border-white">Explore Menu</a>
             </div>
@@ -256,10 +256,11 @@
 
     <div class="ticker-wrap">
         <div class="ticker">
-            @php $origins = ['Gayo Highland', 'Toraja Sapan', 'Bali Kintamani', 'Flores Bajawa', 'Papua Wamena', 'Java Preanger', 'Lintong Ni Huta']; @endphp
-            @for($i=0; $i<4; $i++)
-                @foreach($origins as $origin)
-                <div class="ticker-item">Single Origin: {{ $origin }}</div>
+            {{-- Kita loop 4 kali agar teks cukup panjang untuk animasi marquee (infinite scroll illusion) --}}
+            @for($i=0; $i<6; $i++)
+                @foreach($stripProducts as $item)
+                    {{-- Menampilkan nama_produk dari database --}}
+                    <div class="ticker-item">{{ $item->nama_produk }}</div>
                 @endforeach
             @endfor
         </div>
@@ -278,7 +279,7 @@
                 </div>
                 <div class="col-lg-5 offset-lg-1">
                     <span class="text-uppercase text-muted small ls-2 mb-3 d-block" style="letter-spacing: 2px;">Tentang Kami</span>
-                    <h2 class="display-5 mb-4">Kami percaya kopi adalah <span class="fst-italic" style="font-family: var(--font-script); color: var(--color-accent);">ritual</span>, bukan sekadar rutinitas.</h2>
+                    <h2 class="display-5 mb-4">Kami percaya kopi adalah <span class="fst-italic" style="font-family: var(--font-script); color: #AF461F;">ritual</span>, bukan sekadar rutinitas.</h2>
                     <p class="text-secondary mb-4" style="line-height: 1.8;">
                         Di Coffee House, kami mendedikasikan diri untuk mencari biji kopi terbaik dari seluruh nusantara.
                         Dipanggang dalam *small batches* untuk menjaga karakter unik setiap daerah.
@@ -295,7 +296,7 @@
     <section id="menu" class="section-padding bg-white" style="border-radius: 60px 60px 0 0;">
         <div class="container">
             <div class="text-center mb-5 pb-4">
-                <span style="font-family: var(--font-script); font-size: 2.5rem; color: var(--text-muted);">Our Selection</span>
+                <span style="font-family: var(--font-script); font-size: 2.5rem; color: #AF461F;">Our Selection</span>
                 <h2 class="display-4 mt-2">Seasonal Menu</h2>
             </div>
 
