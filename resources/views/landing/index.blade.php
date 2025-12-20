@@ -84,10 +84,100 @@
         .product-meta h5 { font-size: 1.25rem; margin-bottom: 0.25rem; }
         .product-meta .price { color: var(--color-accent); font-weight: 600; font-family: var(--font-body); }
 
-        /* Modal */
-        .modal-pro .modal-content { border-radius: 32px; border: none; background-color: var(--bg-body); overflow: hidden; }
         .separator { width: 1px; height: 60px; background: var(--color-accent); margin: 0 auto 2rem; }
         .text-accent { color: var(--color-accent) !important; }
+
+        /* ====== MODERN MODAL STYLES ====== */
+        .modal-pro .modal-content {
+            border: none;
+            border-radius: 24px; /* Sudut lebih bulat */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        /* Tombol Close Mengambang */
+        .btn-close-floating {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 1;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: none;
+        }
+        .btn-close-floating:hover {
+            background: #fff;
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        /* Quantity Selector Pro */
+        .qty-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f3f4f6; /* Abu-abu muda */
+            border-radius: 16px;
+            padding: 5px;
+            width: 130px;
+        }
+        .qty-btn-circle {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: #fff;
+            color: var(--color-primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .qty-btn-circle:hover {
+            background: var(--color-accent);
+            color: #fff;
+        }
+        .qty-input-clean {
+            width: 40px;
+            background: transparent;
+            border: none;
+            text-align: center;
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: 1.1rem;
+            outline: none;
+        }
+        /* Hide Spinner */
+        .qty-input-clean::-webkit-outer-spin-button,
+        .qty-input-clean::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .qty-input-clean { -moz-appearance: textfield; }
+
+        /* Tombol Add Cart Gradient/Solid */
+        .btn-cart-modern {
+            background: var(--color-primary);
+            color: #fff;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+        }
+        .btn-cart-modern:hover {
+            background: var(--color-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(162, 123, 92, 0.3);
+            color: #fff;
+        }
+
     </style>
 </head>
 <body>
@@ -120,7 +210,7 @@
     <div class="ticker-wrap">
         <div class="ticker">
             @if(isset($stripProducts) && count($stripProducts) > 0)
-                @for($i=0; $i<4; $i++)
+                @for($i=0; $i<6; $i++)
                     @foreach($stripProducts as $item)
                         <div class="ticker-item">{{ $item->nama_produk }}</div>
                     @endforeach
@@ -142,7 +232,7 @@
                     <div class="img-frame reveal-img shadow-lg position-relative rounded-5 overflow-hidden">
                         <img src="{{ asset('images/biji.JPG') }}" alt="Coffee Beans" class="w-100" style="min-height: 500px; object-fit: cover; filter: grayscale(10%) contrast(1.1) brightness(0.9);">
                         <div class="position-absolute bottom-0 start-0 w-100 p-4"
-                                style="background: rgba(44, 54, 57, 0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-top: 1px solid rgba(255,255,255,0.1);">
+                             style="background: rgba(44, 54, 57, 0.6); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-top: 1px solid rgba(255,255,255,0.1);">
                                 <div>
                                     <p class="mb-3 fst-italic text-white fw-light lh-base" style="font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 0.5px;">
                                         "Setiap biji adalah warisan; menceritakan kisah tanah kelahirannya dengan jujur dalam setiap tegukan."
@@ -229,29 +319,62 @@
                                 </div>
                             </div>
                         </div>
+
                         {{-- MODAL PRODUK --}}
                         <div class="modal fade modal-pro" id="productModal{{ $product->id_product }}" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content">
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    {{-- Tombol Close Mengambang --}}
+                                    <button type="button" class="btn-close-floating" data-bs-dismiss="modal" aria-label="Close">
+                                        <i class="bi bi-x-lg text-dark"></i>
+                                    </button>
+
                                     <div class="row g-0">
-                                        <div class="col-md-6">
-                                            <img src="{{ $imgUrl }}" class="w-100 h-100 object-fit-cover" style="min-height: 400px;" alt="">
+                                        {{-- Kolom Kiri: Gambar Full Height --}}
+                                        <div class="col-md-6 position-relative" style="min-height: 400px; background-color: #f8f8f8;">
+                                            <img src="{{ $imgUrl }}" class="w-100 h-100 object-fit-cover position-absolute top-0 start-0" alt="{{ $product->nama_produk }}">
                                         </div>
+
+                                        {{-- Kolom Kanan: Detail Produk --}}
                                         <div class="col-md-6 p-5 d-flex flex-column justify-content-center">
-                                            <h3 class="mb-2">{{ $product->nama_produk }}</h3>
+
+                                            <span class="badge bg-light text-dark align-self-start mb-3 border px-3 py-2 rounded-pill fw-normal small text-uppercase ls-1">Premium Arabica</span>
+
+                                            <h2 class="mb-2 display-6 fw-bold" style="font-family: var(--font-display); color: var(--color-primary);">{{ $product->nama_produk }}</h2>
+
                                             <p class="fs-4 mb-4 fw-bold" style="color: var(--color-accent);">IDR {{ number_format($product->harga, 0, ',', '.') }}</p>
-                                            <p class="text-muted mb-5">{{ $product->deskripsi ?? 'Deskripsi produk belum tersedia.' }}</p>
+
+                                            <div class="border-top my-2 pt-3">
+                                                <p class="text-muted mb-4" style="line-height: 1.7;">{{ $product->deskripsi ?? 'Nikmati cita rasa otentik dari biji kopi pilihan terbaik kami.' }}</p>
+                                            </div>
+
                                             @auth('customer')
                                                 <form action="{{ route('cart.add', $product->id_product) }}" method="POST">
                                                     @csrf
-                                                    <div class="d-flex gap-3">
-                                                        <input type="number" name="jumlah" value="1" min="1" class="form-control rounded-pill text-center" style="width: 80px; border-color: var(--color-primary);">
-                                                        <button type="submit" class="btn btn-pro w-100" style="background: var(--color-primary); color: #fff;">Add to Cart</button>
+                                                    <div class="d-flex flex-column gap-3">
+                                                        <div class="d-flex gap-3 align-items-stretch">
+                                                            {{-- MODERN QUANTITY SELECTOR --}}
+                                                            <div class="qty-control">
+                                                                <button type="button" class="qty-btn-circle" onclick="updateLandingQty('{{ $product->id_product }}', 'minus')">
+                                                                    <i class="bi bi-dash"></i>
+                                                                </button>
+                                                                <input type="number" name="jumlah" id="qty-landing-{{ $product->id_product }}" value="1" min="1" class="qty-input-clean" readonly>
+                                                                <button type="button" class="qty-btn-circle" onclick="updateLandingQty('{{ $product->id_product }}', 'plus')">
+                                                                    <i class="bi bi-plus"></i>
+                                                                </button>
+                                                            </div>
+
+                                                            {{-- TOMBOL ADD TO CART --}}
+                                                            <button type="submit" class="btn-cart-modern flex-grow-1">
+                                                                <i class="bi bi-bag-plus-fill"></i> Add to Cart
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </form>
                                             @else
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" class="btn btn-pro w-100" style="background: var(--color-primary); color: #fff;">Login to Order</a>
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" class="btn-cart-modern">
+                                                    Login to Order
+                                                </a>
                                             @endauth
                                         </div>
                                     </div>
@@ -299,11 +422,11 @@
                             </div>
                         </li>
                     </ul>
-                    <a href="https://maps.google.com" target="_blank" class="btn btn-pro">Buka di Maps</a>
+                    <a href="https://maps.app.goo.gl/cmiigKkkstWUfUtx7" target="_blank" class="btn btn-pro">Buka di Maps</a>
                 </div>
                 <div class="col-lg-7 reveal">
                     <div class="shadow-lg position-relative" style="border-radius: 32px; overflow: hidden; border: 4px solid #fff;">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126748.56347862!2d107.573117!3d-6.9034443!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6398252477f%3A0x146a1f93d3e815b2!2sBandung%2C%20Bandung%20City%2C%20West%20Java!5e0!3m2!1sen!2sid!4v1646647970000!5m2!1sen!2sid"
+                        <iframe src="https://www.google.com/maps?q=Toko+Kopi+Tjap+1,+Jl.+Raya+Soreang+-+Kopo+No.430,+Cingcin,+Kec.+Soreang,+Kabupaten+Bandung,+Jawa+Barat+40922&output=embed"
                         width="100%" height="450" style="border:0; filter: grayscale(100%) invert(92%) contrast(83%);" allowfullscreen="" loading="lazy"></iframe>
                     </div>
                 </div>
@@ -439,7 +562,7 @@
         gsap.to('.hero-title', { y: 0, opacity: 1, duration: 1.2, ease: 'power3.out', delay: 0.2 });
         gsap.from('.hero-subtitle', { y: 20, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.5 });
 
-        // Reveal Animations (ScrollTrigger)
+        // Reveal Animations
         gsap.utils.toArray('.reveal-img, .reveal').forEach(container => {
             gsap.fromTo(container,
                 { y: 30, opacity: 0 },
@@ -483,6 +606,20 @@
                 });
             }
         });
+
+        // --- SCRIPT LOGIKA QTY DI MODAL ---
+        function updateLandingQty(id, action) {
+            const input = document.getElementById('qty-landing-' + id);
+            let val = parseInt(input.value);
+
+            if (action === 'plus') {
+                val++;
+            } else if (action === 'minus') {
+                if (val > 1) val--;
+            }
+
+            input.value = val;
+        }
 
         // Auto Show Login Modal
         document.addEventListener('DOMContentLoaded', () => {
