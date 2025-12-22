@@ -8,18 +8,24 @@
     </a>
 </div>
 
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+
 <div class="card border-0 shadow-sm">
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>Foto</th>
+                        <th style="width: 80px;">Foto</th>
                         <th>Nama Produk</th>
-                        <th>Harga</th>
-                        <th>Stok</th>
-                        <th>Deskripsi</th>
-                        <th>Aksi</th>
+                        <th style="width: 120px;">Harga</th>
+                        <th style="width: 80px;">Stok</th>
+                        <th style="width: 120px;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,29 +33,35 @@
                         <tr>
                             <td>
                                 @if($item->gambar)
-                                    <img src="{{ asset('uploads/' . $item->gambar) }}" alt="{{ $item->nama_produk }}" width="50" height="50" class="rounded object-fit-cover">
+                                    <img src="{{ asset('uploads/' . $item->gambar) }}" 
+                                         alt="{{ $item->nama_produk }}" 
+                                         style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
                                 @else
-                                    <span class="text-muted small">No Img</span>
+                                    <div style="width: 60px; height: 60px; background: #eee; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-image"></i>
+                                    </div>
                                 @endif
                             </td>
-                            <td class="fw-bold">{{ $item->nama_produk }}</td>
+                            <td>
+                                <strong>{{ $item->nama_produk }}</strong>
+                                <br>
+                                <small class="text-muted">{{ Str::limit($item->deskripsi, 50) }}</small>
+                            </td>
                             <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                             <td>
-                                <span class="badge {{ $item->stok > 0 ? 'bg-success' : 'bg-danger' }}">
+                                <span class="badge {{ $item->stok > 20 ? 'bg-success' : ($item->stok > 0 ? 'bg-warning' : 'bg-danger') }}">
                                     {{ $item->stok }}
                                 </span>
                             </td>
-                            <td><small class="text-muted">{{ \Illuminate\Support\Str::limit($item->deskripsi, 50) }}</small></td>
                             <td>
-                                <div class="d-flex gap-2">
-                                    <a href="{{ route('admin.produk.edit', $item->id_product) }}" class="btn btn-sm btn-warning text-white">
-                                        <i class="bi bi-pencil-square"></i>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{{ route('admin.produk.edit', $item->id_product) }}" class="btn btn-outline-primary">
+                                        <i class="bi bi-pencil"></i>
                                     </a>
-
-                                    <form action="{{ route('admin.produk.destroy', $item->id_product) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus produk ini?');">
+                                    <form action="{{ route('admin.produk.destroy', $item->id_product) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin ingin menghapus?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">
+                                        <button type="submit" class="btn btn-outline-danger">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
@@ -58,14 +70,20 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center py-4 text-muted">
-                                Belum ada data produk. Silakan tambah data baru.
+                            <td colspan="5" class="text-center py-4 text-muted">
+                                Belum ada data produk. <a href="{{ route('admin.produk.create') }}">Tambah sekarang</a>
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
+
+        @if($produk->hasPages())
+            <div class="d-flex justify-content-center mt-4">
+                {{ $produk->links('pagination::bootstrap-5') }}
+            </div>
+        @endif
     </div>
 </div>
 @endsection

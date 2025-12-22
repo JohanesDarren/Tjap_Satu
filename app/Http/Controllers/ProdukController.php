@@ -2,29 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\View\View;
 
 class ProdukController extends Controller
 {
-    public function menu()
+    /**
+     * Display product menu listing
+     */
+    public function menu(): View
     {
-        $produk = Product::all();
-        return view('produk.menu', ['produk' => $produk]);
+        $produk = Product::orderBy('created_at', 'desc')->get();
+        return view('produk.menu', compact('produk'));
     }
 
-    public function show($id)
+    /**
+     * Display single product detail
+     */
+    public function show(int $id): View
     {
-        $foundProduk = Product::findOrFail($id);
-        $produk = [
-            'id_product' => $foundProduk->id_product,
-            'nama' => $foundProduk->nama_produk,
-            'gambar' => $foundProduk->gambar,
-            'harga' => ['100gr' => $foundProduk->harga],
-            'deskripsi' => $foundProduk->deskripsi,
-            'jenis' => $foundProduk->jenis ?? '-',
-            'proses' => $foundProduk->proses ?? '-',
-        ];
-        return view('produk.detail', ['produk' => $produk]);
+        $produk = Product::findOrFail($id);
+        return view('produk.detail', compact('produk'));
     }
 }

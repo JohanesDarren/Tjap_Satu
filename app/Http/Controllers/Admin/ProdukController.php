@@ -3,121 +3,94 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Models\Product; // Pastikan Model Product sudah ada
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Illuminate\Support\Str;
 
 class ProdukController extends Controller
 {
-    // Menampilkan semua produk (READ)
-    public function index()
+    public function index(): View
     {
-        $produk = Product::all(); // Mengambil dari database
+        $produk = Product::orderBy('created_at', 'desc')->paginate(15);
         return view('admin.produk.index', compact('produk'));
     }
 
-    // Menampilkan form tambah (CREATE)
-    public function create()
+    public function create(): View
     {
         return view('admin.produk.create');
     }
 
-    // Menyimpan produk baru ke database (STORE)
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        // 1. Validasi Input
-        $request->validate([
-            'nama_produk' => 'required|string|max:255',
-            'harga'       => 'required|numeric',
-            'stok'        => 'required|integer',
-            'deskripsi'   => 'required|string',
-            'gambar'      => 'required|image|mimes:jpeg,png,jpg|max:2048', // Wajib upload gambar
+        $validated = $request->validate([
+            'nama_produk' => 'required|string|max:255|unique:product,nama_produk',
+            'harga' => 'required|numeric|min:0',
+            'stok' => 'required|integer|min:0',
+            'deskripsi' => 'required|string|min:10',
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'jenis' => 'nullable|string|max:100',
+            'proses' => 'nullable|string|max:100',
         ]);
 
-        // Upload ke public/uploads dan simpan hanya filename
-        $filename = null;
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
-            $ext = $file->getClientOriginalExtension();
-            $base = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $safe = Str::slug($base);
-            $filename = uniqid($safe . '_') . '.' . $ext;
+            $filename = uniqid('produk_') . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('uploads'), $filename);
+            $validated['gambar'] = $filename;
         }
 
-        // 3. Simpan Data
-        Product::create([
-            'nama_produk' => $request->nama_produk,
-            'harga'       => $request->harga,
-            'stok'        => $request->stok,
-            'deskripsi'   => $request->deskripsi,
-            'gambar'      => $filename
-        ]);
+        Product::create($validated);
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil ditambahkan!');
     }
 
-    // Menampilkan form edit (EDIT)
-    public function edit($id)
+    public function edit(int $id): View
     {
         $produk = Product::findOrFail($id);
         return view('admin.produk.edit', compact('produk'));
     }
 
-    // Update data ke database (UPDATE)
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): RedirectResponse
     {
-        $request->validate([
-            'nama_produk' => 'required',
-            'harga'       => 'required|numeric',
-            'stok'        => 'required|integer',
-            'deskripsi'   => 'required',
-            'gambar'      => 'nullable|image|max:2048', // Gambar boleh kosong saat update
+        $produk = Product::findOrFail($id);
+
+        $validated = $request->validate([
+            'nama_produk' => 'required|string|max:255|unique:product,nama_produk,' . $id . ',id_product',
+            'harga' => 'required|numeric|min:0',
+            'stok' => 'required|integer|min:0',
+            'deskripsi' => 'required|string|min:10',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'jenis' => 'nullable|string|max:100',
+            'proses' => 'nullable|string|max:100',
         ]);
 
-        $produk = Product::findOrFail($id);
-        $data = $request->except('gambar');
-
-        // Cek jika user mengupload gambar baru
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama (dukung dua skema penyimpanan lama/baru)
-            if ($produk->gambar) {
-                if (Str::startsWith($produk->gambar, 'products/') && Storage::disk('public')->exists($produk->gambar)) {
-                    Storage::disk('public')->delete($produk->gambar);
-                } elseif (file_exists(public_path('uploads/' . $produk->gambar))) {
-                    @unlink(public_path('uploads/' . $produk->gambar));
-                }
+            if ($produk->gambar && file_exists(public_path('uploads/' . $produk->gambar))) {
+                unlink(public_path('uploads/' . $produk->gambar));
             }
-
-            // Simpan gambar baru ke public/uploads dengan filename saja
             $file = $request->file('gambar');
-            $ext = $file->getClientOriginalExtension();
-            $base = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $safe = Str::slug($base);
-            $newName = uniqid($safe . '_') . '.' . $ext;
-            $file->move(public_path('uploads'), $newName);
-            $data['gambar'] = $newName;
+            $filename = uniqid('produk_') . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads'), $filename);
+            $validated['gambar'] = $filename;
         }
 
-        $produk->update($data);
+        $produk->update($validated);
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil diperbarui!');
     }
 
-    // Hapus data (DELETE)
-    public function destroy($id)
+    public function destroy(int $id): RedirectResponse
     {
         $produk = Product::findOrFail($id);
-
-        // Hapus gambar fisik
-        if ($produk->gambar && Storage::disk('public')->exists($produk->gambar)) {
-            Storage::disk('public')->delete($produk->gambar);
-        } elseif (file_exists(public_path('uploads/' . $produk->gambar))) {
-            @unlink(public_path('uploads/' . $produk->gambar));
+        
+        if ($produk->gambar && file_exists(public_path('uploads/' . $produk->gambar))) {
+            unlink(public_path('uploads/' . $produk->gambar));
         }
 
         $produk->delete();
+
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil dihapus!');
     }
 }

@@ -5,29 +5,38 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class PesananController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        $pesanan = Order::with(['detailOrders.product', 'customer'])
-                        ->orderBy('tanggal_order', 'desc')
-                        ->get();
-        
-        return view('admin.pesanan.index', ['pesanan' => $pesanan]);
+        $pesanan = Order::with(['customer', 'detailOrders.product'])
+            ->orderBy('tanggal_order', 'desc')
+            ->paginate(20);
+
+        return view('admin.pesanan.index', compact('pesanan'));
     }
 
-    public function updateStatus(Request $request, $id)
+    public function updateStatus(Request $request, int $id): RedirectResponse
     {
         $order = Order::findOrFail($id);
-        
-        $request->validate([
-            'status_pesanan' => 'required|in:Pending,Diproses,Dikirim,Selesai,Batal'
+
+        $validated = $request->validate([
+            'status_pesanan' => 'required|in:pending,proses,dikirim,selesai,dibatalkan',
         ]);
 
-        $order->status_pesanan = $request->status_pesanan;
-        $order->save();
+        $order->update($validated);
 
-        return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui.');
+        return back()->with('success', 'Status pesanan berhasil diperbarui!');
+    }
+
+    public function show(int $id): View
+    {
+        $pesanan = Order::with(['customer', 'detailOrders.product'])
+            ->findOrFail($id);
+
+        return view('admin.pesanan.show', compact('pesanan'));
     }
 }

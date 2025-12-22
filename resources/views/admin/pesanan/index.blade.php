@@ -1,9 +1,14 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Manajemen Pesanan</h2>
-</div>
+<h2 class="mb-4">Manajemen Pesanan</h2>
+
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
 
 <div class="card border-0 shadow-sm">
     <div class="card-body">
@@ -11,87 +16,122 @@
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>ID Order</th>
+                        <th style="width: 100px;">ID Order</th>
                         <th>Pelanggan</th>
-                        <th>Tanggal</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
+                        <th style="width: 150px;">Tanggal</th>
+                        <th style="width: 130px;">Total</th>
+                        <th style="width: 100px;">Tipe</th>
+                        <th style="width: 120px;">Status</th>
+                        <th style="width: 100px;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($pesanan as $item)
-                    <tr>
-                        <td>#{{ $item->id_order }}</td>
-                        <td>
-                            {{ $item->customer->nama_lengkap ?? 'Guest' }}<br>
-                            <small class="text-muted">{{ $item->customer->no_telp ?? '-' }}</small>
-                        </td>
-                        <td>{{ \Carbon\Carbon::parse($item->tanggal_order)->format('d M Y H:i') }}</td>
-                        <td class="fw-bold">Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>
-                        <td>
-                            @php
-                                $badge = match($item->status_pesanan) {
-                                    'Selesai' => 'success',
-                                    'Dikirim' => 'info',
-                                    'Diproses' => 'primary',
-                                    'Batal' => 'danger',
-                                    default => 'warning'
-                                };
-                            @endphp
-                            <span class="badge bg-{{ $badge }}">{{ $item->status_pesanan }}</span>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalDetail{{ $item->id_order }}">
-                                Detail & Status
-                            </button>
-                        </td>
-                    </tr>
+                    @forelse($pesanan as $item)
+                        <tr>
+                            <td><strong>#{{ str_pad($item->id_order, 5, '0', STR_PAD_LEFT) }}</strong></td>
+                            <td>
+                                <strong>{{ $item->customer->nama_lengkap ?? 'Guest' }}</strong>
+                                <br>
+                                <small class="text-muted">{{ $item->customer->no_telp ?? '-' }}</small>
+                            </td>
+                            <td>
+                                <small>{{ $item->tanggal_order->format('d M Y H:i') }}</small>
+                            </td>
+                            <td><strong>Rp {{ number_format($item->total_harga, 0, ',', '.') }}</strong></td>
+                            <td><span class="badge bg-secondary">{{ ucfirst($item->tipe_pesanan) }}</span></td>
+                            <td>
+                                <span class="badge bg-{{ $item->status_pesanan == 'selesai' ? 'success' : ($item->status_pesanan == 'proses' ? 'info' : 'warning') }}">
+                                    {{ ucfirst($item->status_pesanan) }}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $item->id_order }}">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
 
-                    <div class="modal fade" id="modalDetail{{ $item->id_order }}" tabindex="-1">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Detail Order #{{ $item->id_order }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <h6>Item Pesanan:</h6>
-                                    <ul class="list-group mb-3">
-                                        @foreach($item->detailOrders as $detail)
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    {{ $detail->product->nama_produk ?? 'Produk Dihapus' }}
-                                                    <small class="text-muted d-block">x{{ $detail->jumlah }}</small>
-                                                </div>
-                                                <span>Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</span>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-
-                                    <form action="{{ route('admin.pesanan.updateStatus', $item->id_order) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <label class="form-label fw-bold">Update Status:</label>
-                                        <div class="input-group">
-                                            <select name="status_pesanan" class="form-select">
-                                                <option value="Pending" {{ $item->status_pesanan == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                                <option value="Diproses" {{ $item->status_pesanan == 'Diproses' ? 'selected' : '' }}>Diproses</option>
-                                                <option value="Dikirim" {{ $item->status_pesanan == 'Dikirim' ? 'selected' : '' }}>Dikirim</option>
-                                                <option value="Selesai" {{ $item->status_pesanan == 'Selesai' ? 'selected' : '' }}>Selesai</option>
-                                                <option value="Batal" {{ $item->status_pesanan == 'Batal' ? 'selected' : '' }}>Batal</option>
-                                            </select>
-                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        <div class="modal fade" id="detailModal{{ $item->id_order }}" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Detail Order #{{ str_pad($item->id_order, 5, '0', STR_PAD_LEFT) }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h6 class="mb-3">Informasi Pelanggan</h6>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <small class="text-muted">Nama</small>
+                                                <p class="mb-0">{{ $item->customer->nama_lengkap }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <small class="text-muted">No. Telepon</small>
+                                                <p class="mb-0">{{ $item->customer->no_telp }}</p>
+                                            </div>
                                         </div>
-                                    </form>
+
+                                        <hr>
+
+                                        <h6 class="mb-3">Item Pesanan</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Produk</th>
+                                                        <th style="width: 70px;">Qty</th>
+                                                        <th style="width: 130px;">Subtotal</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($item->detailOrders as $detail)
+                                                        <tr>
+                                                            <td>{{ $detail->product->nama_produk }}</td>
+                                                            <td>{{ $detail->jumlah }}</td>
+                                                            <td>Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <small class="text-muted">Subtotal</small>
+                                                <p>Rp {{ number_format($item->subtotal_produk, 0, ',', '.') }}</p>
+                                                <small class="text-muted">Biaya Layanan</small>
+                                                <p>Rp {{ number_format($item->biaya_layanan, 0, ',', '.') }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <small class="text-muted">Ongkir</small>
+                                                <p>Rp {{ number_format($item->ongkir, 0, ',', '.') }}</p>
+                                                <small class="text-muted">Total</small>
+                                                <p><strong>Rp {{ number_format($item->total_harga, 0, ',', '.') }}</strong></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">Belum ada pesanan</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
+
+        @if($pesanan->hasPages())
+            <div class="d-flex justify-content-center mt-4">
+                {{ $pesanan->links('pagination::bootstrap-5') }}
+            </div>
+        @endif
     </div>
 </div>
 @endsection
